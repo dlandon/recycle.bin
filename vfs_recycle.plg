@@ -300,7 +300,7 @@ rmdir /mnt/user/.Recycle.bin
 
 # Remove all plugin files.
 rm -f -r /usr/local/emhttp/plugins/&name;
-# rm -f -r /boot/config/plugins/&name;
+rm -f -r /boot/config/plugins/&name;
 
 # Remove rc script.
 rm -f /etc/rc.d/rc.vfs_plg
