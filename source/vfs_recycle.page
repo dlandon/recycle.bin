@@ -91,7 +91,7 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 		<?=mk_option($vfs_recycle_cfg['SERVICE'], "enable", "Yes");?>
 	  </select>
 
-	> Enable the Recycle Bin to start automatically when the server is started.
+	> Set to 'Yes' to enable the Recycle Bin when the server is started.
 
 	Remove trash once a week:
 	: <select name="WEEKLYRUN" size="1";>
@@ -99,12 +99,20 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "no", "No");?>
 	 </select>
 
-	> When set to 'yes' the trash will be emptied every week at 3 AM on Sunday.
+	> When set to 'Yes' the trash will be emptied every week at 3 AM on Sunday.
 
 	Remove files older than (minutes):
-	: <input type="text" name="AGE" class="arrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
+	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
 
 	> Any files older than the set number of minutes are removed when the trash is emptied weekly.
+
+	Weekly Empty Trash Notification:
+	: <select name="NOTIFY" size="1";>
+		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "yes", "Yes");?>
+		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "no", "No");?>
+	 </select>
+
+	> When set to "Yes" a notification will be sent when the weekly empty trash runs.
 
 	<input type="submit" name="#default" value="Default">
 	: <input type="submit" name="#apply" value="Apply"><input type="button" value="Done" onclick="done()">

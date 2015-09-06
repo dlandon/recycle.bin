@@ -1,0 +1,8 @@
+#!/bin/bash
+source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
+
+find /mnt/user/.Recycle.Bin/* -amin +$AGE -delete
+
+if [[ $NOTIFY = "yes" ]]; then
+	/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Weekly empty trash" -i "normal"
+fi

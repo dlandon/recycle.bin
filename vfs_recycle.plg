@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.06">
+<!ENTITY version    "2015.09.06a">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.09.06a
+- Add: Notification when weekly empty trash is run.
+
 ###2015.09.06
 - Fix: Remove console error messages.
 - Fix: Weekly empty trash cron settings.
@@ -24,7 +27,6 @@
 ###2015.09.05
 - Initial unRAID V6.1 release.
 </CHANGES>
-
 
 <!--
 Copyright 2015, Dan Landon
@@ -68,6 +70,7 @@ chmod 755 /usr/local/emhttp/plugins/vfs_recycle/scripts/*
 SERVICE="disable"
 WEEKLYRUN="no"
 AGE="720"
+NOTIFY="no"
 ]]>
 </INLINE>
 </FILE>
@@ -129,7 +132,7 @@ vfs_recycle_start()
 	fi
 	#If weekly run is enabled, add cron job
 	if [[ $WEEKLYRUN = "yes" ]]; then
-		crontab -l > /tmp/file; echo '#Empty vfs trash once a week' >> /tmp/file; echo '0 3 * * 0 find /mnt/user/.Recycle.Bin/* -amin +'$AGE' -delete 1 >/dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
+		crontab -l > /tmp/file; echo '#Empty vfs trash once a week' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/vfs_recycle/scripts/weekly_vfs_recycle 1 >/dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
 	else
 		if [[ `crontab -l | grep "#Empty vfs trash"` != "" ]]; then
 			crontab -l > /tmp/file; sed '/#Empty vfs trash/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
