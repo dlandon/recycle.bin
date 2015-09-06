@@ -1,0 +1,2 @@
+#!/bin/bash
+/etc/rc.d/rc.vfs_plg stop

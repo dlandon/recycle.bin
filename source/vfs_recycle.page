@@ -1,0 +1,112 @@
+Menu="Utilities"
+Icon="vfs_recycle.png"
+Title="Recycle Bin"
+---
+<?PHP
+/* Copyright 2015, Dan Landon.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+?>
+
+<?PHP
+$vfs_recycle_cfg = parse_ini_file( "/boot/config/plugins/vfs_recycle/vfs_recycle.cfg" );
+$vfs_recycle_enabled = no;
+    if (strpos(file_get_contents("/boot/config/smb-extra.conf"),"recycle") !== false):
+	{
+		$vfs_recycle_enabled = yes;
+	}
+	endif;
+$vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2> /dev/null" );
+?>
+
+<div style="width: 49%; float:left">
+	<div id="title">
+		<span class="left">Status:&#32;<img src='/plugins/vfs_recycle/device_status.png'>
+			<?if ($vfs_recycle_enabled=="yes"):?>	
+				<span class="green"><b>Enabled</b></span>
+			<?else:?>
+				<span class="red"><b>Disabled</b></span>
+			<?endif;?>	
+		</span>
+	</div>	
+	<?if ($vfs_recycle_enabled=="yes"):?>
+		<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
+			<form name="vfs_recycle_start_stop" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_stop">
+				<input type="submit" name="runCmd" value="Stop">
+			</form>
+		</div>
+		<div style="position:relative;float:left;width:50%;margin-bottom:24px">
+			<form name="vfs_recycle_restart" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_restart">
+				<input type="submit" name="runCmd" value="Restart">
+			</form>
+		</div>			
+		<br />
+		<?if (($files = @scandir('/mnt/user/.Recycle.Bin/')) && count($files) > 2):?>
+		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom;24px">
+			<img src='/plugins/vfs_recycle/vfs_full.png'><br />
+			<b>Recycle Bin Total Size: <?=$vfs_recycle_trashsize?></b>
+			<form name="vfs_recycle_empty" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
+				<input type="submit" name="runCmd" value="Empty Trash">
+			</form>
+		</div>
+		<?else:?>
+			<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:24px">
+				<img src='/plugins/vfs_recycle/vfs_empty.png'><br />
+				<b>Recycle Bin is empty</b>
+			<form name="vfs_recycle_empty" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
+				<input type="submit" name="runCmd" value="Empty Trash" disabled>
+			</form>
+			</div>
+		<?endif;?>
+	<?else:?>
+		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
+			<form name="vfs_recycle_start" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_buttonstart">
+				<input type="submit" name="runCmd" value="Start">
+			</form>
+		</div>
+		<br />
+	<?endif;?>
+</div>
+<div style="width: 49%; float:right">
+	<div id="title">
+		<span class="left">Configuration:&#32;<img src='/plugins/vfs_recycle/new_config.png'></span>
+	</div>
+	<form markdown="1" name="vfs_recycle_settings" method="POST" action="/update.php" target="progressFrame">
+	<input type="hidden" name="#file" value="vfs_recycle/vfs_recycle.cfg">
+	<input type="hidden" name="#command" value="/plugins/vfs_recycle/scripts/update_vfs_recycle">
+	Enable Recycle Bin:
+	: <select name="SERVICE" size="1">
+		<?=mk_option($vfs_recycle_cfg['SERVICE'], "disable", "No");?>
+		<?=mk_option($vfs_recycle_cfg['SERVICE'], "enable", "Yes");?>
+	  </select>
+
+	> Enable the Recycle Bin to start automatically when the server is started.
+
+	Remove trash once a week:
+	: <select name="WEEKLYRUN" size="1";>
+		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "yes", "Yes");?>
+		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "no", "No");?>
+	 </select>
+
+	> When set to 'yes' the trash will be emptied every week at 3 AM on Sunday.
+
+	Remove files older than (minutes):
+	: <input type="text" name="AGE" class="arrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
+
+	> Any files older than the set number of minutes are removed when the trash is emptied weekly.
+
+	<input type="submit" name="#default" value="Default">
+	: <input type="submit" name="#apply" value="Apply"><input type="button" value="Done" onclick="done()">
+	</form>
+</div>

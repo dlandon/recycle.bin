@@ -1,0 +1,3 @@
+#!/bin/bash
+# Start vfs_recycle bin
+/etc/rc.d/rc.vfs_plg start

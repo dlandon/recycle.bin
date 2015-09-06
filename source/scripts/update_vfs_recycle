@@ -1,0 +1,8 @@
+#!/bin/bash
+source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
+
+/etc/rc.d/rc.vfs_plg stop
+
+if [[ $SERVICE = "enable" ]]; then
+	/etc/rc.d/rc.vfs_plg start
+fi
