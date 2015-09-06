@@ -293,7 +293,7 @@ rmdir /mnt/user/.Recycle.bin 2>/dev/null
 
 # Remove all plugin files.
 rm -f -r /usr/local/emhttp/plugins/&name; 2>/dev/null
-# rm -f -r /boot/config/plugins/&name; 2>/dev/null
+rm -f -r /boot/config/plugins/&name; 2>/dev/null
 
 # Remove rc script.
 rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null

@@ -95,8 +95,8 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 	Remove trash once a week:
 	: <select name="WEEKLYRUN" size="1";>
-		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "yes", "Yes");?>
 		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "no", "No");?>
+		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "yes", "Yes");?>
 	 </select>
 
 	> When set to 'Yes' the trash will be emptied every week at 3 AM on Sunday.
@@ -108,8 +108,8 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 	Weekly Empty Trash Notification:
 	: <select name="NOTIFY" size="1";>
-		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "yes", "Yes");?>
 		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "no", "No");?>
+		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "yes", "Yes");?>
 	 </select>
 
 	> When set to "Yes" a notification will be sent when the weekly empty trash runs.
