@@ -50,6 +50,9 @@ rm -f /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
 rm -f /boot/config/plugins/&name;/conf/smb-extra.conf 2>/dev/null
 
+# Remove rc script.
+rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null
+
 # Install the 'bundle'.
 tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins
 
