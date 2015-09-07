@@ -85,7 +85,8 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 	<form markdown="1" name="vfs_recycle_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="vfs_recycle/vfs_recycle.cfg">
 	<input type="hidden" name="#command" value="/plugins/vfs_recycle/scripts/update_vfs_recycle">
-	Enable Recycle Bin:
+
+	Enable Recycle Bin?
 	: <select name="SERVICE" size="1">
 		<?=mk_option($vfs_recycle_cfg['SERVICE'], "disable", "No");?>
 		<?=mk_option($vfs_recycle_cfg['SERVICE'], "enable", "Yes");?>
@@ -93,7 +94,31 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 	> Set to 'Yes' to enable the Recycle Bin when the server is started.
 
-	Remove trash once a week:
+	Recycle Bin parameters:
+	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$vfs_recycle_cfg['PARAMETERS'];?>">
+
+	> Additional parameters for Recycle Bin.  The following as some options you can set to control the structure of the deleted files.
+	> Enter the parameters in a list with no spaces or commas between them.
+	> The order of the parameters will affect the file structure in the Recycle Bin.
+	> Leaving this field blank will put all deleted files in the Recycle Bin without any path information.
+	>
+	> Hint: Use the '/' for more control of the directory structure in the Recycle Bin.
+	> For example '%m/%S' will organize the deleted files by the machine name that deleted the file and then the share name structure.
+	>
+	> + '%S' Samba share name (which in unRaid equals the user share name), eg. Storage
+	> + '%P' User share full path, eg /mnt/user/Storage
+	> + '%u' Username of the current service, if any
+	> + '%m' Machine name of the user who deleted the file
+
+	Recycle Bin browseable?
+	: <select name="BROWSE" size="1";>
+		<?=mk_option($vfs_recycle_cfg['BROWSE'], "no", "No");?>
+		<?=mk_option($vfs_recycle_cfg['BROWSE'], "yes", "Yes");?>
+	 </select>
+
+	> Set to 'Yes' to allow browsing of the RecycleBin share.
+
+	Remove trash once a week?
 	: <select name="WEEKLYRUN" size="1";>
 		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "no", "No");?>
 		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "yes", "Yes");?>
@@ -106,7 +131,7 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 	> Any files older than the set number of minutes are removed when the trash is emptied weekly.
 
-	Weekly Empty Trash Notification:
+	Weekly Empty Trash Notification?
 	: <select name="NOTIFY" size="1";>
 		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "no", "No");?>
 		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "yes", "Yes");?>

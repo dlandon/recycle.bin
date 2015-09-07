@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.06a">
+<!ENTITY version    "2015.09.07">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,6 +16,13 @@
 
 <CHANGES>
 ##&name;
+###2015.09.07
+- Fix: Remove deleting of the .Recycle.Bin when the plugin is removed.  Removal of .Recycle.Bin is automatic when the Recycle Bin is disabled and the bin is empty.
+- Fix: Typo and minor cleanup of rc.vfs_plg.
+- Fix: Interference with unassigned devices and user entries in the smb-extra.conf file.
+- Add: Parameters for the Recycle Bin are now settable in the webgui.
+- Add: You can set whether the Recycle Bin is browseable in the webgui.
+
 ###2015.09.06a
 - Add: Notification when weekly empty trash is run.
 
@@ -30,7 +37,8 @@
 
 <!--
 Copyright 2015, Dan Landon
-VFS Recycle Bin for samba deleted files.
+VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
+the vfs recycle functionality in samba of unRAID.
 -->
 
 <!--
@@ -68,6 +76,8 @@ chmod 755 /usr/local/emhttp/plugins/vfs_recycle/scripts/*
 <![CDATA[
 # vfs_recycle configuration:
 SERVICE="disable"
+PARAMETERS="%S"
+BROWSE="no"
 WEEKLYRUN="no"
 AGE="720"
 NOTIFY="no"
@@ -81,8 +91,9 @@ NOTIFY="no"
 #vfs_recycle_start
 #Recycle bin share
 [RecycleBin]
-	path = /mnt/user/.Recycle.Bin
-	read only = No
+   path = /mnt/user/.Recycle.Bin
+   read only = no
+   browseable = no
 
 #vfs config
 # Documentation http://www.samba.org/samba/docs/man/manpages-3/smb.conf.5.html
@@ -90,6 +101,7 @@ NOTIFY="no"
 # %S Samba share name (which in unRaid equals the user share name), eg. Storage
 # %P User share full path, eg /mnt/user/Storage
 # %u Username of the current service, if any
+# %m Machine name of the user who deleted the file
 # To apply changes execute: /etc/rc.d/rc.samba restart
 # If the single custom bin solution is chosen, create the dir manually, and grant it g+rwx permissions
 
@@ -113,11 +125,11 @@ acl allow execute always = yes
 <INLINE>
 <![CDATA[
 #!/bin/sh
-# start|stop|restart|enable|disable||empty.
+# start|stop|restart|enable|disable||empty|smb.
 
 vfs_recycle_start()
 {
-	echo "Startinig Recycle Bin..."
+	echo "Starting Recycle Bin..."
 
 	# if smb-extras.conf is not found, create it
 	if [ ! -e "/boot/config/smb-extra.conf" ]; then
@@ -127,6 +139,7 @@ vfs_recycle_start()
 			sed '/#vfs_recycle_start/,/#vfs_recycle_end/{//d}' /boot/config/smb-extra.conf >> smb.tmp
 			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
 			rm smb.tmp
+			printf "\n" >> /boot/config/smb-extra.conf
 			cat /boot/config/plugins/vfs_recycle/config/smb-extra.conf >> /boot/config/smb-extra.conf
 		fi
 	fi
@@ -138,8 +151,9 @@ vfs_recycle_start()
 			crontab -l > /tmp/file; sed '/#Empty vfs trash/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
 		fi
 	fi
-	CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
 
+	# Restart samba
+	CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
 	nohup $CMDLINE > /dev/null 2>&1 &
 	
 	sleep 1
@@ -151,7 +165,7 @@ vfs_recycle_stop()
 
 	# Do nothing if vfs_recycle is not added
 	if [[ `cat /boot/config/smb-extra.conf | grep "vfs objects"` == '' ]]; then
-		echo vfs_recycle not added to samba...
+		echo "Recycle Bin not added to samba..."
 	else
 		echo "Disabling Recycle Bin..."
 		sleep 1
@@ -163,8 +177,9 @@ vfs_recycle_stop()
 		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
 		printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
 		rm smb.tmp
-		CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
 
+		# Restart samba
+		CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
 		nohup $CMDLINE > /dev/null 2>&1 &
 	fi
 	sleep 1
@@ -225,6 +240,12 @@ vfs_recycle_empty()
 	rm -rf /mnt/user/.Recycle.Bin/*
 }	
 
+vfs_recycle_smb()
+{
+	sed -i "/browseable = /c\   browseable = $BROWSE" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/recycle:repository = /c\   recycle:repository = /mnt/user/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+}
+
 # read our configuration
 source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
 
@@ -250,8 +271,11 @@ case "$1" in
 	'empty')
 		vfs_recycle_empty
 	;;
+	'smb')
+		vfs_recycle_smb
+	;;
 	*)
-		echo "usage $0 start|stop|restart|enable|disable|empty"
+		echo "usage $0 start|stop|restart|enable|disable|empty|smb"
 esac
 ]]>
 </INLINE>
@@ -287,9 +311,6 @@ The 'remove' script.
 
 # Empty the recycle bin
 /etc/rc.d/rc.vfs_plg empty
-
-# Remove recycle bin
-rmdir /mnt/user/.Recycle.bin 2>/dev/null
 
 # Remove all plugin files.
 rm -f -r /usr/local/emhttp/plugins/&name; 2>/dev/null
