@@ -97,7 +97,7 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 	Recycle Bin parameters:
 	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$vfs_recycle_cfg['PARAMETERS'];?>">
 
-	> Additional parameters for Recycle Bin.  The following as some options you can set to control the structure of the deleted files.
+	> Additional parameters for Recycle Bin.  The following are some options you can set to control the file structure of the deleted files.
 	> Enter the parameters in a list with no spaces or commas between them.
 	> The order of the parameters will affect the file structure in the Recycle Bin.
 	> Leaving this field blank will put all deleted files in the Recycle Bin without any path information.
@@ -109,6 +109,19 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 	> + '%P' User share full path, eg /mnt/user/Storage
 	> + '%u' Username of the current service, if any
 	> + '%m' Machine name of the user who deleted the file
+
+	Recycle Bin Users:
+	: <input type="text" name="USERS" class="narrow" maxlength="50" value="<?=$vfs_recycle_cfg['USERS'];?>">
+
+	> List of additional Users that can access the Recycle Bin.  User 'admin' always has access.  Giving a User access will give them total access with read/write access privileges, if allowed, to the Recycle Bin.  Separate Users with a comma or space.
+
+	Recycle Bin read only?
+	: <select name="READONLY" size="1";>
+		<?=mk_option($vfs_recycle_cfg['READONLY'], "yes", "Yes");?>
+		<?=mk_option($vfs_recycle_cfg['READONLY'], "no", "No");?>
+	 </select>
+
+	> Set to "Yes" to set the Recycle Bin to read only.  Set to 'No' for full read/write control.
 
 	Recycle Bin browseable?
 	: <select name="BROWSE" size="1";>
