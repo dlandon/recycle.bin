@@ -159,7 +159,7 @@ vfs_recycle_start()
 	fi
 	#If weekly run is enabled, add cron job
 	if [[ $WEEKLYRUN = "yes" ]]; then
-		crontab -l > /tmp/file; echo '#Empty vfs trash once a week' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/vfs_recycle/scripts/weekly_vfs_recycle 1 >/dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
+		crontab -l > /tmp/file; echo '#Empty vfs trash once a week' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/vfs_recycle/scripts/weekly_vfs_recycle 1>/dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
 	else
 		if [[ `crontab -l | grep "#Empty vfs trash"` != "" ]]; then
 			crontab -l > /tmp/file; sed '/#Empty vfs trash/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
