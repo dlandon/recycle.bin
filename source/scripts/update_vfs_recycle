@@ -8,6 +8,6 @@ source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
 /etc/rc.d/rc.vfs_plg smb
 
 # Start vfs recycle if service is enabled
-if [[ $SERVICE = "enable" ]]; then
+if [ $SERVICE = "enable" ]; then
 	/etc/rc.d/rc.vfs_plg start
 fi

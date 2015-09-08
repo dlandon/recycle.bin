@@ -1,8 +1,10 @@
 #!/bin/bash
 source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
 
-find /mnt/user/.Recycle.Bin/* -amin +$AGE -delete
+find /mnt/user/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
 
-if [[ $NOTIFY = "yes" ]]; then
-	/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Weekly empty trash" -i "normal"
+logger "Weekly: Files older than $AGE days have been removed" -t"Recycle Bin"
+
+if [ $NOTIFY = "yes" ]; then
+	/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Weekly: Files older than $AGE days have been removed" -i "normal"
 fi

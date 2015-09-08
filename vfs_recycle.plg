@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.07a">
+<!ENTITY version    "2015.09.08">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,22 +16,30 @@
 
 <CHANGES>
 ##&name;
+###2015.09.08
+- Fix: Some plugin organization - image files moved to images/.
+- Add: Changed the weekly age to days instead of minutes.
+- Add: Changed weekly age days to 'Age Days to remove files'.  This is used for removing files weekly or when the 'Remove Files' button is clicked.
+- Add: Added a 'Remove Files' button to remove files older that the 'Age Days' setting.
+- Add: Browse the Recycle Bin by clicking on the full trash can.
+- Add: Don't empty the trash when removing the plugin.  Deleted files will have to be removed by emptying the trash or manually.
+
 ###2015.09.07a
-- Add: You can add additional Users that can access the Recycle Bin.
+- Add: You can add additional Users that can access the Recycle Bin as admin.
 - Add: You can set the Recycle Bin read only or read/write.
 
 ###2015.09.07
 - Fix: Remove deleting of the .Recycle.Bin when the plugin is removed.  Removal of .Recycle.Bin is automatic when the Recycle Bin is disabled and the bin is empty.
 - Fix: Typo and minor cleanup of rc.vfs_plg.
 - Fix: Interference with unassigned devices and user entries in the smb-extra.conf file.
-- Add: Parameters for the Recycle Bin are now settable.
+- Add: Parameters for the Recycle Bin file structure are now settable.
 - Add: You can set whether the Recycle Bin is browseable.
 
 ###2015.09.06a
 - Add: Notification when weekly empty trash is run.
 
 ###2015.09.06
-- Fix: Remove console error messages.
+- Fix: Suppress console error messages.
 - Fix: Weekly empty trash cron settings.
 - Add: Help information.
 
@@ -46,7 +54,7 @@ the vfs recycle functionality in samba of unRAID.
 -->
 
 <!--
-Get the vfs_recycle bundle.
+Get the vfs_recycle plugin bundle.
 -->
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
 <URL>"https://github.com/dlandon/vfs_recycle/raw/master/&name;-&version;.tgz"</URL>
@@ -62,16 +70,15 @@ rm -f /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
-rm -f /boot/config/plugins/&name;/conf/smb-extra.conf 2>/dev/null
 
 # Remove rc script.
 rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null
 
 # Install the 'bundle'.
-tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins
+tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins 2>/dev/null
 
 # Adjust script permissions.
-chmod 755 /usr/local/emhttp/plugins/vfs_recycle/scripts/*
+chmod 755 /usr/local/emhttp/plugins/vfs_recycle/scripts/* 2>/dev/null
 </INLINE>
 </FILE>
 
@@ -85,7 +92,7 @@ USERS=""
 READONLY="yes"
 BROWSE="no"
 WEEKLYRUN="no"
-AGE="720"
+AGE="7"
 NOTIFY="no"
 ]]>
 </INLINE>
@@ -104,7 +111,7 @@ NOTIFY="no"
 
 #vfs config
 # Documentation http://www.samba.org/samba/docs/man/manpages-3/smb.conf.5.html
-# Forum topic http://lime-technology.com/forum/index.php?topic=5446.0
+# Forum topic http://lime-technology.com/forum/index.php?topic=42729.0
 # %S Samba share name (which in unRaid equals the user share name), eg. Storage
 # %P User share full path, eg /mnt/user/Storage
 # %u Username of the current service, if any
@@ -252,7 +259,7 @@ vfs_recycle_smb()
 	sed -i "/read only =/c\   read only = $READONLY" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 	sed -i "/admin users =/c\   admin users = $USERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 	sed -i "/browseable =/c\   browseable = $BROWSE" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
-	sed -i "/recycle:repository = /c\   recycle:repository = /mnt/user/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/recycle:repository =/c\   recycle:repository = /mnt/user/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 }
 
 # read our configuration
@@ -317,9 +324,6 @@ The 'remove' script.
 <INLINE>
 # Stop recycle bin.
 /etc/rc.d/rc.vfs_plg stop
-
-# Empty the recycle bin
-/etc/rc.d/rc.vfs_plg empty
 
 # Remove all plugin files.
 rm -f -r /usr/local/emhttp/plugins/&name; 2>/dev/null

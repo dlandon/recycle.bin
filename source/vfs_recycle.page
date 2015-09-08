@@ -1,6 +1,6 @@
 Menu="Utilities"
-Icon="vfs_recycle.png"
 Title="Recycle Bin"
+Icon="vfs_recycle.png"
 ---
 <?PHP
 /* Copyright 2015, Dan Landon.
@@ -27,7 +27,7 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 <div style="width: 49%; float:left">
 	<div id="title">
-		<span class="left">Status:&#32;<img src='/plugins/vfs_recycle/device_status.png'>
+		<span class="left"><img src='/plugins/vfs_recycle/images/device_status.png'>Status:
 			<?if ($vfs_recycle_enabled=="yes"):?>	
 				<span class="green"><b>Enabled</b></span>
 			<?else:?>
@@ -35,6 +35,13 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 			<?endif;?>	
 		</span>
 	</div>	
+	<div>
+		<blockquote class='inline_help'>
+		<p>Click on the <strong>Trash Can Icon</strong> to browse the deleted files in the Recycle Bin.</p>
+		<p>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</p>
+		<p>Click on <strong>Empty Trash</strong> to remove all deleted files.</p>
+		</blockquote>
+	</div>
 	<?if ($vfs_recycle_enabled=="yes"):?>
 		<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
 			<form name="vfs_recycle_start_stop" method="POST" action="/update.htm" target="progressFrame">
@@ -50,22 +57,30 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 		</div>			
 		<br />
 		<?if (($files = @scandir('/mnt/user/.Recycle.Bin/')) && count($files) > 2):?>
-		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom;24px">
-			<img src='/plugins/vfs_recycle/vfs_full.png'><br />
-			<b>Recycle Bin Total Size: <?=$vfs_recycle_trashsize?></b>
-			<form name="vfs_recycle_empty" method="POST" action="/update.htm" target="progressFrame">
-				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
-				<input type="submit" name="runCmd" value="Empty Trash">
-			</form>
-		</div>
+			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom;24px">
+				<a href='/Shares/Browse?dir=/mnt/user/.Recycle.Bin'><img src='/plugins/vfs_recycle/images/vfs_full.png'></a><br />
+				<b>Recycle Bin Total Size: <?=$vfs_recycle_trashsize?></b>
+				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_purge">
+					<input type="submit" name="runCmd" value="Remove Aged Files">
+				</form>
+				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
+					<input type="submit" name="runCmd" value="Empty Trash">
+				</form>
+			</div>
 		<?else:?>
 			<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:24px">
-				<img src='/plugins/vfs_recycle/vfs_empty.png'><br />
+				<img src='/plugins/vfs_recycle/images/vfs_empty.png'><br />
 				<b>Recycle Bin is empty</b>
-			<form name="vfs_recycle_empty" method="POST" action="/update.htm" target="progressFrame">
-				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
-				<input type="submit" name="runCmd" value="Empty Trash" disabled>
-			</form>
+				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_purge">
+					<input type="submit" name="runCmd" value="Remove Aged Files" disabled>
+				</form>
+				<form name="vfs_recycle_empty" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
+					<input type="submit" name="runCmd" value="Empty Trash" disabled>
+				</form>
 			</div>
 		<?endif;?>
 	<?else:?>
@@ -80,7 +95,7 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 </div>
 <div style="width: 49%; float:right">
 	<div id="title">
-		<span class="left">Configuration:&#32;<img src='/plugins/vfs_recycle/new_config.png'></span>
+		<span class="left"><img src='/plugins/vfs_recycle/images/new_config.png'></span>Configuration
 	</div>
 	<form markdown="1" name="vfs_recycle_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="vfs_recycle/vfs_recycle.cfg">
@@ -117,8 +132,8 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 	Recycle Bin read only?
 	: <select name="READONLY" size="1";>
-		<?=mk_option($vfs_recycle_cfg['READONLY'], "yes", "Yes");?>
 		<?=mk_option($vfs_recycle_cfg['READONLY'], "no", "No");?>
+		<?=mk_option($vfs_recycle_cfg['READONLY'], "yes", "Yes");?>
 	 </select>
 
 	> Set to "Yes" to set the Recycle Bin to read only.  Set to 'No' for full read/write control.
@@ -131,26 +146,26 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 
 	> Set to 'Yes' to allow browsing of the RecycleBin share.
 
-	Remove trash once a week?
+	Age Days:
+	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
+
+	> Any files older than the set number of days are removed when files are removed weekly or when the 'Remove Aged Files' button is clicked.
+
+	Remove Files once a week?
 	: <select name="WEEKLYRUN" size="1";>
 		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "no", "No");?>
 		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "yes", "Yes");?>
 	 </select>
 
-	> When set to 'Yes' the trash will be emptied every week at 3 AM on Sunday.
+	> When set to 'Yes' files older that 'Age Days' will be removed every week at 3 AM on Sunday.
 
-	Remove files older than (minutes):
-	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
-
-	> Any files older than the set number of minutes are removed when the trash is emptied weekly.
-
-	Weekly Empty Trash Notification?
+	Weekly Remove Files Notification?
 	: <select name="NOTIFY" size="1";>
 		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "no", "No");?>
 		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "yes", "Yes");?>
 	 </select>
 
-	> When set to "Yes" a notification will be sent when the weekly empty trash runs.
+	> When set to "Yes" a notification will be sent when the weekly remove files task runs.
 
 	<input type="submit" name="#default" value="Default">
 	: <input type="submit" name="#apply" value="Apply"><input type="button" value="Done" onclick="done()">
