@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.09">
+<!ENTITY version    "2015.09.09a">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.09.09a
+- Fix: Installation cleanup - /boot/plugins/vfs_recycle/smb-extra.conf settings are lost on reboot.  Select default and then reapply your configuration settings.
+
 ###2015.09.09
 - Add: Excluded files setting.
 - Fix: Modified web page to dynamix standards.
@@ -75,9 +78,6 @@ rm -f /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
 
-# Remove smb-extra.conf so it will updated
-rm -f /boot/config/plugins/&name;/config/smb-extra.conf 2>/dev/null
-
 # Remove rc script.
 rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null
 
@@ -127,7 +127,6 @@ vfs objects = recycle
    recycle:versions = Yes
    recycle:exclude = *.tmp   
    recycle:exclude_dir = .Recycle.Bin
-acl allow execute always = yes
 #vfs_recycle_end
 ]]>
 </INLINE>
