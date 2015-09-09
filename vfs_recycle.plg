@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.08">
+<!ENTITY version    "2015.09.09">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,6 +16,10 @@
 
 <CHANGES>
 ##&name;
+###2015.09.09
+- Add: Excluded files setting.
+- Fix: Modified web page to dynamix standards.
+
 ###2015.09.08
 - Fix: Some plugin organization - image files moved to images/.
 - Add: Changed the weekly age to days instead of minutes.
@@ -57,7 +61,7 @@ the vfs recycle functionality in samba of unRAID.
 Get the vfs_recycle plugin bundle.
 -->
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
-<URL>"https://github.com/dlandon/vfs_recycle/raw/master/&name;-&version;.tgz"</URL>
+<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
 </FILE>
 
 <!--
@@ -71,6 +75,9 @@ rm -f /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
 
+# Remove smb-extra.conf so it will updated
+rm -f /boot/config/plugins/&name;/config/smb-extra.conf 2>/dev/null
+
 # Remove rc script.
 rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null
 
@@ -78,11 +85,11 @@ rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null
 tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins 2>/dev/null
 
 # Adjust script permissions.
-chmod 755 /usr/local/emhttp/plugins/vfs_recycle/scripts/* 2>/dev/null
+chmod 755 /usr/local/emhttp/plugins/&name;/scripts/* 2>/dev/null
 </INLINE>
 </FILE>
 
-<FILE Name="/boot/config/plugins/vfs_recycle/vfs_recycle.cfg">
+<FILE Name="/boot/config/plugins/&name;/&name;.cfg">
 <INLINE>
 <![CDATA[
 # vfs_recycle configuration:
@@ -91,6 +98,7 @@ PARAMETERS="%S"
 USERS=""
 READONLY="yes"
 BROWSE="no"
+EXCLUDE="*.tmp"
 WEEKLYRUN="no"
 AGE="7"
 NOTIFY="no"
@@ -98,7 +106,7 @@ NOTIFY="no"
 </INLINE>
 </FILE>
 
-<FILE Name="/boot/config/plugins/vfs_recycle/config/smb-extra.conf">
+<FILE Name="/boot/config/plugins/&name;/config/smb-extra.conf">
 <INLINE>
 <![CDATA[
 #vfs_recycle_start
@@ -108,16 +116,6 @@ NOTIFY="no"
    read only = yes
    browseable = no
    admin users = 
-
-#vfs config
-# Documentation http://www.samba.org/samba/docs/man/manpages-3/smb.conf.5.html
-# Forum topic http://lime-technology.com/forum/index.php?topic=42729.0
-# %S Samba share name (which in unRaid equals the user share name), eg. Storage
-# %P User share full path, eg /mnt/user/Storage
-# %u Username of the current service, if any
-# %m Machine name of the user who deleted the file
-# To apply changes execute: /etc/rc.d/rc.samba restart
-# If the single custom bin solution is chosen, create the dir manually, and grant it g+rwx permissions
 
 [global]
 vfs objects = recycle
@@ -170,6 +168,7 @@ vfs_recycle_start()
 	CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
 	nohup $CMDLINE > /dev/null 2>&1 &
 	
+	echo "Running" > /var/run/vfs_recycle/vfs_recycle.pid
 	sleep 1
 }
 	
@@ -196,6 +195,8 @@ vfs_recycle_stop()
 		CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
 		nohup $CMDLINE > /dev/null 2>&1 &
 	fi
+
+	rm -f /var/run/vfs_recycle/vfs_recycle.pid 2>/dev/null
 	sleep 1
 }
 
@@ -256,9 +257,10 @@ vfs_recycle_empty()
 
 vfs_recycle_smb()
 {
-	sed -i "/read only =/c\   read only = $READONLY" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 	sed -i "/admin users =/c\   admin users = $USERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/read only =/c\   read only = $READONLY" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 	sed -i "/browseable =/c\   browseable = $BROWSE" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 	sed -i "/recycle:repository =/c\   recycle:repository = /mnt/user/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 }
 
@@ -310,7 +312,7 @@ if [ ! -e /var/run/&name; ]; then
 fi
 
 # Start vfs_recycle if enabled.
-source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
+source /boot/config/plugins/&name;/&name;.cfg
 if [ $SERVICE = "enable" ]; then
 	/etc/rc.d/rc.vfs_plg start
 fi
@@ -331,6 +333,9 @@ rm -f -r /boot/config/plugins/&name; 2>/dev/null
 
 # Remove rc script.
 rm -f /etc/rc.d/rc.vfs_plg 2>/dev/null
+
+# Remove the pid file directory.
+rmdir /var/run/&name; 2>/dev/null
 </INLINE>
 </FILE>
 

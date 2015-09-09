@@ -22,19 +22,16 @@ $vfs_recycle_enabled = no;
 		$vfs_recycle_enabled = yes;
 	}
 	endif;
-$vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2> /dev/null" );
+$vfs_recycle_trashsize = shell_exec( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2> /dev/null" );
 ?>
 
+<script>
+$(function() {
+  showStatus('pid','vfs_recycle/vfs_recycle');
+});
+</script>
+
 <div style="width: 49%; float:left">
-	<div id="title">
-		<span class="left"><img src='/plugins/vfs_recycle/images/device_status.png'>Status:
-			<?if ($vfs_recycle_enabled=="yes"):?>	
-				<span class="green"><b>Enabled</b></span>
-			<?else:?>
-				<span class="red"><b>Disabled</b></span>
-			<?endif;?>	
-		</span>
-	</div>	
 	<div>
 		<blockquote class='inline_help'>
 		<p>Click on the <strong>Trash Can Icon</strong> to browse the deleted files in the Recycle Bin.</p>
@@ -94,9 +91,6 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 	<?endif;?>
 </div>
 <div style="width: 49%; float:right">
-	<div id="title">
-		<span class="left"><img src='/plugins/vfs_recycle/images/new_config.png'></span>Configuration
-	</div>
 	<form markdown="1" name="vfs_recycle_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="vfs_recycle/vfs_recycle.cfg">
 	<input type="hidden" name="#command" value="/plugins/vfs_recycle/scripts/update_vfs_recycle">
@@ -145,6 +139,11 @@ $vfs_recycle_trashsize = shell_exec ( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2
 	 </select>
 
 	> Set to 'Yes' to allow browsing of the RecycleBin share.
+
+	Excluded Files:
+	: <input type="text" name="EXCLUDE" class="narrow" maxlength="100" value="<?=$vfs_recycle_cfg['EXCLUDE'];?>">
+
+	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
 
 	Age Days:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
