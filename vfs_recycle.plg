@@ -17,7 +17,7 @@
 <CHANGES>
 ##&name;
 ###2015.09.09a
-- Fix: Installation cleanup - /boot/plugins/vfs_recycle/smb-extra.conf settings are lost on reboot.  Select default and then reapply your configuration settings.
+- Fix: Installation cleanup - /boot/plugins/vfs_recycle/config/smb-extra.conf settings were lost on reboot.  Select default and then reapply your configuration settings.
 
 ###2015.09.09
 - Add: Excluded files setting.
