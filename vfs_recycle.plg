@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.10">
+<!ENTITY version    "2015.09.09a">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,9 +16,6 @@
 
 <CHANGES>
 ##&name;
-###2015.09.10
-- Fix: Recycle bin is now by share.  Each share has its own Recycle Bin that can be accessed by any User that has access to the share.
-
 ###2015.09.09a
 - Fix: Installation cleanup - /boot/plugins/vfs_recycle/config/smb-extra.conf settings were lost on reboot.  Select default and then reapply your configuration settings.
 
@@ -98,6 +95,9 @@ chmod 755 /usr/local/emhttp/plugins/&name;/scripts/* 2>/dev/null
 # vfs_recycle configuration:
 SERVICE="disable"
 PARAMETERS="%S"
+USERS=""
+READONLY="yes"
+BROWSE="no"
 EXCLUDE="*.tmp"
 WEEKLYRUN="no"
 AGE="7"
@@ -111,9 +111,15 @@ NOTIFY="no"
 <![CDATA[
 #vfs_recycle_start
 #Recycle bin share
+[RecycleBin]
+   path = /mnt/user/.Recycle.Bin
+   read only = yes
+   browseable = no
+   admin users = 
+
 [global]
 vfs objects = recycle
-   recycle:repository = %P/.Recycle.Bin/%S
+   recycle:repository = /mnt/user/.Recycle.Bin/%S
    recycle:directory_mode = 0777
    recycle:keeptree = Yes
    recycle:touch = Yes
@@ -245,13 +251,16 @@ vfs_recycle_disable()
 vfs_recycle_empty()
 {
 	echo "Emptying Recycle Bin..."
-	rm -rf /mnt/user/*/.Recycle.Bin/*
+	rm -rf /mnt/user/.Recycle.Bin/*
 }	
 
 vfs_recycle_smb()
 {
+	sed -i "/admin users =/c\   admin users = $USERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/read only =/c\   read only = $READONLY" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/browseable =/c\   browseable = $BROWSE" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
-	sed -i "/recycle:repository =/c\   recycle:repository = /mnt/user/%S/.Recycle.Bin/%S$PARAMETERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
+	sed -i "/recycle:repository =/c\   recycle:repository = /mnt/user/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/vfs_recycle/config/smb-extra.conf
 }
 
 # read our configuration
