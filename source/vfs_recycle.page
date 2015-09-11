@@ -22,7 +22,8 @@ $vfs_recycle_enabled = no;
 		$vfs_recycle_enabled = yes;
 	}
 	endif;
-$vfs_recycle_trashsize = shell_exec( "du -sh /mnt/user/.Recycle.Bin | cut -f1 2> /dev/null" );
+$vfs_recycle_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin | grep total 2> /dev/null" );
+$vfs_recycle_trashsize = str_replace( 'total', '', $vfs_recycle_trashsize );
 ?>
 
 <script>
@@ -53,9 +54,9 @@ $(function() {
 			</form>
 		</div>			
 		<br />
-		<?if (($files = @scandir('/mnt/user/.Recycle.Bin/')) && count($files) > 2):?>
+		<?if (($files = glob('/mnt/user/*/.Recycle.Bin/' . '*')) && count($files) > 0):?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom;24px">
-				<a href='/Shares/Browse?dir=/mnt/user/.Recycle.Bin'><img src='/plugins/vfs_recycle/images/vfs_full.png'></a><br />
+				<a href='/Shares/Browse?dir=/mnt/user/*/.Recycle.Bin'><img src='/plugins/vfs_recycle/images/vfs_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$vfs_recycle_trashsize?></b>
 				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
 					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_purge">
@@ -118,27 +119,6 @@ $(function() {
 	> + '%P' User share full path, eg /mnt/user/Storage
 	> + '%u' Username of the current service, if any
 	> + '%m' Machine name of the user who deleted the file
-
-	Recycle Bin Users:
-	: <input type="text" name="USERS" class="narrow" maxlength="50" value="<?=$vfs_recycle_cfg['USERS'];?>">
-
-	> List of additional Users that can access the Recycle Bin.  User 'admin' always has access.  Giving a User access will give them total access with read/write access privileges, if allowed, to the Recycle Bin.  Separate Users with a comma or space.
-
-	Recycle Bin read only?
-	: <select name="READONLY" size="1";>
-		<?=mk_option($vfs_recycle_cfg['READONLY'], "no", "No");?>
-		<?=mk_option($vfs_recycle_cfg['READONLY'], "yes", "Yes");?>
-	 </select>
-
-	> Set to "Yes" to set the Recycle Bin to read only.  Set to 'No' for full read/write control.
-
-	Recycle Bin browseable?
-	: <select name="BROWSE" size="1";>
-		<?=mk_option($vfs_recycle_cfg['BROWSE'], "no", "No");?>
-		<?=mk_option($vfs_recycle_cfg['BROWSE'], "yes", "Yes");?>
-	 </select>
-
-	> Set to 'Yes' to allow browsing of the RecycleBin share.
 
 	Excluded Files:
 	: <input type="text" name="EXCLUDE" class="narrow" maxlength="100" value="<?=$vfs_recycle_cfg['EXCLUDE'];?>">

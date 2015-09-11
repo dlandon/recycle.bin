@@ -1,7 +1,7 @@
 #!/bin/bash
 source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
 
-find /mnt/user/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
+find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
 
 logger "Weekly: Files older than $AGE days have been removed" -t"Recycle Bin"
 
