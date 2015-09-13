@@ -22,7 +22,7 @@ $vfs_recycle_enabled = no;
 		$vfs_recycle_enabled = yes;
 	}
 	endif;
-$vfs_recycle_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin | grep total 2> /dev/null" );
+$vfs_recycle_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin 2>/dev/null | grep total 2>/dev/null" );
 $vfs_recycle_trashsize = str_replace( 'total', '', $vfs_recycle_trashsize );
 ?>
 
@@ -35,9 +35,13 @@ $(function() {
 <div style="width: 49%; float:left">
 	<div>
 		<blockquote class='inline_help'>
-		<p>Click on the <strong>Trash Can Icon</strong> to browse the deleted files in the Recycle Bin.</p>
-		<p>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</p>
-		<p>Click on <strong>Empty Trash</strong> to remove all deleted files.</p>
+		<p><strong>These actions apply to User (/mnt/user) shares:</strong><p>
+		<list>
+		<li>Click on the <strong>Trash Can Icon</strong> to browse the deleted files in the Recycle Bin.</li>
+		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
+		<li>Click on <strong>Empty Trash</strong> to remove all deleted files.</li>
+		</list>
+		<p>Flash, disk, and unassigned devices shares are not managed here.  You will have to manage those shares manually by browsing to them at //share/.Recycle.Bin' and deleting files manually.</p>
 		</blockquote>
 	</div>
 	<?if ($vfs_recycle_enabled=="yes"):?>

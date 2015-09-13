@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.11">
+<!ENTITY version    "2015.09.13">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.09.13
+- Added some additional help text.
+
 ###2015.09.11
 - Fix: Recycle bin is now by share.  Each share has its own Recycle Bin that can be accessed by any User that has access to the share.
 
@@ -89,6 +92,14 @@ tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/pl
 
 # Adjust script permissions.
 chmod 755 /usr/local/emhttp/plugins/&name;/scripts/* 2>/dev/null
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " Plugin &name; is installed."
+echo " Copyright 2015, Dan Landon"
+echo " Version: &version;"
+echo "-----------------------------------------------------------"
+echo ""
 </INLINE>
 </FILE>
 
