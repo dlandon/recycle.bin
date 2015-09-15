@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "vfs_recycle">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.13">
+<!ENTITY version    "2015.09.14">
 <!ENTITY category   "Utilities">
 <!ENTITY pluginURL  "https://github.com/dlandon/vfs_recycle/raw/master/vfs_recycle.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.09.14
+- Fix: Remove unused functions from rc.vfs_plg.  Better handle config file.
+
 ###2015.09.13
 - Added some additional help text.
 
@@ -106,7 +109,6 @@ echo ""
 <FILE Name="/boot/config/plugins/&name;/&name;.cfg">
 <INLINE>
 <![CDATA[
-# vfs_recycle configuration:
 SERVICE="disable"
 PARAMETERS="%S"
 EXCLUDE="*.tmp"
@@ -141,7 +143,7 @@ vfs objects = recycle
 <INLINE>
 <![CDATA[
 #!/bin/sh
-# start|stop|restart|enable|disable||empty|smb.
+# start|stop|restart|buttonstart|empty|smb.
 
 vfs_recycle_start()
 {
@@ -223,35 +225,6 @@ vfs_recycle_buttonstart()
 	fi
 }
 
-vfs_write_config()
-{
-	echo "# vfs_recycle configuration:" > /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
-	echo "SERVICE=\"$SERVICE\"" >> /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
-	echo "WEEKLYRUN=\"$WEEKLYRUN\"" >> /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
-	echo "AGE=\"$AGE\"" >> /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
-}
-
-vfs_recycle_change_settings()
-{
-	WEEKLYRUN="$1"
-	AGE="$2"
-}
-
-vfs_recycle_enable()
-{
-	SERVICE=enable
-	vfs_recycle_change_settings $1 $2
-	vfs_write_config
-	vfs_recycle_restart
-}
-
-vfs_recycle_disable()
-{
-	vfs_recycle_stop
-	SERVICE=disable
-	vfs_recycle_change_settings $1 $2
-	vfs_write_config
-}
 
 vfs_recycle_empty()
 {
@@ -278,12 +251,6 @@ case "$1" in
 	'restart')
 		vfs_recycle_restart
 	;;
-	'enable')
-		vfs_recycle_enable $2 $3
-	;;
-	'disable')
-		vfs_recycle_disable $2 $3
-	;;
 	'buttonstart')
 		vfs_recycle_buttonstart
 	;;
@@ -294,7 +261,7 @@ case "$1" in
 		vfs_recycle_smb
 	;;
 	*)
-		echo "usage $0 start|stop|restart|enable|disable|empty|smb"
+		echo "usage $0 start|stop|restart|buttonstart|empty|smb"
 esac
 ]]>
 </INLINE>
