@@ -1,2 +1,3 @@
 #!/bin/bash
+# Stop recycle bin
 /etc/rc.d/rc.recycle.bin stop

@@ -1,5 +1,5 @@
 #!/bin/bash
-source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
+source /boot/config/plugins/recycle.bin/recycle.bin.cfg
 
 find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
 

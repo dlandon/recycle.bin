@@ -1,13 +1,13 @@
 #!/bin/bash
-source /boot/config/plugins/vfs_recycle/vfs_recycle.cfg
+source /boot/config/plugins/recycle.bin/recycle.bin.cfg
 
 # Stop vfs recycle
-/etc/rc.d/rc.vfs_plg stop
+/etc/rc.d/rc.recycle.bin stop
 
 # Update the valid users and parameters in the smb-extra.conf file
-/etc/rc.d/rc.vfs_plg smb
+/etc/rc.d/rc.recycle.bin smb
 
 # Start vfs recycle if service is enabled
 if [ $SERVICE = "enable" ]; then
-	/etc/rc.d/rc.vfs_plg start
+	/etc/rc.d/rc.recycle.bin start
 fi

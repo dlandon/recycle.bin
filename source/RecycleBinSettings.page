@@ -1,6 +1,6 @@
 Menu="Utilities"
 Title="Recycle Bin"
-Icon="vfs_recycle.png"
+Icon="recycle.bin.png"
 ---
 <?PHP
 /* Copyright 2015, Dan Landon.
@@ -15,23 +15,24 @@ Icon="vfs_recycle.png"
 ?>
 
 <?PHP
-$vfs_recycle_cfg = parse_ini_file( "/boot/config/plugins/vfs_recycle/vfs_recycle.cfg" );
-$vfs_recycle_enabled = no;
+$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
+$recycle_bin_enabled = no;
     if (strpos(file_get_contents("/boot/config/smb-extra.conf"),"recycle") !== false):
 	{
-		$vfs_recycle_enabled = yes;
+		$recycle_bin_enabled = yes;
 	}
 	endif;
-$vfs_recycle_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin 2>/dev/null | grep total 2>/dev/null" );
-$vfs_recycle_trashsize = str_replace( 'total', '', $vfs_recycle_trashsize );
+$recycle_bin_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin 2>/dev/null | grep total 2>/dev/null" );
+$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
 ?>
 
 <script>
 $(function() {
-  showStatus('pid','vfs_recycle/vfs_recycle');
+  showStatus('pid','recycle.bin/recycle.bin');
 });
 </script>
 
+<?if ($var['mdState']=="STARTED"):?>
 <div style="width: 49%; float:left">
 	<div>
 		<blockquote class='inline_help'>
@@ -41,75 +42,76 @@ $(function() {
 		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
 		<li>Click on <strong>Empty Trash</strong> to remove all deleted files.</li>
 		</list>
-		<p>Flash, disk, and unassigned devices shares are not managed here.  You will have to manage those shares manually by browsing to them at //share/.Recycle.Bin' and deleting files manually.</p>
+		<p>Flash, disk, and unassigned devices shares are not managed here.  You will have to manage those shares manually by browsing to them at //Tower/Share/.Recycle.Bin' and delete the files manually.</p>
 		</blockquote>
 	</div>
-	<?if ($vfs_recycle_enabled=="yes"):?>
+	<?if ($recycle_bin_enabled=="yes"):?>
 		<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
-			<form name="vfs_recycle_start_stop" method="POST" action="/update.htm" target="progressFrame">
-				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_stop">
+			<form name="recycle_bin_stop" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_stop">
 				<input type="submit" name="runCmd" value="Stop">
 			</form>
 		</div>
 		<div style="position:relative;float:left;width:50%;margin-bottom:24px">
-			<form name="vfs_recycle_restart" method="POST" action="/update.htm" target="progressFrame">
-				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_restart">
+			<form name="recycle_bin_restart" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_restart">
 				<input type="submit" name="runCmd" value="Restart">
 			</form>
 		</div>			
-		<br />
 		<?if (($files = glob('/mnt/user/*/.Recycle.Bin/' . '*')) && count($files) > 0):?>
-			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom;24px">
-				<a href='/Shares/Browse?dir=/mnt/user/*/.Recycle.Bin'><img src='/plugins/vfs_recycle/images/vfs_full.png'></a><br />
-				<b>Recycle Bin Total Size: <?=$vfs_recycle_trashsize?></b>
-				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_purge">
+			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
+				<a href='/Shares/Browse?dir=/mnt/user/*/.Recycle.Bin'><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
+				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
+				<form name="recycle_bin_remove_aged_files" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_purge">
 					<input type="submit" name="runCmd" value="Remove Aged Files">
 				</form>
-				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
+				<form name="recycle_bin_empty_trash" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_empty">
 					<input type="submit" name="runCmd" value="Empty Trash">
 				</form>
 			</div>
 		<?else:?>
-			<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:24px">
-				<img src='/plugins/vfs_recycle/images/vfs_empty.png'><br />
+			<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:35px">
+				<img src='/plugins/recycle.bin/images/recycle.bin_empty.png'><br />
 				<b>Recycle Bin is empty</b>
-				<form name="vfs_recycle_full" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_purge">
+				<form name="recycle_bin_remove_aged_files" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_purge">
 					<input type="submit" name="runCmd" value="Remove Aged Files" disabled>
 				</form>
-				<form name="vfs_recycle_empty" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_empty">
+				<form name="recycle_bin_empty_trash" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_empty">
 					<input type="submit" name="runCmd" value="Empty Trash" disabled>
 				</form>
 			</div>
 		<?endif;?>
+			<div style="position:relative;float:right;width:100%;text-align:center">
+			<input type="button" value="Refresh" onclick="refresh()">
+		</div>
 	<?else:?>
-		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
-			<form name="vfs_recycle_start" method="POST" action="/update.htm" target="progressFrame">
-				<input type="hidden" name="cmd" value="/plugins/vfs_recycle/scripts/vfs_plg_buttonstart">
+		<div style="position:relative;float:left;width:100%;text-align:center">
+			<form name="recycle_bin_start" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_buttonstart">
 				<input type="submit" name="runCmd" value="Start">
 			</form>
 		</div>
-		<br />
 	<?endif;?>
 </div>
 <div style="width: 49%; float:right">
-	<form markdown="1" name="vfs_recycle_settings" method="POST" action="/update.php" target="progressFrame">
-	<input type="hidden" name="#file" value="vfs_recycle/vfs_recycle.cfg">
-	<input type="hidden" name="#command" value="/plugins/vfs_recycle/scripts/update_vfs_recycle">
+	<form markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
+	<input type="hidden" name="#file" value="recycle.bin/recycle.bin.cfg">
+	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/recycle.bin_update">
 
 	Enable Recycle Bin?
 	: <select name="SERVICE" size="1">
-		<?=mk_option($vfs_recycle_cfg['SERVICE'], "disable", "No");?>
-		<?=mk_option($vfs_recycle_cfg['SERVICE'], "enable", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['SERVICE'], "disable", "No");?>
+		<?=mk_option($recycle_bin_cfg['SERVICE'], "enable", "Yes");?>
 	  </select>
 
 	> Set to 'Yes' to enable the Recycle Bin when the server is started.
 
 	Recycle Bin parameters:
-	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$vfs_recycle_cfg['PARAMETERS'];?>">
+	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">
 
 	> Additional parameters for Recycle Bin.  The following are some options you can set to control the file structure of the deleted files.
 	> Enter the parameters in a list with no spaces or commas between them.
@@ -125,27 +127,27 @@ $(function() {
 	> + '%m' Machine name of the user who deleted the file
 
 	Excluded Files:
-	: <input type="text" name="EXCLUDE" class="narrow" maxlength="100" value="<?=$vfs_recycle_cfg['EXCLUDE'];?>">
+	: <input type="text" name="EXCLUDE" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE'];?>">
 
 	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
 
 	Age Days:
-	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$vfs_recycle_cfg['AGE'];?>">
+	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
 
 	> Any files older than the set number of days are removed when files are removed weekly or when the 'Remove Aged Files' button is clicked.
 
 	Remove Files once a week?
 	: <select name="WEEKLYRUN" size="1";>
-		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "no", "No");?>
-		<?=mk_option($vfs_recycle_cfg['WEEKLYRUN'], "yes", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['WEEKLYRUN'], "no", "No");?>
+		<?=mk_option($recycle_bin_cfg['WEEKLYRUN'], "yes", "Yes");?>
 	 </select>
 
 	> When set to 'Yes' files older that 'Age Days' will be removed every week at 3 AM on Sunday.
 
 	Weekly Remove Files Notification?
 	: <select name="NOTIFY" size="1";>
-		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "no", "No");?>
-		<?=mk_option($vfs_recycle_cfg['NOTIFY'], "yes", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['NOTIFY'], "no", "No");?>
+		<?=mk_option($recycle_bin_cfg['NOTIFY'], "yes", "Yes");?>
 	 </select>
 
 	> When set to "Yes" a notification will be sent when the weekly remove files task runs.
@@ -154,3 +156,6 @@ $(function() {
 	: <input type="submit" name="#apply" value="Apply"><input type="button" value="Done" onclick="done()">
 	</form>
 </div>
+<?else:?>
+	<p>Array is stopped!</p>
+<?endif;?>

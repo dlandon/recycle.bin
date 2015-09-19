@@ -1,5 +1,5 @@
 #!/bin/bash
-# Empty vfs_recycle bin
-/etc/rc.d/rc.vfs_plg empty
+# Empty recycle bin
+/etc/rc.d/rc.recycle.bin empty
 
 logger "Recycle Bin has been emptied" -t"Recycle Bin"

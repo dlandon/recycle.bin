@@ -1,3 +1,0 @@
-#!/bin/bash
-# Stop vfs_recycle bin
-/etc/rc.d/rc.vfs_plg stop
