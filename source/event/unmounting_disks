@@ -1,2 +1,2 @@
 #!/bin/bash
-/etc/rc.d/rc.recycle.bin stop
+/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop

@@ -1,5 +1,5 @@
 #!/bin/bash
 # Empty recycle bin
-/etc/rc.d/rc.recycle.bin empty
+/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin empty
 
 logger "Recycle Bin has been emptied" -t"Recycle Bin"

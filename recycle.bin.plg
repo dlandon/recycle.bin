@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.19a">
+<!ENTITY version    "2015.09.19b">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.09.19b
+- Add: Move /etc/rc.d/rc.recycle.bin to recycle.bin/scripts/rc.recycle.bin.
+
 ###2015.09.19a
 - Add: "Removing aged files..." message.
 
@@ -100,9 +103,6 @@ rm -f /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
 
-# Remove rc script.
-rm -f /etc/rc.d/rc.recycle.bin 2>/dev/null
-
 # Install the 'bundle'.
 tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins 2>/dev/null
 
@@ -152,133 +152,6 @@ vfs objects = recycle
 </INLINE>
 </FILE>
 
-<FILE Name="/etc/rc.d/rc.recycle.bin" Mode="0755">
-<INLINE>
-<![CDATA[
-#!/bin/sh
-# start|stop|restart|buttonstart|empty|smb.
-
-vfs_recycle_start()
-{
-	echo "Starting Recycle Bin..."
-
-	# if smb-extras.conf is not found, create it
-	if [ ! -e "/boot/config/smb-extra.conf" ]; then
-		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-	elif [[ `cat /boot/config/smb-extra.conf | grep "vfs objects"` == '' ]]; then
-		if [ -e "/boot/config/smb-extra.conf" ]; then
-			sed '/#vfs_recycle_start/,/#vfs_recycle_end/{//d}' /boot/config/smb-extra.conf >> smb.tmp
-			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-			rm smb.tmp
-			printf "\n" >> /boot/config/smb-extra.conf
-			cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-		fi
-	fi
-	#If weekly run is enabled, add cron job
-	if [[ $WEEKLYRUN = "yes" ]]; then
-		crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/recycle.bin_weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
-	else
-		if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-			crontab -l > /tmp/file; sed '/# Purge recycle bin/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
-		fi
-	fi
-
-	# Restart samba
-	CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
-	nohup $CMDLINE > /dev/null 2>&1 &
-	
-	echo "Running" > /var/run/recycle.bin/recycle.bin.pid
-	sleep 1
-}
-	
-vfs_recycle_stop()
-{
-	echo "Stopping Recycle Bin..."
-
-	# Do nothing if vfs_recycle is not added
-	if [[ `cat /boot/config/smb-extra.conf | grep "vfs objects"` == '' ]]; then
-		echo "Recycle Bin not added to samba..."
-	else
-		echo "Disabling Recycle Bin..."
-		sleep 1
-		if [[ $WEEKLYRUN = "yes" ]]; then
-			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-				crontab -l > /tmp/file; sed '/# Purge recycle bin/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
-			fi
-		fi
-		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
-		printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-		rm smb.tmp
-
-		# Restart samba
-		CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
-		nohup $CMDLINE > /dev/null 2>&1 &
-	fi
-
-	rm -f /var/run/recycle.bin/recycle.bin.pid 2>/dev/null
-	sleep 1
-}
-
-vfs_recycle_restart()
-{
-	vfs_recycle_stop
-	sleep 5
-	vfs_recycle_start
-}
-
-vfs_recycle_buttonstart()
-{
-	cd /
-	echo "Enabling Recycle Bin..."
-	if [ -f $CONFIG ]; then
-		sed -i "s/"disable"/"enable/"" $CONFIG
-		sleep 3
-		vfs_recycle_start
-	fi
-}
-
-vfs_recycle_empty()
-{
-	echo "Emptying Recycle Bin..."
-	rm -rf /mnt/user/*/.Recycle.Bin/*
-}	
-
-vfs_recycle_smb()
-{
-	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/recycle.bin/config/smb-extra.conf
-	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
-}
-
-# read our configuration
-CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
-source $CONFIG
-
-case "$1" in
-	'start')
-		vfs_recycle_start
-	;;
-	'stop')
-		vfs_recycle_stop
-	;;
-	'restart')
-		vfs_recycle_restart
-	;;
-	'buttonstart')
-		vfs_recycle_buttonstart
-	;;
-	'empty')
-		vfs_recycle_empty
-	;;
-	'smb')
-		vfs_recycle_smb
-	;;
-	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|smb"
-esac
-]]>
-</INLINE>
-</FILE>
-
 <!--
 The 'post-install' script.
 -->
@@ -294,7 +167,7 @@ fi
 # Start vfs_recycle if enabled.
 source /boot/config/plugins/&name;/&name;.cfg
 if [ $SERVICE = "enable" ]; then
-	/etc/rc.d/rc.recycle.bin start
+	/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin start
 fi
 </INLINE>
 </FILE>
@@ -305,14 +178,11 @@ The 'remove' script.
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 # Stop recycle bin.
-/etc/rc.d/rc.recycle.bin stop
+/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop
 
 # Remove all plugin files.
 rm -f -r /usr/local/emhttp/plugins/&name; 2>/dev/null
 rm -f -r /boot/config/plugins/&name; 2>/dev/null
-
-# Remove rc script.
-rm -f /etc/rc.d/rc.recycle.bin 2>/dev/null
 
 # Remove the pid file directory.
 rmdir /var/run/&name; 2>/dev/null
