@@ -1,3 +1,0 @@
-#!/bin/bash
-# Buttonstart recycle bin
-/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin buttonstart
