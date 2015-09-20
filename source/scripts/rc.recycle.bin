@@ -100,7 +100,7 @@ vfs_recycle_update()
 	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 
-	# Start vfs recycle if service is enabled
+	# Start vfs recycle if service is enabled and not already running
 	if [ $SERVICE = "enable" ]; then
 		vfs_recycle_start
 	fi
