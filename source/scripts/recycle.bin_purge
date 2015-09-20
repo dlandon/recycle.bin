@@ -1,8 +1,0 @@
-#!/bin/bash
-echo "Removing aged files..."
-
-source /boot/config/plugins/recycle.bin/recycle.bin.cfg
-
-find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
-
-logger "User: Files older than $AGE days have been removed" -t"Recycle Bin"

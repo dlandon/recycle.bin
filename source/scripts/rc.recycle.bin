@@ -1,5 +1,5 @@
 #!/bin/sh
-# start|stop|restart|buttonstart|empty|smb.
+# start|stop|restart|buttonstart|empty|update|purge|weekly.
 
 vfs_recycle_start()
 {
@@ -19,7 +19,7 @@ vfs_recycle_start()
 	fi
 	#If weekly run is enabled, add cron job
 	if [[ $WEEKLYRUN = "yes" ]]; then
-		crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/recycle.bin_weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
+		crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
 	else
 		if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
 			crontab -l > /tmp/file; sed '/# Purge recycle bin/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
@@ -84,12 +84,42 @@ vfs_recycle_empty()
 {
 	echo "Emptying Recycle Bin..."
 	rm -rf /mnt/user/*/.Recycle.Bin/*
+
+	logger "Recycle Bin has been emptied" -t"Recycle Bin"
 }	
 
-vfs_recycle_smb()
+vfs_recycle_update()
 {
+	# Stop vfs recycle
+	vfs_recycle_stop
+
 	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
+
+	# Start vfs recycle if service is enabled
+	if [ $SERVICE = "enable" ]; then
+		vfs_recycle_start
+	fi
+}
+
+vfs_recycle_purge()
+{
+	echo "Removing aged files..."
+
+	find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
+
+	logger "User: Files older than $AGE days have been removed" -t"Recycle Bin"
+}
+
+vfs_recycle_weekly()
+{
+	find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
+
+	logger "Weekly: Files older than $AGE days have been removed" -t"Recycle Bin"
+
+	if [ $NOTIFY = "yes" ]; then
+		/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Weekly: Files older than $AGE days have been removed" -i "normal"
+	fi
 }
 
 # read our configuration
@@ -112,9 +142,15 @@ case "$1" in
 	'empty')
 		vfs_recycle_empty
 	;;
-	'smb')
-		vfs_recycle_smb
+	'update')
+		vfs_recycle_update
+	;;
+	'purge')
+		vfs_recycle_purge
+	;;
+	'weekly')
+		vfs_recycle_weekly
 	;;
 	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|smb"
+		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|weekly"
 esac

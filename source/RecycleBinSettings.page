@@ -47,14 +47,14 @@ $(function() {
 	</div>
 	<?if ($recycle_bin_enabled=="yes"):?>
 		<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
-            <form name="start_openvpnserver" method="POST" action="/update.php" target="progressFrame">
+            <form name="stop_recycle_bin" method="POST" action="/update.php" target="progressFrame">
                 <input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
                 <input type="hidden" name="#arg[1]" value="stop">
                 <input type="submit" value="Stop">
             </form>
 		</div>
 		<div style="position:relative;float:left;width:50%;margin-bottom:24px">
-            <form name="start_openvpnserver" method="POST" action="/update.php" target="progressFrame">
+            <form name="restart_recycle_bin" method="POST" action="/update.php" target="progressFrame">
                 <input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
                 <input type="hidden" name="#arg[1]" value="restart">
                 <input type="submit" value="Restart">
@@ -64,11 +64,12 @@ $(function() {
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
 				<a href='/Shares/Browse?dir=/mnt/user/*/.Recycle.Bin'><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
-				<form name="recycle_bin_remove_aged_files" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_purge">
-					<input type="submit" name="runCmd" value="Remove Aged Files">
+				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
+					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+					<input type="hidden" name="#arg[1]" value="purge">
+					<input type="submit" value="Remove Aged Files">
 				</form>
-				<form name="start_openvpnserver" method="POST" action="/update.php" target="progressFrame">
+				<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 					<input type="hidden" name="#arg[1]" value="empty">
 					<input type="submit" value="Empty Trash">
@@ -78,11 +79,12 @@ $(function() {
 			<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:35px">
 				<img src='/plugins/recycle.bin/images/recycle.bin_empty.png'><br />
 				<b>Recycle Bin is empty</b>
-				<form name="recycle_bin_remove_aged_files" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/plugins/recycle.bin/scripts/recycle.bin_purge">
-					<input type="submit" name="runCmd" value="Remove Aged Files" disabled>
+				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
+					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+					<input type="hidden" name="#arg[1]" value="purge">
+					<input type="submit" value="Remove Aged Files" disabled>
 				</form>
-				<form name="start_openvpnserver" method="POST" action="/update.php" target="progressFrame">
+				<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 					<input type="hidden" name="#arg[1]" value="empty">
 					<input type="submit" value="Empty Trash" disabled>
@@ -94,10 +96,10 @@ $(function() {
 		</div>
 	<?else:?>
 		<div style="position:relative;float:left;width:100%;text-align:center">
-            <form name="start_openvpnserver" method="POST" action="/update.php" target="progressFrame">
-                <input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
-                <input type="hidden" name="#arg[1]" value="buttonstart">
-                <input type="submit" value="Start">
+            <form name="start_recycle_bin" method="POST" action="/update.php" target="progressFrame">
+				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+				<input type="hidden" name="#arg[1]" value="buttonstart">
+				<input type="submit" value="Start">
             </form>
 		</div>
 	<?endif;?>
@@ -105,7 +107,8 @@ $(function() {
 <div style="width: 49%; float:right">
 	<form markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="recycle.bin/recycle.bin.cfg">
-	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/recycle.bin_update">
+	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+	<input type="hidden" name="#arg[1]" value="update">
 
 	Enable Recycle Bin?
 	: <select name="SERVICE" size="1">

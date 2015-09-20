@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.19c">
+<!ENTITY version    "2015.09.19d">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,7 +16,7 @@
 
 <CHANGES>
 ##&name;
-###2015.09.19c
+###2015.09.19d
 - Add: Move /etc/rc.d/rc.recycle.bin to recycle.bin/scripts/rc.recycle.bin.
 
 ###2015.09.19a
