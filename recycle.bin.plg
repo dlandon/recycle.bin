@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.19d">
+<!ENTITY version    "2015.09.19e">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,8 +16,9 @@
 
 <CHANGES>
 ##&name;
-###2015.09.19d
+###2015.09.19e
 - Add: Move /etc/rc.d/rc.recycle.bin to recycle.bin/scripts/rc.recycle.bin.
+- Fix: More script work.
 
 ###2015.09.19a
 - Add: "Removing aged files..." message.
@@ -164,7 +165,7 @@ if [ ! -e /var/run/&name; ]; then
 	chmod 0755 /var/run/&name;
 fi
 
-# Start vfs_recycle if enabled.
+# Start vfs_recycle if enabled and not running.
 source /boot/config/plugins/&name;/&name;.cfg
 if [ $SERVICE = "enable" ]; then
 	/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin start

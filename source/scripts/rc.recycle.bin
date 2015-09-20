@@ -3,6 +3,7 @@
 
 vfs_recycle_start()
 {
+if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
 	echo "Starting Recycle Bin..."
 
 	# if smb-extras.conf is not found, create it
@@ -32,6 +33,9 @@ vfs_recycle_start()
 	
 	echo "Running" > /var/run/recycle.bin/recycle.bin.pid
 	sleep 1
+else
+	echo "Recycle Bin is already running..."
+fi
 }
 	
 vfs_recycle_stop()
