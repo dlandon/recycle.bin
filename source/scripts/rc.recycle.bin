@@ -23,12 +23,12 @@ if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
 		crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
 	else
 		if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-			crontab -l > /tmp/file; sed '/# Purge recycle bin/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
+			crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
 		fi
 	fi
 
 	# Restart samba
-	CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
+	CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
 	nohup $CMDLINE > /dev/null 2>&1 &
 	
 	echo "Running" > /var/run/recycle.bin/recycle.bin.pid
@@ -50,7 +50,7 @@ vfs_recycle_stop()
 		sleep 1
 		if [[ $WEEKLYRUN = "yes" ]]; then
 			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-				crontab -l > /tmp/file; sed '/# Purge recycle bin/,/\/mnt\/user\/.Recycle.Bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
+				crontab -l > /tmp/file; sed '/# Purge recycle bin/\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin,/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
 			fi
 		fi
 		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
@@ -58,7 +58,7 @@ vfs_recycle_stop()
 		rm smb.tmp
 
 		# Restart samba
-		CMDLINE="sudo /etc/rc.d/rc.samba restart > /dev/null 2>&1"
+		CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
 		nohup $CMDLINE > /dev/null 2>&1 &
 	fi
 
