@@ -3,42 +3,40 @@
 
 vfs_recycle_start()
 {
-if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
-	echo "Starting Recycle Bin..."
+	# Is vfs_recycle running?
+	if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
+		echo "Starting Recycle Bin..."
 
-	#Add vfs_recycle to smb-extra.conf.
-	printf "\n" >> /boot/config/smb-extra.conf
-	cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
+		# Add vfs_recycle to smb-extra.conf.
+		printf "\n" >> /boot/config/smb-extra.conf
+		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
-	#If weekly run is enabled, add cron job
-	if [[ $WEEKLYRUN = "yes" ]]; then
-		crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
-	else
-		if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-			crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
+		# If weekly run is enabled, add cron job
+		if [[ $WEEKLYRUN = "yes" ]]; then
+			crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
+		else
+			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
+				crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
+			fi
 		fi
-	fi
 
-	# Restart samba
-	CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
-	nohup $CMDLINE > /dev/null 2>&1 &
+		# Restart samba
+		CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
+		nohup $CMDLINE > /dev/null 2>&1 &
 	
-	echo "Running" > /var/run/recycle.bin/recycle.bin.pid
-	sleep 1
-else
-	echo "Recycle Bin is already running..."
-fi
+		echo "Running" > /var/run/recycle.bin/recycle.bin.pid
+		sleep 1
+	else
+		echo "Recycle Bin is already running..."
+	fi
 }
 	
 vfs_recycle_stop()
 {
-	echo "Stopping Recycle Bin..."
+	# Is vfs_recycle running?
+	if [ -e /var/run/recycle.bin/recycle.bin.pid ]; then
+		echo "Stopping Recycle Bin..."
 
-	# Do nothing if vfs_recycle is not added
-	if [[ `cat /boot/config/smb-extra.conf | grep "vfs objects"` == '' ]]; then
-		echo "Recycle Bin not added to samba..."
-	else
-		echo "Disabling Recycle Bin..."
 		sleep 1
 		if [[ $WEEKLYRUN = "yes" ]]; then
 			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
@@ -52,10 +50,12 @@ vfs_recycle_stop()
 		# Restart samba
 		CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
 		nohup $CMDLINE > /dev/null 2>&1 &
-	fi
 
-	rm -f /var/run/recycle.bin/recycle.bin.pid 2>/dev/null
-	sleep 1
+		rm -f /var/run/recycle.bin/recycle.bin.pid 2>/dev/null
+		sleep 1
+	else
+		echo "Recycle Bin is not running..."
+	fi
 }
 
 vfs_recycle_restart()
