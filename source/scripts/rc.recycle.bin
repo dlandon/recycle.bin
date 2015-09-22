@@ -6,18 +6,9 @@ vfs_recycle_start()
 if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
 	echo "Starting Recycle Bin..."
 
-	# if smb-extras.conf is not found, create it
-	if [ ! -e "/boot/config/smb-extra.conf" ]; then
-		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-	elif [[ `cat /boot/config/smb-extra.conf | grep "vfs objects"` == '' ]]; then
-		if [ -e "/boot/config/smb-extra.conf" ]; then
-			sed '/#vfs_recycle_start/,/#vfs_recycle_end/{//d}' /boot/config/smb-extra.conf >> smb.tmp
-			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-			rm smb.tmp
-			printf "\n" >> /boot/config/smb-extra.conf
-			cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-		fi
-	fi
+	printf "\n" >> /boot/config/smb-extra.conf
+	cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
+
 	#If weekly run is enabled, add cron job
 	if [[ $WEEKLYRUN = "yes" ]]; then
 		crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
