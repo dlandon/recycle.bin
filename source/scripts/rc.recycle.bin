@@ -6,6 +6,7 @@ vfs_recycle_start()
 if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
 	echo "Starting Recycle Bin..."
 
+	#Add vfs_recycle to smb-extra.conf.
 	printf "\n" >> /boot/config/smb-extra.conf
 	cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
@@ -41,7 +42,7 @@ vfs_recycle_stop()
 		sleep 1
 		if [[ $WEEKLYRUN = "yes" ]]; then
 			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-				crontab -l > /tmp/file; sed '/# Purge recycle bin/\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin,/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
+				crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
 			fi
 		fi
 		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
