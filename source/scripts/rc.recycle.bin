@@ -3,6 +3,8 @@
 
 vfs_recycle_start()
 {
+	logger "Starting Recycle Bin" -t"$PROG_NAME"
+
 	# Is vfs_recycle running?
 	if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
 		echo "Starting Recycle Bin..."
@@ -21,23 +23,25 @@ vfs_recycle_start()
 		fi
 
 		# Restart samba
-		CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
-		nohup $CMDLINE > /dev/null 2>&1 &
+		/etc/rc.d/rc.samba restart > /dev/null 2>&1
 	
 		echo "Running" > /var/run/recycle.bin/recycle.bin.pid
-		sleep 1
+
+		logger "Recycle Bin started" -t"$PROG_NAME"
 	else
 		echo "Recycle Bin is already running..."
+		logger "Recycle Bin is already running" -t"$PROG_NAME"
 	fi
 }
 	
 vfs_recycle_stop()
 {
+	logger "Stopping Recycle Bin" -t"$PROG_NAME"
+
 	# Is vfs_recycle running?
 	if [ -e /var/run/recycle.bin/recycle.bin.pid ]; then
 		echo "Stopping Recycle Bin..."
 
-		sleep 1
 		if [[ $WEEKLYRUN = "yes" ]]; then
 			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
 				crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
@@ -48,20 +52,20 @@ vfs_recycle_stop()
 		rm smb.tmp
 
 		# Restart samba
-		CMDLINE="/etc/rc.d/rc.samba restart > /dev/null 2>&1"
-		nohup $CMDLINE > /dev/null 2>&1 &
+		/etc/rc.d/rc.samba restart > /dev/null 2>&1
 
 		rm -f /var/run/recycle.bin/recycle.bin.pid 2>/dev/null
-		sleep 1
+
+		logger "Recycle Bin stopped" -t"$PROG_NAME"
 	else
 		echo "Recycle Bin is not running..."
+		logger "Recycle Bin is not running" -t"$PROG_NAME"
 	fi
 }
 
 vfs_recycle_restart()
 {
 	vfs_recycle_stop
-	sleep 5
 	vfs_recycle_start
 }
 
@@ -71,18 +75,9 @@ vfs_recycle_buttonstart()
 	echo "Enabling Recycle Bin..."
 	if [ -f $CONFIG ]; then
 		sed -i "s/"disable"/"enable/"" $CONFIG
-		sleep 3
 		vfs_recycle_start
 	fi
 }
-
-vfs_recycle_empty()
-{
-	echo "Emptying Recycle Bin..."
-	rm -rf /mnt/user/*/.Recycle.Bin/*
-
-	logger "Recycle Bin has been emptied" -t"Recycle Bin"
-}	
 
 vfs_recycle_update()
 {
@@ -98,29 +93,54 @@ vfs_recycle_update()
 	fi
 }
 
+vfs_recycle_empty()
+{
+	echo "Emptying Recycle Bin..."
+
+	rm -rf /mnt/user/*/.Recycle.Bin/*
+	rm -rf /mnt/disk*/.Recycle.Bin/*
+	rm -rf /mnt/disks/*/.Recycle.Bin/*
+	rm -rf /mnt/cache/.Recycle.Bin/*
+	rm -rf /boot/.Recycle.Bin/*
+
+	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
+}	
+
+vfs_recycle_remove()
+{
+	# Remove aged files.
+	find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/disk*/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/disks/*/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/cache/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /boot/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
+}
+
 vfs_recycle_purge()
 {
 	echo "Removing aged files..."
 
-	find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
+	vfs_recycle_remove
 
-	logger "User: Files older than $AGE days have been removed" -t"Recycle Bin"
+	logger "User: Files older than $AGE days have been removed" -t"$PROG_NAME"
 }
 
 vfs_recycle_weekly()
 {
-	find /mnt/user/*/.Recycle.Bin/* -mtime +$AGE -delete 2>/dev/null
+	vfs_recycle_remove
 
-	logger "Weekly: Files older than $AGE days have been removed" -t"Recycle Bin"
+	logger "Weekly: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
 	if [ $NOTIFY = "yes" ]; then
 		/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Weekly: Files older than $AGE days have been removed" -i "normal"
 	fi
 }
 
+
 # read our configuration
 CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
 source $CONFIG
+PROG_NAME="Recycle Bin"
 
 case "$1" in
 	'start')

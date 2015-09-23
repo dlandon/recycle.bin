@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.22">
+<!ENTITY version    "2015.09.23">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,6 +16,11 @@
 
 <CHANGES>
 ##&name;
+###2015.09.23
+- Add: Flash, disk, and unassigned devices shares are now managed in the recycle bin.
+- Fix: Change purge procedure to handle hidden files and directories.
+- FIx: More rc.recycle.bin modifications.
+
 ###2015.09.22
 - Fix: rc.recycle.bin script issues.
 
@@ -98,7 +103,7 @@ The 'pre-install' script.
 <FILE Run="/bin/bash">
 <INLINE>
 # Remove emhttp files so we can re-install.
-rm -f -r /usr/local/emhttp/plugins/&name;/* 2>/dev/null
+rm -rf /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
@@ -194,13 +199,12 @@ The 'remove' script.
 # Stop recycle bin.
 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop
 
-
 # Remove the pid file directory.
 rmdir /var/run/&name; 2>/dev/null
 
 # Remove all plugin files.
-rm -f -r /usr/local/emhttp/plugins/&name; 2>/dev/null
-rm -f -r /boot/config/plugins/&name; 2>/dev/null
+rm -rf /boot/config/plugins/&name; 2>/dev/null
+rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
 </INLINE>
 </FILE>
 
