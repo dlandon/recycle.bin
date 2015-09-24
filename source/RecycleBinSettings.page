@@ -22,7 +22,7 @@ $recycle_bin_enabled = no;
 		$recycle_bin_enabled = yes;
 	}
 	endif;
-$recycle_bin_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin /mnt/disk*/.Recycle.Bin /mnt/disks/*/.Recycle.Bin /mnt/cache/.Recycle.Bin /boot/.Recycle.Bin 2>/dev/null | grep total 2>/dev/null" );
+$recycle_bin_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
 ?>
 
@@ -36,7 +36,7 @@ $(function() {
 <div style="width: 49%; float:left">
 	<div>
 		<blockquote class='inline_help'>
-		<p><strong>These actions apply to all shares:</strong><p>
+		<p>These actions apply to all shares:<p>
 		<list>
 		<li>Click on the <strong>Share Text</strong> to browse the deleted files in the respective Recycle Bin.</li>
 		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
@@ -135,8 +135,8 @@ $(function() {
 	> Hint: Use the '/' for more control of the directory structure in the Recycle Bin.
 	> For example '%m/%S' will organize the deleted files by the machine name that deleted the file and then the share name structure.
 	>
-	> + '%S' Samba share name (which in unRaid equals the user share name), eg. Storage
-	> + '%P' User share full path, eg /mnt/user/Storage
+	> + '%S' Samba share name (which in unRaid equals the share name), eg. Storage
+	> + '%P' User share full path, eg /mnt/user/Storage, /mnt/disk1, /mnt/disks/unassigned_device, /flash
 	> + '%u' Username of the current service, if any
 	> + '%m' Machine name of the user who deleted the file
 

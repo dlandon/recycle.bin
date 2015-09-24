@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+# Usage:
 # start|stop|restart|buttonstart|empty|update|purge|weekly.
+#
 
 vfs_recycle_start()
 {
@@ -97,6 +99,7 @@ vfs_recycle_empty()
 {
 	echo "Emptying Recycle Bin..."
 
+	# Remove deleted files from all shares.
 	rm -rf /mnt/user/*/.Recycle.Bin/*
 	rm -rf /mnt/disk*/.Recycle.Bin/*
 	rm -rf /mnt/disks/*/.Recycle.Bin/*

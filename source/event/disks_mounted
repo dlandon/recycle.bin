@@ -1,4 +1,5 @@
 #!/bin/bash
+# Start recycle bin if it is enabled.
 source /boot/config/plugins/recycle.bin/recycle.bin.cfg
 
 if [ $SERVICE = enable ]; then
