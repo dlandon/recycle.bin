@@ -24,6 +24,7 @@ $recycle_bin_enabled = no;
 	endif;
 $recycle_bin_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
+shell_exec ( "/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse" );
 ?>
 
 <script>
@@ -38,7 +39,7 @@ $(function() {
 		<blockquote class='inline_help'>
 		<p>These actions apply to all shares:<p>
 		<list>
-		<li>Click on the <strong>Share Text</strong> to browse the deleted files in the respective Recycle Bin.</li>
+		<li>Click on the <strong>Trash Can Icon</strong> to browse the deleted files Recycle Bin.</li>
 		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
 		<li>Click on <strong>Empty Trash</strong> to remove all deleted files.</li>
 		</list>
@@ -61,15 +62,8 @@ $(function() {
 		</div>
 		<?if (($files = count(glob('/mnt/user/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disk*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disks/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/cache/.Recycle.Bin/' . '*')) + count(glob('/boot/.Recycle.Bin/' . '*'))) && $files > 0):?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
-				<img src='/plugins/recycle.bin/images/recycle.bin_full.png'><br />
+				<a href='Browse?dir=/plugins/recycle.bin/RecycleBin'><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
-				<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:12px">
-					<a href='/Shares/Browse?dir=/mnt/user/*/.Recycle.Bin'><u>User</u></a>
-					<a href='/Shares/Browse?dir=/mnt/disk*/.Recycle.Bin'>&nbsp;&nbsp;<u>Disk</u></a>
-					<a href='/Shares/Browse?dir=/mnt/disks/*/.Recycle.Bin'>&nbsp;&nbsp;<u>Unassigned</u></a>
-					<a href='/Shares/Browse?dir=/mnt/cache/.Recycle.Bin'>&nbsp;&nbsp;<u>Cache</u></a>
-					<a href='/Shares/Browse?dir=/boot/.Recycle.Bin'>&nbsp;&nbsp;<u>Flash</u></a>
-				</div>
 				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 					<input type="hidden" name="#arg[1]" value="purge">

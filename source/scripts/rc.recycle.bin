@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage:
-# start|stop|restart|buttonstart|empty|update|purge|weekly.
+# start|stop|restart|buttonstart|empty|update|purge|weekly|browse.
 #
 
 vfs_recycle_start()
@@ -139,6 +139,42 @@ vfs_recycle_weekly()
 	fi
 }
 
+vfs_recycle_browse()
+{
+	# Remove browsing links.
+	rm -rf /usr/local/emhttp/plugins/recycle.bin/RecycleBin
+
+	# Set up browsing links.
+	cd /usr/local/emhttp/plugins/recycle.bin
+	mkdir RecycleBin
+	mkdir RecycleBin/Disk
+	mkdir RecycleBin/User
+	mkdir RecycleBin/Unassigned
+
+	# Disk, unassigned, and cache links.
+	DIRS=`ls -l /mnt/`
+	for DIR in $DIRS
+	do
+		if [ "${DIR}" = "disks" ]; then
+			ls /mnt/disks | while read line
+			do
+				ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+			done
+		elif [ "${DIR}" = "cache" ]; then
+			ln -sf /mnt/cache/.Recycle.Bin RecycleBin/Cache
+		elif [ "${DIR}" = "user" ]; then
+			ls /mnt/user | while read line
+			do
+				ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/User/"${line}"
+			done
+		elif [ "${DIR}" != "user0" ]; then
+			ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
+		fi
+	done
+
+	# Flash link.
+	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
+}
 
 # read our configuration
 CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
@@ -170,6 +206,9 @@ case "$1" in
 	'weekly')
 		vfs_recycle_weekly
 	;;
+	'browse')
+		vfs_recycle_browse
+	;;
 	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|weekly"
+		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|weekly|browse"
 esac
