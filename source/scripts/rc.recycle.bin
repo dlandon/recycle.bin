@@ -16,12 +16,11 @@ vfs_recycle_start()
 		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
 		# If weekly run is enabled, add cron job
-		if [[ $WEEKLYRUN = "yes" ]]; then
-			crontab -l > /tmp/file; echo '# Purge recycle bin at 3:00 on the first day of the week:' >> /tmp/file; echo '0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly 1> /dev/null' >>/tmp/file; crontab /tmp/file; rm /tmp/file
-		else
-			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-				crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
-			fi
+		if [ $WEEKLYRUN = "yes" ]; then
+			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			# Reload dynamix crons
+			/usr/local/emhttp/webGui/scripts/notify cron-init
 		fi
 
 		# Restart samba
@@ -44,11 +43,10 @@ vfs_recycle_stop()
 	if [ -e /var/run/recycle.bin/recycle.bin.pid ]; then
 		echo "Stopping Recycle Bin..."
 
-		if [[ $WEEKLYRUN = "yes" ]]; then
-			if [[ `crontab -l | grep "# Purge recycle bin"` != "" ]]; then
-				crontab -l > /tmp/file; sed '/# Purge recycle bin/,\/usr\/local\/emhttp\/plugins\/recycle.bin\/scripts\/rc.recycle.bin/d' /tmp/file >> /tmp/cron; crontab /tmp/cron; rm /tmp/file; rm /tmp/cron
-			fi
-		fi
+		rm -f /boot/config/plugins/dynamix/recyclebin.cron
+		# Reload dynamix crons
+		/usr/local/emhttp/webGui/scripts/notify cron-init
+
 		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
 		printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
 		rm smb.tmp
@@ -141,17 +139,19 @@ vfs_recycle_weekly()
 
 vfs_recycle_browse()
 {
-	# Remove browsing links.
-	rm -rf /usr/local/emhttp/plugins/recycle.bin/RecycleBin
-
-	# Set up browsing links.
+	# Recycle bin browsing directory contains symlinks to shares.
 	cd /usr/local/emhttp/plugins/recycle.bin
+
+	# Remove browsing directory.
+	rm -rf RecycleBin
+
+	# Set up browsing directories for symlinks.
 	mkdir RecycleBin
 	mkdir RecycleBin/Disk
 	mkdir RecycleBin/User
 	mkdir RecycleBin/Unassigned
 
-	# Disk, unassigned, and cache links.
+	# Disk, unassigned, and cache symlinks.
 	DIRS=`ls -l /mnt/`
 	for DIR in $DIRS
 	do
@@ -172,8 +172,11 @@ vfs_recycle_browse()
 		fi
 	done
 
-	# Flash link.
+	# Flash symlink.
 	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
+
+	# Adjust RecycleBin browsing directory permissions.
+	chmod 755 -R RecycleBin 2>/dev/null
 }
 
 # read our configuration
