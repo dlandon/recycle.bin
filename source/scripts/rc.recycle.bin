@@ -140,7 +140,7 @@ vfs_recycle_weekly()
 vfs_recycle_browse()
 {
 	# Recycle bin browsing directory contains symlinks to shares.
-	cd /usr/local/emhttp/plugins/recycle.bin
+	cd /mnt
 
 	# Remove browsing directory.
 	rm -rf RecycleBin
@@ -152,7 +152,7 @@ vfs_recycle_browse()
 	mkdir RecycleBin/Unassigned
 
 	# Disk, unassigned, and cache symlinks.
-	DIRS=`ls -l /mnt/`
+	DIRS=`ls /mnt/`
 	for DIR in $DIRS
 	do
 		if [ "${DIR}" = "disks" ]; then
