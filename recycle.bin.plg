@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.09.29">
+<!ENTITY version    "2015.09.29a">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,7 +16,7 @@
 
 <CHANGES>
 ##&name;
-###2015.09.29
+###2015.09.29a
 - Fix: Webgui browsing issues.
 
 ###2015.09.27

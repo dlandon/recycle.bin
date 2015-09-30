@@ -139,11 +139,11 @@ vfs_recycle_weekly()
 
 vfs_recycle_browse()
 {
-	# Recycle bin browsing directory contains symlinks to shares.
-	cd /mnt
-
 	# Remove browsing directory.
-	rm -rf RecycleBin
+	rm -rf /mnt/RecycleBin
+
+	# Recycle bin browsing directory contains symlinks to shares.
+	cd /tmp
 
 	# Set up browsing directories for symlinks.
 	mkdir RecycleBin
@@ -175,8 +175,8 @@ vfs_recycle_browse()
 	# Flash symlink.
 	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
 
-	# Adjust RecycleBin browsing directory permissions.
-	chmod 755 -R RecycleBin 2>/dev/null
+	# Move the RecycleBin to /mnt
+	mv /tmp/RecycleBin /mnt/RecycleBin
 }
 
 # read our configuration
