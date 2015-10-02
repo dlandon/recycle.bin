@@ -14,20 +14,22 @@ vfs_recycle_start()
 		# Add vfs_recycle to smb-extra.conf.
 		printf "\n" >> /boot/config/smb-extra.conf
 		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-
-		# If weekly run is enabled, add cron job
+.
+		# If weekly run is enabled, add cron job to dynamix
 		if [ $WEEKLYRUN = "yes" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
-			# Reload dynamix crons
+			# Reload dynamix crons.
 			/usr/local/emhttp/webGui/scripts/notify cron-init
 		fi
 
-		# Restart samba
-		/etc/rc.d/rc.samba restart > /dev/null 2>&1
+		# Restart samba.
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 	
+		# Create pid file to show the recycle bin is running.
 		echo "Running" > /var/run/recycle.bin/recycle.bin.pid
 
+		echo "Recycle Bin started..."
 		logger "Recycle Bin started" -t"$PROG_NAME"
 	else
 		echo "Recycle Bin is already running..."
@@ -43,19 +45,24 @@ vfs_recycle_stop()
 	if [ -e /var/run/recycle.bin/recycle.bin.pid ]; then
 		echo "Stopping Recycle Bin..."
 
+		# Remove dynamix recycle bin cron file.
 		rm -f /boot/config/plugins/dynamix/recyclebin.cron
-		# Reload dynamix crons
+
+		# Reload dynamix crons.
 		/usr/local/emhttp/webGui/scripts/notify cron-init
 
+		# Remove vfs_recycle from smb-extra.conf.
 		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
 		printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-		rm smb.tmp
+		rm -f smb.tmp
 
-		# Restart samba
-		/etc/rc.d/rc.samba restart > /dev/null 2>&1
+		# Restart samba.
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 
-		rm -f /var/run/recycle.bin/recycle.bin.pid 2>/dev/null
+		# Remove pid file to show recycle bin is not running.
+		rm -f /var/run/recycle.bin/recycle.bin.pid
 
+		echo "Recycle Bin stopped..."
 		logger "Recycle Bin stopped" -t"$PROG_NAME"
 	else
 		echo "Recycle Bin is not running..."
@@ -71,7 +78,6 @@ vfs_recycle_restart()
 
 vfs_recycle_buttonstart()
 {
-	cd /
 	echo "Enabling Recycle Bin..."
 	if [ -f $CONFIG ]; then
 		sed -i "s/"disable"/"enable/"" $CONFIG
@@ -81,13 +87,14 @@ vfs_recycle_buttonstart()
 
 vfs_recycle_update()
 {
-	# Stop vfs recycle
+	# Stop vfs recycle.
 	vfs_recycle_stop
 
+	# Adjust smb-extra.conf user set parameters.
 	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 
-	# Start vfs recycle if service is enabled and not already running
+	# Start vfs recycle if service is enabled and not already running.
 	if [ $SERVICE = "enable" ]; then
 		vfs_recycle_start
 	fi
@@ -104,6 +111,7 @@ vfs_recycle_empty()
 	rm -rf /mnt/cache/.Recycle.Bin/*
 	rm -rf /boot/.Recycle.Bin/*
 
+	echo "Recycle Bin has been emptied..."
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
 }	
 
@@ -123,6 +131,7 @@ vfs_recycle_purge()
 
 	vfs_recycle_remove
 
+	echo "Aged files removed..."
 	logger "User: Files older than $AGE days have been removed" -t"$PROG_NAME"
 }
 
@@ -175,11 +184,11 @@ vfs_recycle_browse()
 	# Flash symlink.
 	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
 
-	# Move the RecycleBin to /mnt
+	# Move the RecycleBin to /mnt.
 	mv /tmp/RecycleBin /mnt/RecycleBin
 }
 
-# read our configuration
+# read our configuration.
 CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
 source $CONFIG
 PROG_NAME="Recycle Bin"

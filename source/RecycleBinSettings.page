@@ -24,7 +24,7 @@ $recycle_bin_enabled = no;
 	endif;
 $recycle_bin_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
-shell_exec ( "/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse" );
+exec ( "/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse" );
 ?>
 
 <script>
