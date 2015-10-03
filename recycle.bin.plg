@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.10.02">
+<!ENTITY version    "2015.10.03">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.10.03
+- Fix: Typo in rc.recycle.bin.
+
 ###2015.10.02
 - Fix: Minor changes to rc.recycle.bin for clarity and documentation.
 

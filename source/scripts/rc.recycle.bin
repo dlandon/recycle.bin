@@ -14,8 +14,8 @@ vfs_recycle_start()
 		# Add vfs_recycle to smb-extra.conf.
 		printf "\n" >> /boot/config/smb-extra.conf
 		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-.
-		# If weekly run is enabled, add cron job to dynamix
+
+		# If weekly run is enabled, add cron job to dynamix.
 		if [ $WEEKLYRUN = "yes" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
