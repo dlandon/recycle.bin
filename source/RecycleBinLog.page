@@ -1,0 +1,38 @@
+Menu="RecycleBinSettings"
+Title="Deleted Files"
+---
+<?PHP
+/* Copyright 2015, Dan Landon
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+?>
+
+<table class="tablesorter shift ups">
+<thead><tr><th>Log</th></tr></thead>
+</table>
+
+<div>
+	<blockquote class='inline_help'>
+	<p>Recycle Bin Log Viewer:</p>
+	<p>The deleted files will show in the log as unlinked files.  Click on the 'Clear' button to clear the log.</p>
+	</blockquote>
+</div>
+<br /><br />
+
+<?
+echo "<pre class='up'>".shell_exec('cat /var/log/samba/log.smbd | grep unlink 2>/dev/null')."</pre>";
+?>
+
+<form name="clear log" method="POST" action="/update.php" target="progressFrame">
+	<input type="button" value="Refresh" onclick="refresh()">
+	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+	<input type="hidden" name="#arg[1]" value="clear">
+	<input type="submit" value="Clear">
+	<input type="button" value="Done" onclick="done()">
+</form>

@@ -1,4 +1,5 @@
 Menu="Utilities"
+Type="xmenu"
 Title="Recycle Bin"
 Icon="recycle.bin.png"
 ---
@@ -22,7 +23,7 @@ $recycle_bin_enabled = no;
 		$recycle_bin_enabled = yes;
 	}
 	endif;
-$recycle_bin_trashsize = shell_exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+$recycle_bin_trashsize = exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
 exec ( "/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse" );
 ?>
@@ -33,11 +34,15 @@ $(function() {
 });
 </script>
 
+<table class="tablesorter shift ups">
+<thead><tr><th>Settings</th></tr></thead>
+</table>
+
 <?if ($var['mdState']=="STARTED"):?>
 <div style="width: 49%; float:left">
 	<div>
 		<blockquote class='inline_help'>
-		<p>These actions apply to all shares:<p>
+		<p>These actions apply to all shares:</p>
 		<list>
 		<li>Click on the <strong>Trash Can Icon</strong> to browse the deleted files Recycle Bin.</li>
 		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
@@ -159,6 +164,14 @@ $(function() {
 	 </select>
 
 	> When set to "Yes" a notification will be sent when the weekly remove files task runs.
+
+	Log Deleted Files?
+	: <select name="LOG" size="1";>
+		<?=mk_option($recycle_bin_cfg['LOG'], "no", "No");?>
+		<?=mk_option($recycle_bin_cfg['LOG'], "yes", "Yes");?>
+	 </select>
+
+	> When set to "Yes" deleted files will be logged.
 
 	<input type="submit" name="#default" value="Default">
 	: <input type="submit" name="#apply" value="Apply"><input type="button" value="Done" onclick="done()">

@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.10.03">
+<!ENTITY version    "2015.10.04">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.10.04
+- Add: Logging of vfs recycle delete file events and viewer to view deleted (unlinked) files.
+
 ###2015.10.03
 - Fix: Typo in rc.recycle.bin.
 
@@ -158,6 +161,7 @@ EXCLUDE="*.tmp"
 WEEKLYRUN="no"
 AGE="7"
 NOTIFY="no"
+LOG="no"
 ]]>
 </INLINE>
 </FILE>
@@ -168,7 +172,9 @@ NOTIFY="no"
 #vfs_recycle_start
 #Recycle bin configuration
 [global]
-vfs objects = recycle
+   vfs objects = recycle
+   syslog only = No
+   log level = 0 vfs:0
    recycle:repository = %P/.Recycle.Bin/
    recycle:directory_mode = 0777
    recycle:keeptree = Yes

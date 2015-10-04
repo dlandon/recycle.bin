@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage:
-# start|stop|restart|buttonstart|empty|update|purge|weekly|browse.
+# start|stop|restart|buttonstart|empty|update|purge|weekly|browse|clear.
 #
 
 vfs_recycle_start()
@@ -91,6 +91,11 @@ vfs_recycle_update()
 	vfs_recycle_stop
 
 	# Adjust smb-extra.conf user set parameters.
+	if [ $LOG = "yes" ]; then
+		sed -i "/vfs objects =/c\   vfs objects = extd_audit recycle" /boot/config/plugins/recycle.bin/config/smb-extra.conf
+	else
+		sed -i "/vfs objects =/c\   vfs objects = recycle" /boot/config/plugins/recycle.bin/config/smb-extra.conf
+	fi
 	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 
@@ -188,6 +193,11 @@ vfs_recycle_browse()
 	mv /tmp/RecycleBin /mnt/RecycleBin
 }
 
+vfs_recycle_clear() {
+	# Clear the samba log.
+	echo "" > /var/log/samba/log.smbd
+}
+
 # read our configuration.
 CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
 source $CONFIG
@@ -221,6 +231,9 @@ case "$1" in
 	'browse')
 		vfs_recycle_browse
 	;;
+	'clear')
+		vfs_recycle_clear
+	;;
 	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|weekly|browse"
+		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|weekly|browse|clear"
 esac
