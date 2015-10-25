@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.10.04">
+<!ENTITY version    "2015.10.25">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.10.25
+- Fix: Adjust 'syslog only' setting in smb-extra.conf when turning logging on/off.
+
 ###2015.10.04
 - Add: Logging of vfs recycle delete file events and viewer to view deleted (unlinked) files.
 
@@ -173,7 +176,7 @@ LOG="no"
 #Recycle bin configuration
 [global]
    vfs objects = recycle
-   syslog only = No
+   syslog only = Yes
    log level = 0 vfs:0
    recycle:repository = %P/.Recycle.Bin/
    recycle:directory_mode = 0777
