@@ -20,7 +20,7 @@ vfs_recycle_start()
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 			# Reload dynamix crons.
-			/usr/local/emhttp/webGui/scripts/notify cron-init
+			/usr/local/sbin/update_cron
 		fi
 
 		# Restart samba.
@@ -49,7 +49,7 @@ vfs_recycle_stop()
 		rm -f /boot/config/plugins/dynamix/recyclebin.cron
 
 		# Reload dynamix crons.
-		/usr/local/emhttp/webGui/scripts/notify cron-init
+		/usr/local/sbin/update_cron
 
 		# Remove vfs_recycle from smb-extra.conf.
 		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
