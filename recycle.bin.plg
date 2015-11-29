@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.10.28">
+<!ENTITY version    "2015.11.29">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 ]>
@@ -16,6 +16,9 @@
 
 <CHANGES>
 ##&name;
+###2015.11.29
+- Add: Add Hourly, Daily, and Weekly selections to remove files choices.  You can now set the schedule for the aged files removal.
+
 ###2015.10.28
 - Fix: Change to '/usr/local/sbin/update_cron' to update Dynamix crons.
 
@@ -164,7 +167,7 @@ chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
 SERVICE="disable"
 PARAMETERS=""
 EXCLUDE="*.tmp"
-WEEKLYRUN="no"
+SCHEDRUN="no"
 AGE="7"
 NOTIFY="no"
 LOG="no"

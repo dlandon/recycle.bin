@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage:
-# start|stop|restart|buttonstart|empty|update|purge|weekly|browse|clear.
+# start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear.
 #
 
 vfs_recycle_start()
@@ -15,10 +15,24 @@ vfs_recycle_start()
 		printf "\n" >> /boot/config/smb-extra.conf
 		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
-		# If weekly run is enabled, add cron job to dynamix.
-		if [ $WEEKLYRUN = "yes" ]; then
+		# If cron run is enabled, add cron job to dynamix.
+		if [ $SCHEDRUN = "hourly" ]; then
+			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 * * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			# Reload dynamix crons.
+		elif [ $SCHEDRUN = "daily" ]; then
+			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			# Reload dynamix crons.
+		elif [ $SCHEDRUN = "weekly" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin weekly &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			# Reload dynamix crons.
+			/usr/local/sbin/update_cron
+		else
+			# Remove dynamix recycle bin cron file.
+			rm -f /boot/config/plugins/dynamix/recyclebin.cron
+
 			# Reload dynamix crons.
 			/usr/local/sbin/update_cron
 		fi
@@ -142,14 +156,14 @@ vfs_recycle_purge()
 	logger "User: Files older than $AGE days have been removed" -t"$PROG_NAME"
 }
 
-vfs_recycle_weekly()
+vfs_recycle_cron()
 {
 	vfs_recycle_remove
 
-	logger "Weekly: Files older than $AGE days have been removed" -t"$PROG_NAME"
+	logger "Scheduled: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
 	if [ $NOTIFY = "yes" ]; then
-		/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Weekly: Files older than $AGE days have been removed" -i "normal"
+		/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Scheduled: Files older than $AGE days have been removed" -i "normal"
 	fi
 }
 
@@ -227,8 +241,8 @@ case "$1" in
 	'purge')
 		vfs_recycle_purge
 	;;
-	'weekly')
-		vfs_recycle_weekly
+	'cron')
+		vfs_recycle_cron
 	;;
 	'browse')
 		vfs_recycle_browse
@@ -237,5 +251,5 @@ case "$1" in
 		vfs_recycle_clear
 	;;
 	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|weekly|browse|clear"
+		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear"
 esac

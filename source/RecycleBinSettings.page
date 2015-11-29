@@ -147,23 +147,25 @@ $(function() {
 	Age Days:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
 
-	> Any files older than the set number of days are removed when files are removed weekly or when the 'Remove Aged Files' button is clicked.
+	> Any files older than the set number of days are removed on the schedule or when the 'Remove Aged Files' button is clicked.
 
-	Remove Files once a week?
-	: <select name="WEEKLYRUN" size="1";>
-		<?=mk_option($recycle_bin_cfg['WEEKLYRUN'], "no", "No");?>
-		<?=mk_option($recycle_bin_cfg['WEEKLYRUN'], "yes", "Yes");?>
+	Remove Aged Files on Schedule?
+	: <select name="SCHEDRUN" size="1";>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "no", "No");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "hourly", "Hourly");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "daily", "Daily");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "weekly", "Weekly");?>
 	 </select>
 
-	> When set to 'Yes' files older that 'Age Days' will be removed every week at 3 AM on Sunday.
+	> Set the desired schedule to remove aged files.  Hourly will be on the hour every hour.  Daily will be every day at 3 AM.  Weekly will be every week at 3 AM on Sunday.
 
-	Weekly Remove Files Notification?
+	Remove Aged Files Notification?
 	: <select name="NOTIFY" size="1";>
 		<?=mk_option($recycle_bin_cfg['NOTIFY'], "no", "No");?>
 		<?=mk_option($recycle_bin_cfg['NOTIFY'], "yes", "Yes");?>
 	 </select>
 
-	> When set to "Yes" a notification will be sent when the weekly remove files task runs.
+	> When set to "Yes" a notification will be sent when the scheduled remove files task runs.
 
 	Log Deleted Files?
 	: <select name="LOG" size="1";>
