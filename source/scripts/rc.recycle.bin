@@ -19,23 +19,19 @@ vfs_recycle_start()
 		if [ $SCHEDRUN = "hourly" ]; then
 			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 * * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
-			# Reload dynamix crons.
 		elif [ $SCHEDRUN = "daily" ]; then
 			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
-			# Reload dynamix crons.
 		elif [ $SCHEDRUN = "weekly" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
-			# Reload dynamix crons.
-			/usr/local/sbin/update_cron
 		else
 			# Remove dynamix recycle bin cron file.
 			rm -f /boot/config/plugins/dynamix/recyclebin.cron
-
-			# Reload dynamix crons.
-			/usr/local/sbin/update_cron
 		fi
+
+		# Reload dynamix crons.
+		/usr/local/sbin/update_cron
 
 		# Restart samba.
 		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
