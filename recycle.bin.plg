@@ -230,7 +230,7 @@ fi
 # Start vfs_recycle if enabled and not running.
 source /boot/config/plugins/&name;/&name;.cfg
 if [ $SERVICE = "enable" ]; then
-	/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin start
+	/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin start 2>/dev/null
 fi
 
 echo ""
@@ -249,7 +249,7 @@ The 'remove' script.
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 # Stop recycle bin.
-/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop
+/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop 2>/dev/null
 
 # Remove the pid file directory.
 rmdir /var/run/&name; 2>/dev/null
