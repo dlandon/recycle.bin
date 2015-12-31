@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.12.18">
+<!ENTITY version    "2015.12.31">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"c59a139420edf124c44df86add26b0f9">
+<!ENTITY MD5		"7d5cd15f5b877217ee65e4186f9afd1f">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Deleted files log now scrolls in preparation for next release of Dynamix.
+
+###2015.12.18
 - Added MD5 checksum to bundle file.
 
 ###2015.12.14

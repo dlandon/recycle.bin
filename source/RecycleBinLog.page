@@ -26,7 +26,7 @@ Title="Deleted Files"
 <br /><br />
 
 <?
-echo "<pre class='up'>".shell_exec('cat /var/log/samba/log.smbd | grep unlink 2>/dev/null')."</pre>";
+echo "<pre class='up' style='display:none'>".shell_exec('cat /var/log/samba/log.smbd | grep unlink 2>/dev/null')."</pre>";
 ?>
 
 <form name="clear log" method="POST" action="/update.php" target="progressFrame">
@@ -36,3 +36,9 @@ echo "<pre class='up'>".shell_exec('cat /var/log/samba/log.smbd | grep unlink 2>
 	<input type="submit" value="Clear">
 	<input type="button" value="Done" onclick="done()">
 </form>
+
+<script>
+$(function() {
+  $('pre.up').css('height',Math.max(window.innerHeight-340,370)).show();
+});
+</script>
