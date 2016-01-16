@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2015.12.31">
+<!ENTITY version    "2016.01.16">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"7d5cd15f5b877217ee65e4186f9afd1f">
+<!ENTITY MD5		"4abfb735a85ab7d075ba046b76ae767c">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Compatibility with unRAID 6.1.7.
+
+###2015.12.31
 - Add: Deleted files log now scrolls in preparation for next release of Dynamix.
 
 ###2015.12.18
