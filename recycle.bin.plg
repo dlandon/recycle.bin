@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.01.16">
+<!ENTITY version    "2016.04.23">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"4abfb735a85ab7d075ba046b76ae767c">
+<!ENTITY MD5		"1b2284f9227ae07cab9f28ac791cd441">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,13 +18,16 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Ability to exclude shares.  A cron is run once an hour to remove deleted files from the share.  Note: Disks may spin up to remove the deleted files.
+
+###2016.01.16
 - Add: Compatibility with unRAID 6.1.7.
 
 ###2015.12.31
 - Add: Deleted files log now scrolls in preparation for next release of Dynamix.
 
 ###2015.12.18
-- Added MD5 checksum to bundle file.
+- Add: MD5 checksum to bundle file.
 
 ###2015.12.14
 - Add: unRaid version check.  Only unRaid 6.1 and higher.

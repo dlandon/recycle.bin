@@ -30,6 +30,24 @@ vfs_recycle_start()
 			rm -f /boot/config/plugins/dynamix/recyclebin.cron
 		fi
 
+		# Create hourly cron file for purging excluded shares.
+		if [ $EXCLUDE_SHARES != "" ]; then
+			list=$(echo $EXCLUDE_SHARES | tr "," "\n")
+			printf "# Purge excluded shares every hour on the hour:\n" > /boot/config/plugins/dynamix/share_exclude.cron
+			for share in $list; do
+				share_dir="/mnt/user/$share"
+				if [ -d $share_dir ]; then
+					printf "0 * * * * rm -rf $share_dir/.Recycle.Bin/* &> /dev/null\n" >> /boot/config/plugins/dynamix/share_exclude.cron
+				else
+					logger "'$share' is not a share and cannot be excluded." -t"$PROG_NAME"
+				fi
+			done
+			printf "\n" >> /boot/config/plugins/dynamix/share_exclude.cron
+		else
+			# Remove dynamix recycle bin cron file.
+			rm -f /boot/config/plugins/dynamix/share_exclude.cron
+		fi
+
 		# Reload dynamix crons.
 		/usr/local/sbin/update_cron
 

@@ -144,6 +144,13 @@ $(function() {
 
 	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
 
+	Excluded Shares:
+	: <input type="text" name="EXCLUDE_SHARES" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE_SHARES'];?>">
+
+	> List of shares to exclude from the Recycle Bin separated by commas.  A cron will be run every hour to remove deleted files.
+	>
+	> <strong>Note:</strong> Disks may spin up when this cron is run to remove deleted files.
+
 	Age Days:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
 
