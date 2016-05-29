@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.05.28">
+<!ENTITY version    "2016.05.29">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"905a88cd518121cd103ba8c2e227dc3c">
+<!ENTITY MD5		"97b5a17fe9bd217c6c412e4ec09634c6">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Error when smb-extra.conf file does not exist.
+
+###2016.05.28
 - Fix: Changed samba configuration reload so the samba shares would not go offline briefly.
 - Fix: Unclean shutdown could end up with two entries for the recycle bin in the smb-extra.conf.
 - Fix: Added tool tips.

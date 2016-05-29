@@ -18,7 +18,7 @@ Icon="recycle.bin.png"
 <?PHP
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
 $recycle_bin_enabled = no;
-    if (strpos(file_get_contents("/boot/config/smb-extra.conf"),"recycle") !== false):
+	if (is_file("/boot/config/smb-extra.conf") && (strpos(file_get_contents("/boot/config/smb-extra.conf"),"recycle") !== false)):
 	{
 		$recycle_bin_enabled = yes;
 		shell_exec("echo 'Running' > /var/run/recycle.bin/recycle.bin.pid");
