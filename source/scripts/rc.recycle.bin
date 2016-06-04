@@ -12,9 +12,11 @@ vfs_recycle_start()
 		echo "Starting Recycle Bin..."
 
 		# Remove vfs_recycle from smb-extra.conf if we had an unclean shutdown.
-		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
-		printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-		rm -f smb.tmp
+		if [ -f "/boot/config/smb-extra.conf" ]; then
+			sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
+			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
+			rm -f smb.tmp
+		fi
 
 		# Add vfs_recycle to smb-extra.conf.
 		printf "\n" >> /boot/config/smb-extra.conf
@@ -63,8 +65,8 @@ vfs_recycle_start()
 		# Reload dynamix crons.
 		/usr/local/sbin/update_cron
 
-		# Reload samba configuration.
-		/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		# Restart samba.
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 	
 		# Create pid file to show the recycle bin is running.
 		echo "Running" > /var/run/recycle.bin/recycle.bin.pid
@@ -95,12 +97,14 @@ vfs_recycle_stop()
 		/usr/local/sbin/update_cron
 
 		# Remove vfs_recycle from smb-extra.conf.
-		sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
-		printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-		rm -f smb.tmp
+		if [ -f "/boot/config/smb-extra.conf" ]; then
+			sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
+			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
+			rm -f smb.tmp
+		fi
 
-		# Reload samba configuration.
-		/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		# Restart samba.
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/recycle.bin/recycle.bin.pid

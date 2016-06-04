@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.05.29">
+<!ENTITY version    "2016.06.03">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"97b5a17fe9bd217c6c412e4ec09634c6">
+<!ENTITY MD5		"b7cd3c61fc5703b2718d783d034949a7">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Reverted to samba restart.
+
+###2016.05.29
 - Fix: Error when smb-extra.conf file does not exist.
 
 ###2016.05.28
