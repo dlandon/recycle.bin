@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.06.03">
+<!ENTITY version    "2016.10.06">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"b7cd3c61fc5703b2718d783d034949a7">
+<!ENTITY MD5		"0d14810c002673a5ad5130f51a887222">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Samba being restarted on a shutdown.
+
+###2016.06.03
 - Fix: Reverted to samba restart.
 
 ###2016.05.29
