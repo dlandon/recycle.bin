@@ -66,16 +66,10 @@ vfs_recycle_start()
 		/usr/local/sbin/update_cron
 
 		# Restart samba.
-		if [ $RESTART_SAMBA == "yes" ];then
-			/etc/rc.d/rc.samba restart 2>&1 >/dev/null
-			logger "Samba restarted" -t"$PROG_NAME"
-		fi
-	
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
+
 		# Create pid file to show the recycle bin is running.
 		echo "Running" > /var/run/recycle.bin/recycle.bin.pid
-
-		echo "Recycle Bin started..."
-		logger "Recycle Bin started" -t"$PROG_NAME"
 	else
 		echo "Recycle Bin is already running..."
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -107,16 +101,10 @@ vfs_recycle_stop()
 		fi
 
 		# Restart samba.
-		if [ $RESTART_SAMBA == "yes" ];then
-			/etc/rc.d/rc.samba restart 2>&1 >/dev/null
-			logger "Samba restarted" -t"$PROG_NAME"
-		fi
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/recycle.bin/recycle.bin.pid
-
-		echo "Recycle Bin stopped..."
-		logger "Recycle Bin stopped" -t"$PROG_NAME"
 	else
 		echo "Recycle Bin is not running..."
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -257,10 +245,6 @@ vfs_recycle_clear() {
 CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
 source $CONFIG
 PROG_NAME="Recycle Bin"
-RESTART_SAMBA="yes"
-if [ "$#" -eq 2 ]; then
-	RESTART_SAMBA=$2
-fi
 
 case "$1" in
 	'start')
