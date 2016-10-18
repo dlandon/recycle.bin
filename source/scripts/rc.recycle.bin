@@ -23,13 +23,13 @@ vfs_recycle_start()
 		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
 		# If cron run is enabled, add cron job to dynamix.
-		if [ $SCHEDRUN = "hourly" ]; then
+		if [ "$SCHEDRUN" = "hourly" ]; then
 			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 * * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
-		elif [ $SCHEDRUN = "daily" ]; then
+		elif [ "$SCHEDRUN" = "daily" ]; then
 			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
-		elif [ $SCHEDRUN = "weekly" ]; then
+		elif [ "$SCHEDRUN" = "weekly" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
 			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		else
@@ -132,7 +132,7 @@ vfs_recycle_update()
 	vfs_recycle_stop
 
 	# Adjust smb-extra.conf user set parameters.
-	if [ $LOG = "yes" ]; then
+	if [ "$LOG" = "yes" ]; then
 		sed -i "/vfs objects =/c\   vfs objects = extd_audit recycle" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 		sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 	else
@@ -143,7 +143,7 @@ vfs_recycle_update()
 	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
 
 	# Start vfs recycle if service is enabled and not already running.
-	if [ $SERVICE = "enable" ]; then
+	if [ "$SERVICE" = "enable" ]; then
 		vfs_recycle_start
 	fi
 }
@@ -189,7 +189,7 @@ vfs_recycle_cron()
 
 	logger "Scheduled: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
-	if [ $NOTIFY = "yes" ]; then
+	if [ "$NOTIFY" = "yes" ]; then
 		/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Scheduled: Files older than $AGE days have been removed" -i "normal"
 	fi
 }

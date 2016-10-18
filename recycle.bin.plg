@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.10.07">
+<!ENTITY version    "2016.10.18">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"60ac18a3c677521c5d8f153a1c62d090">
+<!ENTITY MD5		"cdfbb1df63babf25b5790b0ec2c74626">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Syntax in rc.recycle.bin script.
+
+###2016.10.07
 - Fix: Move stop recycle bin event to 'stopping_svcs'.
 
 ###2016.10.06
