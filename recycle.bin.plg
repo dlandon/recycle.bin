@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.10.18">
+<!ENTITY version    "2016.10.20">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"cdfbb1df63babf25b5790b0ec2c74626">
+<!ENTITY MD5		"e2a3f070ccdf20e04fa7dba26c7f959f">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Recursion where unmounting_disks event was left in.
+
+###2016.10.18
 - Fix: Syntax in rc.recycle.bin script.
 
 ###2016.10.07

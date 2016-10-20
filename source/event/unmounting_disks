@@ -1,3 +1,0 @@
-#!/bin/bash
-# Stop recycle bin.
-/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop no
