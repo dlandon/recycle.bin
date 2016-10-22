@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.10.20">
+<!ENTITY version    "2016.10.22">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"e2a3f070ccdf20e04fa7dba26c7f959f">
+<!ENTITY MD5		"cd5ce8a3e23ac31d149acb2d4d790e7c">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Updates for compatibility with unRAID 6.2 and later.
+
+###2016.10.20
 - Fix: Recursion where unmounting_disks event was left in.
 
 ###2016.10.18
@@ -267,7 +270,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " Plugin &name; is installed."
-echo " Copyright 2015,2016 Dan Landon"
+echo " Copyright 2015-2016 Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
