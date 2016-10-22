@@ -8,7 +8,7 @@ vfs_recycle_start()
 	logger "Starting Recycle Bin" -t"$PROG_NAME"
 
 	# Is vfs_recycle running?
-	if [ ! -e /var/run/recycle.bin/recycle.bin.pid ]; then
+	if [ ! -e /var/run/${plugin}/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
 		# Remove vfs_recycle from smb-extra.conf if we had an unclean shutdown.
@@ -20,18 +20,18 @@ vfs_recycle_start()
 
 		# Add vfs_recycle to smb-extra.conf.
 		printf "\n" >> /boot/config/smb-extra.conf
-		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
+		cat /boot/config/plugins/${plugin}/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
 		# If cron run is enabled, add cron job to dynamix.
 		if [ "$SCHEDRUN" = "hourly" ]; then
 			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 * * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 * * * * /usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		elif [ "$SCHEDRUN" = "daily" ]; then
 			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * * /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * * /usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		elif [ "$SCHEDRUN" = "weekly" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * 0 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * 0 /usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		else
 			# Remove dynamix recycle bin cron file.
 			rm -f /boot/config/plugins/dynamix/recyclebin.cron
@@ -69,7 +69,7 @@ vfs_recycle_start()
 		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 
 		# Create pid file to show the recycle bin is running.
-		echo "Running" > /var/run/recycle.bin/recycle.bin.pid
+		echo "Running" > /var/run/${plugin}/${plugin}.pid
 	else
 		echo "Recycle Bin is already running..."
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -81,7 +81,7 @@ vfs_recycle_stop()
 	logger "Stopping Recycle Bin" -t"$PROG_NAME"
 
 	# Is vfs_recycle running?
-	if [ -e /var/run/recycle.bin/recycle.bin.pid ]; then
+	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
 		echo "Stopping Recycle Bin..."
 
 		# Remove dynamix recycle bin cron file.
@@ -104,7 +104,7 @@ vfs_recycle_stop()
 		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 
 		# Remove pid file to show recycle bin is not running.
-		rm -f /var/run/recycle.bin/recycle.bin.pid
+		rm -f /var/run/${plugin}/${plugin}.pid
 	else
 		echo "Recycle Bin is not running..."
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -133,14 +133,14 @@ vfs_recycle_update()
 
 	# Adjust smb-extra.conf user set parameters.
 	if [ "$LOG" = "yes" ]; then
-		sed -i "/vfs objects =/c\   vfs objects = extd_audit recycle" /boot/config/plugins/recycle.bin/config/smb-extra.conf
-		sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/recycle.bin/config/smb-extra.conf
+		sed -i "/vfs objects =/c\   vfs objects = extd_audit recycle" /boot/config/plugins/${plugin}/config/smb-extra.conf
+		sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/${plugin}/config/smb-extra.conf
 	else
-		sed -i "/vfs objects =/c\   vfs objects = recycle" /boot/config/plugins/recycle.bin/config/smb-extra.conf
-		sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/plugins/recycle.bin/config/smb-extra.conf
+		sed -i "/vfs objects =/c\   vfs objects = recycle" /boot/config/plugins/${plugin}/config/smb-extra.conf
+		sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/plugins/${plugin}/config/smb-extra.conf
 	fi
-	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/recycle.bin/config/smb-extra.conf
-	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/recycle.bin/config/smb-extra.conf
+	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/${plugin}/config/smb-extra.conf
+	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/${plugin}/config/smb-extra.conf
 
 	# Start vfs recycle if service is enabled and not already running.
 	if [ "$SERVICE" = "enable" ]; then
@@ -242,9 +242,11 @@ vfs_recycle_clear() {
 }
 
 # read our configuration.
-CONFIG="/boot/config/plugins/recycle.bin/recycle.bin.cfg"
+plugin="recycle.bin"
+CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
-PROG_NAME="Recycle Bin"
+PROG_NAME=${plugin}
+DOCROOT="/usr/local/emhttp"
 
 case "$1" in
 	'start')
