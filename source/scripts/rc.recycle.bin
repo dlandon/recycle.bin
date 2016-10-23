@@ -25,13 +25,13 @@ vfs_recycle_start()
 		# If cron run is enabled, add cron job to dynamix.
 		if [ "$SCHEDRUN" = "hourly" ]; then
 			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 * * * * /usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 * * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		elif [ "$SCHEDRUN" = "daily" ]; then
 			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * * /usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		elif [ "$SCHEDRUN" = "weekly" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * 0 /usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "0 3 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
 		else
 			# Remove dynamix recycle bin cron file.
 			rm -f /boot/config/plugins/dynamix/recyclebin.cron
@@ -190,7 +190,7 @@ vfs_recycle_cron()
 	logger "Scheduled: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
 	if [ "$NOTIFY" = "yes" ]; then
-		/usr/local/emhttp/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Scheduled: Files older than $AGE days have been removed" -i "normal"
+		${DOCROOT}/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Scheduled: Files older than $AGE days have been removed" -i "normal"
 	fi
 }
 
@@ -246,7 +246,10 @@ plugin="recycle.bin"
 CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
 PROG_NAME=${plugin}
-DOCROOT="/usr/local/emhttp"
+DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf`
+if [ -z ${DOCROOT} ];then
+	DOCROOT="/usr/local/emhttp"
+fi
 
 case "$1" in
 	'start')

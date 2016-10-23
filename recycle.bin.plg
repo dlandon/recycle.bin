@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "recycle.bin">
 <!ENTITY author     "dlandon">
-<!ENTITY version    "2016.10.22a">
+<!ENTITY version    "2016.10.23">
 <!ENTITY launch    "Settings/RecycleBinSettings">
 <!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"ef051eb05a8fe5f21dcba134f64e4929">
+<!ENTITY MD5		"050c6eb2ebba65d4e5e6a8c1af384660">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Changed absolute path using $docroot in preparation for moving from emhttp.
+
+###2016.10.22a
 - Updates for compatibility with unRAID 6.2 and later.
 
 ###2016.10.20
