@@ -71,7 +71,7 @@ vfs_recycle_start()
 		# Create pid file to show the recycle bin is running.
 		echo "Running" > /var/run/${plugin}/${plugin}.pid
 	else
-		echo "Recycle Bin is already running..."
+		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
 	fi
 }
@@ -106,7 +106,7 @@ vfs_recycle_stop()
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
 	else
-		echo "Recycle Bin is not running..."
+		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
 	fi
 }
@@ -159,7 +159,7 @@ vfs_recycle_empty()
 	rm -rf /mnt/cache/.Recycle.Bin/*
 	rm -rf /boot/.Recycle.Bin/*
 
-	echo "Recycle Bin has been emptied..."
+	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
 }	
 
@@ -179,7 +179,7 @@ vfs_recycle_purge()
 
 	vfs_recycle_remove
 
-	echo "Aged files removed..."
+	echo "Aged files removed"
 	logger "User: Files older than $AGE days have been removed" -t"$PROG_NAME"
 }
 

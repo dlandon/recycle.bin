@@ -1,12 +1,12 @@
 <?xml version='1.0' standalone='yes'?>
 
 <!DOCTYPE PLUGIN [
-<!ENTITY name       "recycle.bin">
-<!ENTITY author     "dlandon">
-<!ENTITY version    "2016.10.23">
-<!ENTITY launch    "Settings/RecycleBinSettings">
-<!ENTITY pluginURL  "https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"050c6eb2ebba65d4e5e6a8c1af384660">
+<!ENTITY name		"recycle.bin">
+<!ENTITY author		"dlandon">
+<!ENTITY version	"2016.10.30">
+<!ENTITY launch		"Settings/RecycleBinSettings">
+<!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
+<!ENTITY MD5		"3a81d1f8c6763c60fbdd91af5b681ae4">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,10 +18,13 @@
 <CHANGES>
 ##&name;
 ###&version;
-- Changed absolute path using $docroot in preparation for moving from emhttp.
+- Fix: Script hanging when plugin is removed keeping the "Done" button from showing.
+
+###2016.10.23
+- Fix: Changed absolute path using $docroot in preparation for moving from emhttp.
 
 ###2016.10.22a
-- Updates for compatibility with unRAID 6.2 and later.
+- Fix: Updates for compatibility with unRAID 6.2 and later.
 
 ###2016.10.20
 - Fix: Recursion where unmounting_disks event was left in.
@@ -176,7 +179,7 @@
 </CHANGES>
 
 <!--
-Copyright 2015, Dan Landon
+Copyright 2015-2016, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba of unRAID.
 -->
@@ -281,19 +284,51 @@ echo ""
 </FILE>
 
 <!--
-The 'remove' script.
+DOCROOT script.
 -->
-<FILE Run="/bin/bash" Method="remove">
+<FILE Name="/tmp/&name;/docroot" Mode="0770">
 <INLINE>
+#!/bin/bash
+DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf`
+if [ -z ${DOCROOT} ];then
+	DOCROOT="/usr/local/emhttp"
+fi
+
+echo ${DOCROOT}
+</INLINE>
+</FILE>
+
+<!--
+Recycle bin background stop script.
+-->
+<FILE Name="/tmp/&name;/stop_recycle.bin" Mode="0770">
+<INLINE>
+#!/bin/bash
 # Stop recycle bin.
 /usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop 2>/dev/null
 
 # Remove the pid file directory.
 rmdir /var/run/&name; 2>/dev/null
 
-# Remove all plugin files.
-rm -rf /boot/config/plugins/&name; 2>/dev/null
+# Remove plugin files.
 rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
+
+# Remove the background stop script.
+rm -rf /tmp/&name; 2>/dev/null
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+# Run the stop recycle bin script in the background.
+echo "Stopping Recycle Bin..."
+at -M -f /tmp/&name;/stop_recycle.bin now 2>/dev/null
+
+# Remove plugin files from the flash drive.
+rm -rf /boot/config/plugins/&name; 2>/dev/null
 
 # Remove RecycleBin browse symlinks.
 rm -rf /mnt/RecycleBin
