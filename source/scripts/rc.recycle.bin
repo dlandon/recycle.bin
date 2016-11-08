@@ -246,7 +246,7 @@ plugin="recycle.bin"
 CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
 PROG_NAME=${plugin}
-DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf`
+DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf 2>/dev/null`
 if [ -z ${DOCROOT} ];then
 	DOCROOT="/usr/local/emhttp"
 fi

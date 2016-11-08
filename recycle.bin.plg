@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2016.10.30">
+<!ENTITY version	"2016.11.08">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"3a81d1f8c6763c60fbdd91af5b681ae4">
+<!ENTITY MD5		"bbc3c8df9fcc8e59eb4e8f636139c6d5">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Eliminate error message when trying to determine the docroot.
+
+###2016.10.30
 - Fix: Script hanging when plugin is removed keeping the "Done" button from showing.
 
 ###2016.10.23
@@ -181,7 +184,7 @@
 <!--
 Copyright 2015-2016, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
-the vfs recycle functionality in samba of unRAID.
+the vfs recycle functionality in samba on unRAID.
 -->
 
 <!--
@@ -280,21 +283,6 @@ echo " Copyright 2015-2016 Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
-</INLINE>
-</FILE>
-
-<!--
-DOCROOT script.
--->
-<FILE Name="/tmp/&name;/docroot" Mode="0770">
-<INLINE>
-#!/bin/bash
-DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf`
-if [ -z ${DOCROOT} ];then
-	DOCROOT="/usr/local/emhttp"
-fi
-
-echo ${DOCROOT}
 </INLINE>
 </FILE>
 
