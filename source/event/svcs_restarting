@@ -1,0 +1,10 @@
+#!/usr/bin/php
+<?php
+
+exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin");
+
+$files = glob("/etc/samba/unassigned-shares/*.conf");
+foreach ($files as $file) {
+	exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin $file");
+}
+?>

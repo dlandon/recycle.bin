@@ -1,0 +1,114 @@
+#!/usr/bin/php
+<?
+/* Copyright 2017, Dan Landon
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+// Get the recycle bin confifuration.
+$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
+
+if (isset($argv[1])) {
+	$smb_file = $argv[1];
+	$ud_config_file = TRUE;
+} else {
+	$smb_file =  "/etc/samba/smb-shares.conf";
+	$ud_config_file = FALSE;
+}
+
+if (!is_file($smb_file)) {
+	$smb_file = "";
+}
+
+// If smb_file is not defined then there is nothing to configure
+if ($smb_file != "") {
+	// Array of recycle bin parameters
+	$parms =  array("recycle:repository"		=> "%P/.Recycle.Bin/",
+					"recycle:directory_mode"	=> "0777",
+					"recycle:keeptree"			=> "Yes",
+					"recycle:touch"				=> "Yes",
+					"recycle:touch_mtime"		=> "Yes",
+					"recycle:versions"			=> "Yes",
+					"recycle:exclude"			=> "",   
+					"recycle:exclude_dir"		=> ".Recycle.Bin"
+	);
+
+	// Adjust user set parameters.
+	if ($recycle_bin_cfg['LOG'] == "yes") {
+		$vfs_objects = " extd_audit recycle";
+	} else {
+		$vfs_objects = " recycle";
+	}
+	
+	// Set the excluded files.
+	$parms['recycle:exclude'] = $recycle_bin_cfg['EXCLUDE'];
+
+	// Adjust repository with user parameters.
+	$parms['recycle:repository'] .= $recycle_bin_cfg['PARAMETERS'];
+
+	// Parse the samba config file.
+	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);
+
+	// Get the excluded files from recycle bin configuration.
+	$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
+
+	// Get all shares from the smb configuration file.
+	$smb_shares = array_keys($smb_config);
+
+	// Remove excluded shares.
+	$shares = array_diff($smb_shares, $excluded_shares);
+
+	if ($ud_config_file) {
+		// Remove recycle bin parameters from the UD coonfiguration.
+		foreach ($shares as $s) {
+			if (isset($smb_config[$s]['vfs objects'])) {
+				$smb_config[$s]['vfs objects'] = "";
+			}
+			$parms_keys = array_keys($parms);
+			foreach ($parms_keys as $key) {
+				if (isset($smb_config[$s][$key])) {
+					unset($smb_config[$s][$key]);
+				}
+			}
+		}
+
+		// Add ud parameters if recycle bin is running and UD shares are included.
+		if (is_file("/var/run/recycle.bin/recycle.bin.pid") && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes')) {
+			// Add vfs objects and recycle bin parameters.
+			foreach ($shares as $s) {
+				if ((isset($smb_config[$s]['vfs objects'])) && ($smb_config[$s]['vfs objects'] == "")) {
+					$smb_config[$s]['vfs objects'] .= $vfs_objects;
+					$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
+					$smb_config[$s] = array_merge($smb_config[$s], $parms);
+				}
+			}
+		}
+	} else if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
+		// Add vfs objects and recycle bin parameters.
+		foreach ($shares as $s) {
+			if (isset($smb_config[$s]['vfs objects'])) {
+				$smb_config[$s]['vfs objects'] .= $vfs_objects;
+				$smb_config[$s] = array_merge($smb_config[$s], $parms);
+			}
+		}
+	}
+
+	// Rewrite the configuration file.
+	$keys = array_keys($smb_config);
+	foreach ($keys as $key) {
+		$iniFile .= "[$key]\n";
+		$entryKeys = array_keys($smb_config[$key]);
+		foreach ($entryKeys as $entry) {
+			$iniFile .= "\t".$entry.' = '.$smb_config[$key][$entry]."\n";
+		}
+	}
+
+	// Write the new configuration.
+	file_put_contents($smb_file, $iniFile);
+}
+?>

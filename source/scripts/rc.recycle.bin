@@ -37,39 +37,14 @@ vfs_recycle_start()
 			rm -f /boot/config/plugins/dynamix/recyclebin.cron
 		fi
 
-		# Create hourly cron file for purging excluded shares.
-		if [ ${#EXCLUDE_SHARES} -ne 0 ]; then
-			printf "# Purge excluded shares every hour on the half hour:\n" > /boot/config/plugins/dynamix/share_exclude.cron
-			OIFS=$IFS
-			IFS=","
-			list=($EXCLUDE_SHARES)
-			for ((i=0; i<${#list[@]}; ++i)); do
-				share=${list[$i]}
-				share_dir="/mnt/user/$share"
-				disk_dir="/mnt/$share"
-				if [ -d $share_dir ]; then
-					printf "30 * * * * rm -rf '$share_dir/.Recycle.Bin/' &> /dev/null\n" >> /boot/config/plugins/dynamix/share_exclude.cron
-				elif [ -d $disk_dir ]; then
-					printf "30 * * * * rm -rf '$disk_dir/.Recycle.Bin/' &> /dev/null\n" >> /boot/config/plugins/dynamix/share_exclude.cron
-				else
-					logger "Warning: '$share' is not a disk, cache, or user share and cannot be excluded" -t"$PROG_NAME"
-				fi
-			done
-			IFS=$OIFS
-			printf "\n" >> /boot/config/plugins/dynamix/share_exclude.cron
-		else
-			# Remove dynamix exclude share cron file.
-			rm -f /boot/config/plugins/dynamix/share_exclude.cron
-		fi
-
 		# Reload dynamix crons.
 		/usr/local/sbin/update_cron
 
-		# Restart samba.
-		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
-
 		# Create pid file to show the recycle bin is running.
 		echo "Running" > /var/run/${plugin}/${plugin}.pid
+
+		# Restart samba.
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -87,9 +62,6 @@ vfs_recycle_stop()
 		# Remove dynamix recycle bin cron file.
 		rm -f /boot/config/plugins/dynamix/recyclebin.cron
 
-		# Remove dynamix exclude share cron file.
-		rm -f /boot/config/plugins/dynamix/share_exclude.cron
-
 		# Reload dynamix crons.
 		/usr/local/sbin/update_cron
 
@@ -100,11 +72,11 @@ vfs_recycle_stop()
 			rm -f smb.tmp
 		fi
 
-		# Restart samba.
-		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
-
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
+
+		# Restart samba.
+		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
 	else
 		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -133,14 +105,10 @@ vfs_recycle_update()
 
 	# Adjust smb-extra.conf user set parameters.
 	if [ "$LOG" = "yes" ]; then
-		sed -i "/vfs objects =/c\   vfs objects = extd_audit recycle" /boot/config/plugins/${plugin}/config/smb-extra.conf
 		sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/${plugin}/config/smb-extra.conf
 	else
-		sed -i "/vfs objects =/c\   vfs objects = recycle" /boot/config/plugins/${plugin}/config/smb-extra.conf
 		sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/plugins/${plugin}/config/smb-extra.conf
 	fi
-	sed -i "/recycle:exclude =/c\   recycle:exclude = $EXCLUDE" /boot/config/plugins/${plugin}/config/smb-extra.conf
-	sed -i "/recycle:repository =/c\   recycle:repository = %P/.Recycle.Bin/$PARAMETERS" /boot/config/plugins/${plugin}/config/smb-extra.conf
 
 	# Start vfs recycle if service is enabled and not already running.
 	if [ "$SERVICE" = "enable" ]; then

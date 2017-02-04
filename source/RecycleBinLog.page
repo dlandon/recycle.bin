@@ -1,8 +1,8 @@
 Menu="RecycleBinSettings"
 Title="Deleted Files"
 ---
-<?PHP
-/* Copyright 2015-2016 Dan Landon
+<?php
+/* Copyright 2015-2017 Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -27,7 +27,7 @@ Title="Deleted Files"
 
 <?
 echo $display['resize'] ? "<pre class='up' style='display:none'>" : "<pre class='up'>";
-echo shell_exec('cat /var/log/samba/log.smbd | grep unlink 2>/dev/null');
+echo shell_exec("cat /var/log/samba/log.smbd | grep unlink | paste - - 2>/dev/null");
 echo "</pre>";
 ?>
 

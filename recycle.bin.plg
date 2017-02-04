@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2016.11.08">
+<!ENTITY version	"2017.02.04">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"bbc3c8df9fcc8e59eb4e8f636139c6d5">
+<!ENTITY MD5		"d7f2fe0c5e820fab7215410848185745">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Modifications for 6.3 final compatibility.  This version is not backwards compatible.
+- Fix: Recycle bins are now set up on a per share basis.  Excluding a share disables the recycle bin functionality on that share.
+
+2016.11.08
 - Fix: Eliminate error message when trying to determine the docroot.
 
 ###2016.10.30
@@ -182,7 +186,7 @@
 </CHANGES>
 
 <!--
-Copyright 2015-2016, Dan Landon
+Copyright 2015-2017, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba on unRAID.
 -->
@@ -194,10 +198,13 @@ The 'pre-install' script.
 <INLINE>
 # Check unRAID version
 source /etc/unraid-version
-if [[ ${version:0:3} == 6.0 ]]; then
-  echo "unRAID version 6.1 or higher is required"
+if [[ ${version:0:3} == 6.2 ]]; then
+  echo "unRAID version 6.3 or higher is required"
   exit 1
 fi
+
+# Remove old cron files.
+rm -rf /boot/config/plugins/dynamix/share_exclude.cron
 
 # Remove emhttp files so we can re-install.
 rm -rf /usr/local/emhttp/plugins/&name;/* 2>/dev/null
@@ -238,6 +245,7 @@ SCHEDRUN="no"
 AGE="7"
 NOTIFY="no"
 LOG="no"
+INCLUDE_UD="no"
 ]]>
 </INLINE>
 </FILE>
@@ -248,17 +256,8 @@ LOG="no"
 #vfs_recycle_start
 #Recycle bin configuration
 [global]
-   vfs objects = recycle
    syslog only = Yes
    log level = 0 vfs:0
-   recycle:repository = %P/.Recycle.Bin/
-   recycle:directory_mode = 0777
-   recycle:keeptree = Yes
-   recycle:touch = Yes
-   recycle:touch_mtime = Yes
-   recycle:versions = Yes
-   recycle:exclude = *.tmp   
-   recycle:exclude_dir = .Recycle.Bin
 #vfs_recycle_end
 ]]>
 </INLINE>
@@ -279,7 +278,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " Plugin &name; is installed."
-echo " Copyright 2015-2016 Dan Landon"
+echo " Copyright 2015-2017 Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""

@@ -3,8 +3,8 @@ Type="xmenu"
 Title="Recycle Bin"
 Icon="recycle.bin.png"
 ---
-<?PHP
-/* Copyright 2015-2016 Dan Landon.
+<?php
+/* Copyright 2015-2017 Dan Landon.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -13,20 +13,16 @@ Icon="recycle.bin.png"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-?>
 
-<?PHP
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
-$recycle_bin_enabled = no;
-	if (is_file("/boot/config/smb-extra.conf") && (strpos(file_get_contents("/boot/config/smb-extra.conf"),"recycle") !== false)):
-	{
-		$recycle_bin_enabled = yes;
-		shell_exec("echo 'Running' > /var/run/recycle.bin/recycle.bin.pid");
-	}
-	endif;
+if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
+	$recycle_bin_enabled = yes;
+} else {
+	$recycle_bin_enabled = no;
+}
 $recycle_bin_trashsize = exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
-exec ( "plugins/recycle.bin/scripts/rc.recycle.bin browse" );
+exec( "plugins/recycle.bin/scripts/rc.recycle.bin browse" );
 ?>
 
 <script>
@@ -68,7 +64,7 @@ $(function() {
 		</div>
 		<?if (($files = count(glob('/mnt/user/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disk*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disks/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/cache/.Recycle.Bin/' . '*')) + count(glob('/boot/.Recycle.Bin/' . '*'))) && $files > 0):?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
-				<a href='/Shares/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares."><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
+				<a href='/Settings/RecycleBinSettings/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares."><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
 				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
@@ -124,6 +120,14 @@ $(function() {
 
 	> Set to 'Yes' to enable the Recycle Bin when the server is started.
 
+	Enable on Unassigned Devices?
+	: <select name="INCLUDE_UD" size="1">
+		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "no", "No");?>
+		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "yes", "Yes");?>
+	  </select>
+
+	> Set to 'Yes' to enable the Recycle Bin on Unassigned Devices drive shares.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin.
+
 	Recycle Bin parameters:
 	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">
 
@@ -148,9 +152,8 @@ $(function() {
 	Excluded Shares:
 	: <input type="text" name="EXCLUDE_SHARES" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE_SHARES'];?>">
 
-	> List of shares to exclude from the Recycle Bin separated by commas.  A cron will be run every hour to remove deleted files.
+	> List of shares to exclude from the Recycle Bin separated by commas.  This list can include Unassigned Devices shares.  The share name is case sensitive.
 	>
-	> <strong>Note:</strong> Disks may spin up when this cron is run to remove deleted files.
 
 	Age Days:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
