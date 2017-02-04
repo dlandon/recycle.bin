@@ -33,6 +33,7 @@ if ($smb_file != "") {
 					"recycle:keeptree"			=> "Yes",
 					"recycle:touch"				=> "Yes",
 					"recycle:touch_mtime"		=> "Yes",
+					"recycle:minsize"			=> 1,
 					"recycle:versions"			=> "Yes",
 					"recycle:exclude"			=> "",   
 					"recycle:exclude_dir"		=> ".Recycle.Bin"

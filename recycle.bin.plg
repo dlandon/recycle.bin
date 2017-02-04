@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.04c">
+<!ENTITY version	"2017.02.04d">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"47da8abb49c7636e3e58e677eade9177">
+<!ENTITY MD5		"e7aecfbdf44fdea3d57df5bd65b0222d">
 ]>
 
 <PLUGIN  name="&name;"
@@ -20,6 +20,7 @@
 ###&version;
 - Add: Added a 'Statistics' tab to show the included shares and the recycle bin size on each share.
 - Fix: Issues with excluding UD devices.
+- Fix: Zero length files will not be saved to the recycle bin.
 
 ###2017.02.04
 - Add: Modifications for 6.3 final compatibility.  This version is not backwards compatible.
