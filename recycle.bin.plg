@@ -21,7 +21,7 @@
 - Add: Modifications for 6.3 final compatibility.  This version is not backwards compatible.
 - Fix: Recycle bins are now set up on a per share basis.  Excluding a share disables the recycle bin functionality on that share.
 
-2016.11.08
+###2016.11.08
 - Fix: Eliminate error message when trying to determine the docroot.
 
 ###2016.10.30
