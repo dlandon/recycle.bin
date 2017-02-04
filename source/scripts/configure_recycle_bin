@@ -65,7 +65,7 @@ if ($smb_file != "") {
 
 	if ($ud_config_file) {
 		// Remove recycle bin parameters from the UD coonfiguration.
-		foreach ($shares as $s) {
+		foreach ($smb_shares as $s) {
 			if (isset($smb_config[$s]['vfs objects'])) {
 				$smb_config[$s]['vfs objects'] = "";
 			}
