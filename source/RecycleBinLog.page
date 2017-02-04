@@ -11,24 +11,21 @@ Title="Deleted Files"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-?>
 
-<table class="tablesorter shift ups">
-<thead><tr><th>Log</th></tr></thead>
-</table>
+echo "<table class='tablesorter shift ups'>";
+echo "<thead><tr><th>Delete Files Log</th></tr></thead>";
+echo "</table>";
 
-<div>
-	<blockquote class='inline_help'>
-	<p>Recycle Bin Log Viewer:</p>
-	<p>The deleted files will show in the log as unlinked files.  Click on the 'Clear' button to clear the log.</p>
-	</blockquote>
-</div>
-<br /><br />
-
-<?
 echo $display['resize'] ? "<pre class='up' style='display:none'>" : "<pre class='up'>";
 echo shell_exec("cat /var/log/samba/log.smbd | grep unlink | paste - - 2>/dev/null");
 echo "</pre>";
+echo "</tbody></table>";
+echo "<div>";
+echo	"<blockquote class='inline_help'>";
+echo	"<p>Recycle Bin Statistics:</p>";
+echo	"<p>The deleted files will show in the log as unlinked files.  Click on the 'Clear' button to clear the log.</p>";
+echo	"</blockquote>";
+echo "</div>";
 ?>
 
 <form name="clear log" method="POST" action="/update.php" target="progressFrame">

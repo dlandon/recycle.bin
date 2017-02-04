@@ -1,0 +1,69 @@
+Menu="RecycleBinSettings"
+Title="Statistics"
+---
+<?php
+/* Copyright 2015-2017 Dan Landon
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+echo "<table class='tablesorter shift ups'>";
+echo "<thead><tr><th>Included Shares</th><th>Share Trash Size</th></tr></thead>";
+
+echo "<tbody>";
+$smb_config = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
+$smb_shares = array_keys($smb_config);
+$shares = array();
+echo "<tr><td><strong>User Shares:</strong></td></tr>";
+foreach($smb_shares as $share) {
+	if ($share == 'flash') {
+		$recycle_bin_trashsize = exec( "du -shc /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+	} else {
+		$recycle_bin_trashsize = exec( "du -shc /mnt/user/'$share'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+	}
+	$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
+	$recycle_bin_trashsize = str_replace( '0', '', $recycle_bin_trashsize );
+	echo "<tr><td>".$share."</td><td>".$recycle_bin_trashsize."</td></tr>";
+}
+$files = glob("/etc/samba/unassigned-shares/*.conf");
+echo "<tr><td><strong>Unassigned Devices Shares:</strong></td></tr>";
+foreach ($files as $file) {
+	$ud_config = parse_ini_file($file, true, INI_SCANNER_RAW);
+	$share_name = basename($file, ".conf");
+	if (isset($ud_config[$share_name]['vfs objects'])) {
+		$recycle_bin_trashsize = exec( "du -shc /mnt/disks/'$share_name'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
+		$recycle_bin_trashsize = str_replace( '0', '', $recycle_bin_trashsize );
+		echo "<tr><td>".$share_name."</td><td>".$recycle_bin_trashsize."</td></tr>";
+	}
+}
+echo "</tbody></table>";
+echo "<div>";
+echo	"<blockquote class='inline_help'>";
+echo	"<p>Recycle Bin Statistics:</p>";
+echo	"<p>The shares with the Recycle Bin enabled will be displayed along with the size of the share's Trash Bin.</p>";
+echo	"</blockquote>";
+echo "</div>";
+?>
+
+<form name="clear log" method="POST" action="/update.php" target="progressFrame">
+	<input type="button" value="Refresh" onclick="refresh()">
+	<input type="button" value="Done" onclick="done()">
+</form>
+
+<script>
+<?if ($display['resize']):?>
+function resize() {
+  $('pre.up').height(Math.max(window.innerHeight-340,370)).show();
+}
+$(function() {
+  resize();
+  $(window).bind('resize',function(){resize();});
+});
+<?endif;?>
+</script>
