@@ -126,7 +126,7 @@ $(function() {
 		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "yes", "Yes");?>
 	  </select>
 
-	> Set to 'Yes' to enable the Recycle Bin on Unassigned Devices drive shares.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin.
+	> Set to 'Yes' to enable the Recycle Bin on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin.
 
 	Recycle Bin parameters:
 	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">

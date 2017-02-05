@@ -10,9 +10,6 @@
  * all copies or substantial portions of the Software.
  */
 
-// Get the recycle bin confifuration.
-$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
-
 if (isset($argv[1])) {
 	$smb_file = $argv[1];
 	$ud_config_file = TRUE;
@@ -27,6 +24,9 @@ if (!is_file($smb_file)) {
 
 // If smb_file is not defined then there is nothing to configure
 if ($smb_file != "") {
+	// Get the recycle bin confifuration.
+	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
+
 	// Array of recycle bin parameters
 	$parms =  array("recycle:repository"		=> "%P/.Recycle.Bin/",
 					"recycle:directory_mode"	=> "0777",

@@ -43,8 +43,8 @@ vfs_recycle_start()
 		# Create pid file to show the recycle bin is running.
 		echo "Running" > /var/run/${plugin}/${plugin}.pid
 
-		# Restart samba.
-		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
+		# Reload samba configuration
+		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -75,8 +75,8 @@ vfs_recycle_stop()
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
 
-		# Restart samba.
-		/etc/rc.d/rc.samba restart 2>&1 >/dev/null
+		# Reload samba configuration
+		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
 	else
 		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
