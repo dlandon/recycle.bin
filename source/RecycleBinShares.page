@@ -1,5 +1,5 @@
-Menu="RecycleBinSettings"
-Title="Statistics"
+Menu="RecycleBinSettings:2"
+Title="Shares"
 ---
 <?php
 /* Copyright 2015-2017 Dan Landon
@@ -13,7 +13,7 @@ Title="Statistics"
  */
 
 echo "<table class='tablesorter shift ups'>";
-echo "<thead><tr><th>Included Shares</th><th>Share Trash Size</th></tr></thead>";
+echo "<thead><tr><th>Included Shares</th><th>Trash Size</th></tr></thead>";
 
 echo "<tbody>";
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );

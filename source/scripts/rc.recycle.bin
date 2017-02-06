@@ -45,6 +45,7 @@ vfs_recycle_start()
 
 		# Reload samba configuration
 		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		sleep 2
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -77,6 +78,7 @@ vfs_recycle_stop()
 
 		# Reload samba configuration
 		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		sleep 2
 	else
 		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -121,11 +123,11 @@ vfs_recycle_empty()
 	echo "Emptying Recycle Bin..."
 
 	# Remove deleted files from all shares.
-	rm -rf /mnt/user/*/.Recycle.Bin/*
-	rm -rf /mnt/disk*/.Recycle.Bin/*
-	rm -rf /mnt/disks/*/.Recycle.Bin/*
-	rm -rf /mnt/cache/.Recycle.Bin/*
-	rm -rf /boot/.Recycle.Bin/*
+	rm -rf /mnt/user/*/.Recycle.Bin
+	rm -rf /mnt/disk*/.Recycle.Bin
+	rm -rf /mnt/disks/*/.Recycle.Bin
+	rm -rf /mnt/cache/.Recycle.Bin
+	rm -rf /boot/.Recycle.Bin
 
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
@@ -139,6 +141,13 @@ vfs_recycle_remove()
 	find /mnt/disks/*/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/cache/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /boot/.Recycle.Bin/* -mtime +$AGE -exec rm -rf {} \; 2>/dev/null
+
+	# Remove all empty .Recycle.Bin directories.
+	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
 }
 
 vfs_recycle_purge()
@@ -171,10 +180,10 @@ vfs_recycle_browse()
 	cd /tmp
 
 	# Set up browsing directories for symlinks.
-	mkdir RecycleBin
-	mkdir RecycleBin/Disk
-	mkdir RecycleBin/User
-	mkdir RecycleBin/Unassigned
+	mkdir "RecycleBin"
+	mkdir "RecycleBin/Disk"
+	mkdir "RecycleBin/User Shares"
+	mkdir "RecycleBin/Unassigned"
 
 	# Disk, unassigned, and cache symlinks.
 	DIRS=`ls /mnt/`
@@ -190,7 +199,7 @@ vfs_recycle_browse()
 		elif [ "${DIR}" = "user" ]; then
 			ls /mnt/user | while read line
 			do
-				ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/User/"${line}"
+				ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
 			done
 		elif [ "${DIR}" != "user0" ]; then
 			ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}

@@ -22,7 +22,6 @@ if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 }
 $recycle_bin_trashsize = exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
-exec( "plugins/recycle.bin/scripts/rc.recycle.bin browse" );
 ?>
 
 <script>

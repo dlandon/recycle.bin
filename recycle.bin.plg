@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.05">
+<!ENTITY version	"2017.02.06">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"ab90311f26a92c424e6a38786cfa97c2">
+<!ENTITY MD5		"760249856b9febdd82dc15548e341545">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,11 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Reorganized tabs and made some minor adjustments.
+- Add: All .Recycle.Bin directories are removed when the recycle bin is enptied.
+- Add: All empty .Recycle.Bin directories are removed when the recycle bin is purged.
+
+###2017.02.05
 - Fix: Changed samba restart to samba reload configuration to prevent interruption of samba shares when the recycle bin is started and stopped.
 - Fix: Reformatted deleted files log.
 

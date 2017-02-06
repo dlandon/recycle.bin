@@ -1,4 +1,4 @@
-Menu="RecycleBinSettings"
+Menu="RecycleBinSettings:3"
 Title="Deleted Files"
 ---
 <?php
