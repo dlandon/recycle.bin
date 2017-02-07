@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.06">
+<!ENTITY version	"2017.02.06a">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"760249856b9febdd82dc15548e341545">
+<!ENTITY MD5		"a14922993dcd90cd8125ad42109012ef">
 ]>
 
 <PLUGIN  name="&name;"
@@ -324,6 +324,10 @@ The 'remove' script.
 -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
+# Remove svcs_restarting event to stop the updates
+rm -rf /usr/local/emhttp/plugins/&name;/event/svcs_restarting 2>/dev/null
+sleep 1
+
 # Run the stop recycle bin script in the background.
 echo "Stopping Recycle Bin..."
 at -M -f /tmp/&name;/stop_recycle.bin now 2>/dev/null
