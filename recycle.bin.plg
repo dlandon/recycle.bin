@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.06a">
+<!ENTITY version	"2017.02.08">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"a14922993dcd90cd8125ad42109012ef">
+<!ENTITY MD5		"abb5d3114de333dac235f8ff6f863e0f">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Excluded shares are now treated as wild cards unless quoted.
+- Fix: Some code cleanup in script generating smb-shares.conf.
+
+###2017.02.06a
 - Fix: Reorganized tabs and made some minor adjustments.
 - Add: All .Recycle.Bin directories are removed when the recycle bin is enptied.
 - Add: All empty .Recycle.Bin directories are removed when the recycle bin is purged.
@@ -27,7 +31,7 @@
 - Fix: Reformatted deleted files log.
 
 ##2017.02.04d
-- Add: Added a 'Statistics' tab to show the included shares and the recycle bin size on each share.
+- Add: Added a 'Shares' tab to show the included shares and the recycle bin size on each share.
 - Fix: Issues with excluding UD devices.
 - Fix: Zero length files will not be saved to the recycle bin.
 

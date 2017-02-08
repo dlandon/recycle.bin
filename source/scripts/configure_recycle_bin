@@ -41,9 +41,9 @@ if ($smb_file != "") {
 
 	// Adjust user set parameters.
 	if ($recycle_bin_cfg['LOG'] == "yes") {
-		$vfs_objects = " extd_audit recycle";
+		$vfs_objects = "extd_audit recycle";
 	} else {
-		$vfs_objects = " recycle";
+		$vfs_objects = "recycle";
 	}
 	
 	// Set the excluded files.
@@ -56,45 +56,45 @@ if ($smb_file != "") {
 	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);
 
 	// Get the excluded files from recycle bin configuration.
-	$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
+	if ($recycle_bin_cfg['EXCLUDE_SHARES'] != "") {
+		$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
+	} else {
+		$excluded_shares = array();
+	}
 
 	// Get all shares from the smb configuration file.
 	$smb_shares = array_keys($smb_config);
 
-	// Remove excluded shares.
-	$shares = array_diff($smb_shares, $excluded_shares);
+	// Remove excluded shares - treat excluded share as a wildcard.
+	$shares = $smb_shares;
+	if (!empty($excluded_shares)) {
+		foreach ($excluded_shares as $e) {
+			$shares = preg_grep('~'.$e.'~i', $shares, PREG_GREP_INVERT);
+		}
+	}
 
-	if ($ud_config_file) {
-		// Remove recycle bin parameters from the UD coonfiguration.
-		foreach ($smb_shares as $s) {
-			if (isset($smb_config[$s]['vfs objects'])) {
-				$smb_config[$s]['vfs objects'] = "";
-			}
-			$parms_keys = array_keys($parms);
-			foreach ($parms_keys as $key) {
-				if (isset($smb_config[$s][$key])) {
-					unset($smb_config[$s][$key]);
-				}
+	// Remove recycle bin parameters from the configuration.
+	foreach ($smb_shares as $s) {
+		if (isset($smb_config[$s]['vfs objects'])) {
+			$smb_config[$s]['vfs objects'] = str_replace($vfs_objects, "", $smb_config[$s]['vfs objects']);
+		}
+		$parms_keys = array_keys($parms);
+		foreach ($parms_keys as $key) {
+			if (isset($smb_config[$s][$key])) {
+				unset($smb_config[$s][$key]);
 			}
 		}
+	}
 
-		// Add ud parameters if recycle bin is running and UD shares are included.
-		if (is_file("/var/run/recycle.bin/recycle.bin.pid") && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes')) {
-			// Add vfs objects and recycle bin parameters.
+	if ((! $ud_config_file) || (($ud_config_file) && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes'))) {
+		// Add parameters if recycle bin is running.
+		if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 			foreach ($shares as $s) {
-				if ((isset($smb_config[$s]['vfs objects'])) && ($smb_config[$s]['vfs objects'] == "")) {
-					$smb_config[$s]['vfs objects'] .= $vfs_objects;
+				if (isset($smb_config[$s]['vfs objects'])) {
+					$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
 					$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
 					$smb_config[$s] = array_merge($smb_config[$s], $parms);
 				}
-			}
-		}
-	} else if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
-		// Add vfs objects and recycle bin parameters.
-		foreach ($shares as $s) {
-			if (isset($smb_config[$s]['vfs objects'])) {
-				$smb_config[$s]['vfs objects'] .= $vfs_objects;
-				$smb_config[$s] = array_merge($smb_config[$s], $parms);
 			}
 		}
 	}
