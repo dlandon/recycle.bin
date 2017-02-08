@@ -17,28 +17,28 @@ echo "<thead><tr><th>Included Shares</th><th>Trash Size</th></tr></thead>";
 
 echo "<tbody>";
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
-$smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
-$shares = array_keys($smb_shares);
-natcasesort($shares);
+$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
+$smb_config = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
+$smb_config_shares = array_keys($smb_config);
+$smb_shares = array_diff($smb_config_shares, $excluded_shares);
+$shares = array();
 echo "<tr><td><strong>User Shares:</strong></td><td></td></tr>";
-foreach($shares as $share) {
-	if (strpos($smb_shares[$share]['vfs objects'], "recycle")) {
-		if ($share == 'flash') {
-			$recycle_bin_trashsize = exec( "du -shc /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
-		} else {
-			$recycle_bin_trashsize = exec( "du -shc /mnt/user/'$share'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
-		}
-		$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
-		$recycle_bin_trashsize = str_replace( '0', '', $recycle_bin_trashsize );
-		echo "<tr><td>".$share."</td><td>".$recycle_bin_trashsize."</td></tr>";
+foreach($smb_shares as $share) {
+	if ($share == 'flash') {
+		$recycle_bin_trashsize = exec( "du -shc /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+	} else {
+		$recycle_bin_trashsize = exec( "du -shc /mnt/user/'$share'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 	}
+	$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
+	$recycle_bin_trashsize = str_replace( '0', '', $recycle_bin_trashsize );
+	echo "<tr><td>".$share."</td><td>".$recycle_bin_trashsize."</td></tr>";
 }
 $files = glob("/etc/samba/unassigned-shares/*.conf");
 echo "<tr><td><strong>Unassigned Devices Shares:</strong></td><td></td></tr>";
 foreach ($files as $file) {
 	$ud_config = parse_ini_file($file, true, INI_SCANNER_RAW);
 	$share_name = basename($file, ".conf");
-	if (strpos($ud_config[$share_name]['vfs objects'], "recycle")) {
+	if ($ud_config[$share_name]['vfs objects'] != "") {
 		$recycle_bin_trashsize = exec( "du -shc /mnt/disks/'$share_name'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 		$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
 		$recycle_bin_trashsize = str_replace( '0', '', $recycle_bin_trashsize );

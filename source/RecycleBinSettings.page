@@ -153,12 +153,6 @@ $(function() {
 
 	> List of shares to exclude from the Recycle Bin separated by commas.  This list can include Unassigned Devices shares.  The share name is case sensitive.
 	>
-	> The excluded share can include part of a share name and will exclude all shares with the excluded share in the actual share name.  If you want an exact match, use 'share name'.
-	>
-	> For example:
-	>
-	> 'Squidbait' will exclude all shares created by the Ransom Ware plugin.
-	>
 
 	Age Days:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
