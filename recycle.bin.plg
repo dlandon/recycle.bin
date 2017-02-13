@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.08">
+<!ENTITY version	"2017.02.10">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"abb5d3114de333dac235f8ff6f863e0f">
+<!ENTITY MD5		"16ddc52fa85794e31ac2e3684ff95139">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Trash size display issue in 'Shares'.
+
+###2017.02.08
 - Add: Excluded shares are now treated as wild cards unless quoted.
 - Fix: Some code cleanup in script generating smb-shares.conf.
 
