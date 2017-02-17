@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.10">
+<!ENTITY version	"2017.02.17">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"16ddc52fa85794e31ac2e3684ff95139">
+<!ENTITY MD5		"0757d8ca9c6a9664dfe1cac68e451181">
 ]>
 
 <PLUGIN  name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Reformat date on deleted files log to be consistent with other logs.
+
+###2017.02.10
 - Fix: Trash size display issue in 'Shares'.
 
 ###2017.02.08
@@ -33,7 +36,7 @@
 - Fix: Changed samba restart to samba reload configuration to prevent interruption of samba shares when the recycle bin is started and stopped.
 - Fix: Reformatted deleted files log.
 
-##2017.02.04d
+###2017.02.04d
 - Add: Added a 'Shares' tab to show the included shares and the recycle bin size on each share.
 - Fix: Issues with excluding UD devices.
 - Fix: Zero length files will not be saved to the recycle bin.

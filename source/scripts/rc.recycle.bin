@@ -41,7 +41,7 @@ vfs_recycle_start()
 		/usr/local/sbin/update_cron
 
 		# Create pid file to show the recycle bin is running.
-		echo "Running" > /var/run/${plugin}/${plugin}.pid
+		echo $$ > /var/run/${plugin}/${plugin}.pid
 
 		# Reload samba configuration
 		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
