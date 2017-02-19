@@ -3,21 +3,24 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.02.17">
+<!ENTITY version	"2017.02.19">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"0757d8ca9c6a9664dfe1cac68e451181">
+<!ENTITY MD5		"aeced9aa51fe98bda78e9e8eaf12baf1">
 ]>
 
-<PLUGIN  name="&name;"
-         author="&author;"
-         version="&version;"
-         launch="&launch;"
-         pluginURL="&pluginURL;">
+<PLUGIN	name="&name;"
+		author="&author;"
+		version="&version;"
+		launch="&launch;"
+		pluginURL="&pluginURL;">
 
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Minor event script rewrites.
+
+###2017.02.17
 - Fix: Reformat date on deleted files log to be consistent with other logs.
 
 ###2017.02.10
@@ -265,6 +268,7 @@ chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
 SERVICE="disable"
 PARAMETERS=""
 EXCLUDE="*.tmp"
+EXCLUDE_SHARES=""
 SCHEDRUN="no"
 AGE="7"
 NOTIFY="no"

@@ -12,5 +12,4 @@ foreach ($files as $file) {
 
 // Update the RecycleBin symlinks.
 exec("/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse");
-
 ?>

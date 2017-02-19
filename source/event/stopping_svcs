@@ -1,3 +1,8 @@
 #!/bin/bash
-# Stop recycle bin.
-/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop
+#
+plugin="recycle.bin"
+
+# Stop recycle bin if it is running.
+if [ -e "/var/run/${plugin}/${plugin}.pid" ]; then
+	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} stop
+fi
