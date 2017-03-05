@@ -22,22 +22,22 @@ vfs_recycle_start()
 		printf "\n" >> /boot/config/smb-extra.conf
 		cat /boot/config/plugins/${plugin}/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
-		# If cron run is enabled, add cron job to dynamix.
+		# If cron run is enabled, add cron job.
 		if [ "$SCHEDRUN" = "hourly" ]; then
-			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 * * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "0 * * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
 		elif [ "$SCHEDRUN" = "daily" ]; then
-			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "0 3 * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
 		elif [ "$SCHEDRUN" = "weekly" ]; then
-			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/dynamix/recyclebin.cron
-			printf "0 3 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/dynamix/recyclebin.cron
+			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "0 3 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
 		else
-			# Remove dynamix recycle bin cron file.
-			rm -f /boot/config/plugins/dynamix/recyclebin.cron
+			# Remove recycle bin cron file.
+			rm -f /boot/config/plugins/${plugin}/recyclebin.cron
 		fi
 
-		# Reload dynamix crons.
+		# Reload crons.
 		/usr/local/sbin/update_cron
 
 		# Create pid file to show the recycle bin is running.
@@ -60,10 +60,13 @@ vfs_recycle_stop()
 	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
 		echo "Stopping Recycle Bin..."
 
-		# Remove dynamix recycle bin cron file.
+		# Remove dynamix recycle bin cron file (Fix for cron being in the wrong directory).
 		rm -f /boot/config/plugins/dynamix/recyclebin.cron
 
-		# Reload dynamix crons.
+		# Remove recycle bin cron file.
+		rm -f /boot/config/plugins/${plugin}/recyclebin.cron
+
+		# Reload crons.
 		/usr/local/sbin/update_cron
 
 		# Remove vfs_recycle from smb-extra.conf.
