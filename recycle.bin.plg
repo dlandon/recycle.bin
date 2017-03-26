@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.03.05">
+<!ENTITY version	"2017.03.26">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"cc51bef00f1c584349f4088d83380483">
+<!ENTITY MD5		"bb49b2a19a469b717ee73ee3828ecb8e">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Remove browsing symlinks at /mnt/RecycleBin/ when Recycle Bin is not running.
+
+###2017.03.05
 - Fix: Move cron file to plugin directory.
 
 ###2017.02.19

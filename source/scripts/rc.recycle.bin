@@ -179,41 +179,43 @@ vfs_recycle_browse()
 	# Remove browsing directory.
 	rm -rf /mnt/RecycleBin
 
-	# Recycle bin browsing directory contains symlinks to shares.
-	cd /tmp
+	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
+		# Recycle bin browsing directory contains symlinks to shares.
+		cd /tmp
 
-	# Set up browsing directories for symlinks.
-	mkdir "RecycleBin"
-	mkdir "RecycleBin/Disk"
-	mkdir "RecycleBin/User Shares"
-	mkdir "RecycleBin/Unassigned"
+		# Set up browsing directories for symlinks.
+		mkdir "RecycleBin"
+		mkdir "RecycleBin/Disk"
+		mkdir "RecycleBin/User Shares"
+		mkdir "RecycleBin/Unassigned"
 
-	# Disk, unassigned, and cache symlinks.
-	DIRS=`ls /mnt/`
-	for DIR in $DIRS
-	do
-		if [ "${DIR}" = "disks" ]; then
-			ls /mnt/disks | while read line
-			do
-				ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
-			done
-		elif [ "${DIR}" = "cache" ]; then
-			ln -sf /mnt/cache/.Recycle.Bin RecycleBin/Cache
-		elif [ "${DIR}" = "user" ]; then
-			ls /mnt/user | while read line
-			do
-				ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
-			done
-		elif [ "${DIR}" != "user0" ]; then
-			ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
-		fi
-	done
+		# Disk, unassigned, and cache symlinks.
+		DIRS=`ls /mnt/`
+		for DIR in $DIRS
+		do
+			if [ "${DIR}" = "disks" ]; then
+				ls /mnt/disks | while read line
+				do
+					ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+				done
+			elif [ "${DIR}" = "cache" ]; then
+				ln -sf /mnt/cache/.Recycle.Bin RecycleBin/Cache
+			elif [ "${DIR}" = "user" ]; then
+				ls /mnt/user | while read line
+				do
+					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
+				done
+			elif [ "${DIR}" != "user0" ]; then
+				ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
+			fi
+		done
 
-	# Flash symlink.
-	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
+		# Flash symlink.
+		ln -sf /boot/.Recycle.Bin RecycleBin/Flash
 
-	# Move the RecycleBin to /mnt.
-	mv /tmp/RecycleBin /mnt/RecycleBin
+		# Move the RecycleBin to /mnt.
+		mv /tmp/RecycleBin /mnt/RecycleBin
+	fi
 }
 
 vfs_recycle_clear() {
