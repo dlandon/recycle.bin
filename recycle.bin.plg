@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.03.26">
+<!ENTITY version	"2017.04.30">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"bb49b2a19a469b717ee73ee3828ecb8e">
+<!ENTITY MD5		"aa5ab32d93533dcf38ed949ee5f68424">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Shares not showing when "Log Deleted Files" was set to "No".
+
+###2017.03.26
 - Fix: Remove browsing symlinks at /mnt/RecycleBin/ when Recycle Bin is not running.
 
 ###2017.03.05
