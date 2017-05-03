@@ -22,7 +22,7 @@ $shares = array_keys($smb_shares);
 natcasesort($shares);
 echo "<tr><td><strong>User Shares:</strong></td><td></td></tr>";
 foreach($shares as $share) {
-	if (strpos(" ".$smb_shares[$share]['vfs objects'], "recycle")) {
+	if (strpos($smb_shares[$share]['vfs objects'], "recycle") !== FALSE) {
 		if ($share == 'flash') {
 			$recycle_bin_trashsize = exec( "du -shc /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 		} else {
@@ -40,7 +40,7 @@ echo "<tr><td><strong>Unassigned Devices Shares:</strong></td><td></td></tr>";
 foreach ($files as $file) {
 	$ud_config = parse_ini_file($file, true, INI_SCANNER_RAW);
 	$share_name = basename($file, ".conf");
-	if (strpos(" ".$ud_config[$share_name]['vfs objects'], "recycle")) {
+	if (strpos($ud_config[$share_name]['vfs objects'], "recycle") !== FALSE) {
 		$recycle_bin_trashsize = exec( "du -shc /mnt/disks/'$share_name'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 		$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
 		if (trim($recycle_bin_trashsize) == "0") {
