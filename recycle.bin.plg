@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.05.03">
+<!ENTITY version	"2017.05.04">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"5a61d9bdb50269c35e9c85861015feef">
+<!ENTITY MD5		"2f57133cc15f107de3db67aadaa5cd1a">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Remove Recycle Bin simlinks at /mnt/RecycleBin at svcs_stopped event.
+
+###2017.05.03
 - Fix: Shares not showing when "Log Deleted Files" was set to "No".
 
 ###2017.03.26

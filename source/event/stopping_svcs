@@ -6,3 +6,6 @@ plugin="recycle.bin"
 if [ -e "/var/run/${plugin}/${plugin}.pid" ]; then
 	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} stop
 fi
+
+# Remove RecycleBin browse symlinks.
+rm -rf /mnt/RecycleBin
