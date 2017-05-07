@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.05.04">
+<!ENTITY version	"2017.05.07">
 <!ENTITY launch		"Settings/RecycleBinSettings">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"2f57133cc15f107de3db67aadaa5cd1a">
+<!ENTITY MD5		"70056f33c5b58566f8c8dcc7321020df">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Changed the recycle bin aging to the last access date and don't change the modify date when the file is put in the recycle bin.
+
+###2017.05.04
 - Fix: Remove Recycle Bin simlinks at /mnt/RecycleBin at svcs_stopped event.
 
 ###2017.05.03
