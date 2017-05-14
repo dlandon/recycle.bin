@@ -1,7 +1,5 @@
-Menu="Utilities"
-Type="xmenu"
-Title="Recycle Bin"
-Icon="recycle.bin.png"
+Menu="RecycleBin:1"
+Title="Settings"
 ---
 <?php
 /* Copyright 2015-2017 Dan Landon.
