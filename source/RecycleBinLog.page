@@ -13,7 +13,7 @@ Title="Deleted Files"
  */
 
 echo "<table class='tablesorter shift ups'>";
-echo "<thead><tr><th>Deleted Files Log</th></tr></thead>";
+echo "<thead><tr><th>Recycle Bin Deleted Files Log</th></tr></thead>";
 echo "</table>";
 
 echo $display['resize'] ? "<pre class='up' style='display:none'>" : "<pre class='up'>";

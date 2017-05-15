@@ -13,7 +13,7 @@ Title="Shares"
  */
 
 echo "<table class='tablesorter shift ups'>";
-echo "<thead><tr><th>Included Shares</th><th>Trash Size</th></tr></thead>";
+echo "<thead><tr><th>Recycle Bin Shares</th><th>Trash Size</th></tr></thead>";
 
 echo "<tbody>";
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );

@@ -29,7 +29,7 @@ $(function() {
 </script>
 
 <table class="tablesorter shift ups">
-<thead><tr><th>Settings</th></tr></thead>
+<thead><tr><th>Recycle Bin Settings</th></tr></thead>
 </table>
 
 <?if ($var['mdState']=="STARTED"):?>
@@ -61,7 +61,7 @@ $(function() {
 		</div>
 		<?if (($files = count(glob('/mnt/user/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disk*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disks/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/cache/.Recycle.Bin/' . '*')) + count(glob('/boot/.Recycle.Bin/' . '*'))) && $files > 0):?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
-				<a href='/Settings/RecycleBinSettings/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares."><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
+				<a href='/Settings/RecycleBin/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares."><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
 				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
