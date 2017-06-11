@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.05.14b">
+<!ENTITY version	"2017.06.11">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"1fa65baf7052a8f7d5d68b4cce6ba313">
+<!ENTITY MD5		"eef629448e30d5fc2bf76314a7dc2fec">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Modifications for unRAID 6.4 Azure and Gray themes.
+
+2017.05.14b
 - Fix: Change menu tabs.
 
 ###2017.05.07

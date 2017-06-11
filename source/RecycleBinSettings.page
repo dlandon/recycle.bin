@@ -33,7 +33,7 @@ $(function() {
 </table>
 
 <?if ($var['mdState']=="STARTED"):?>
-<div style="width: 49%; float:left">
+<div style="width: 35%; float:left">
 	<div>
 		<blockquote class='inline_help'>
 		<p>These actions apply to all shares:</p>
@@ -103,7 +103,7 @@ $(function() {
 		</div>
 	<?endif;?>
 </div>
-<div style="width: 49%; float:right">
+<div style="width: 65%; float:right">
 	<form markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="recycle.bin/recycle.bin.cfg">
 	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
