@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage:
-# start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear.
+# start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear|share.
 #
 
 vfs_recycle_start()
@@ -163,6 +163,20 @@ vfs_recycle_purge()
 	logger "User: Files older than $AGE days have been removed" -t"$PROG_NAME"
 }
 
+vfs_recycle_share()
+{
+	if [ "$share_empty" = "/mnt/user/flash" ];then
+		recycle_bin="/boot/.Recycle.Bin"
+	else
+		recycle_bin=$share_empty"/.Recycle.Bin"
+	fi
+	echo Emptying \'$(basename "$share_empty")\' Recycle Bin...
+
+	rm -rf "$recycle_bin"
+
+	sleep 1
+}	
+
 vfs_recycle_cron()
 {
 	vfs_recycle_remove
@@ -227,7 +241,7 @@ vfs_recycle_clear() {
 plugin="recycle.bin"
 CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
-PROG_NAME=${plugin}
+PROG_NAME="Recycle Bin"
 DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf 2>/dev/null`
 if [ -z ${DOCROOT} ];then
 	DOCROOT="/usr/local/emhttp"
@@ -264,6 +278,10 @@ case "$1" in
 	'clear')
 		vfs_recycle_clear
 	;;
+	'share')
+		share_empty=$2
+		vfs_recycle_share
+	;;
 	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear"
+		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear|share"
 esac

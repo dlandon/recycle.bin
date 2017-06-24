@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.06.11">
+<!ENTITY version	"2017.06.24">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"eef629448e30d5fc2bf76314a7dc2fec">
+<!ENTITY MD5		"bfd1851f0ca960793166c847fc80271e">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Recyle Bin shares tab shows only shares with Recycle Bin contents and Recycle Bins can now be emptied per share.
+
+###2017.06.11
 - Fix: Modifications for unRAID 6.4 Azure and Gray themes.
 
 ###2017.05.14b
