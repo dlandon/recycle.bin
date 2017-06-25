@@ -12,20 +12,21 @@ Title="Deleted Files"
  * all copies or substantial portions of the Software.
  */
 
+echo "<div>";
+echo	"<blockquote class='inline_help'>";
+echo	"<p>Recycle Bin Log:</p>";
+echo	"<p>The deleted files will show in the log as unlinked files.  Click on the 'Clear' button to clear the log.</p>";
+echo	"</blockquote>";
+echo "</div>";
+
 echo "<table class='tablesorter shift ups'>";
-echo "<thead><tr><th>Recycle Bin Deleted Files Log</th></tr></thead>";
+echo "<thead><tr><th>Deleted Files Log</th></tr></thead>";
 echo "</table>";
 
 echo $display['resize'] ? "<pre class='up' style='display:none'>" : "<pre class='up'>";
 echo shell_exec("cat /var/log/samba/log.smbd | grep unlink | paste - - |  awk '{t=substr($1,2,10);gsub(\"/\",\" \",t);printf strftime(\"%b %d\", mktime(t\" 00 00 00\")) \" %s  %s =>%s\", substr($2,1,8), $6, $1=$2=$3=$4=$5=$6=\"\";print substr($0,6)}' 2>/dev/null");
 echo "</pre>";
 echo "</tbody></table>";
-echo "<div>";
-echo	"<blockquote class='inline_help'>";
-echo	"<p>Recycle Bin Statistics:</p>";
-echo	"<p>The deleted files will show in the log as unlinked files.  Click on the 'Clear' button to clear the log.</p>";
-echo	"</blockquote>";
-echo "</div>";
 ?>
 
 <form name="clear log" method="POST" action="/update.php" target="progressFrame">
