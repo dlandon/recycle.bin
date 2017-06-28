@@ -142,7 +142,7 @@ $(function() {
 	> + '%m' Machine name of the user who deleted the file
 
 	Excluded Files:
-	: <input type="text" name="EXCLUDE" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE'];?>">
+	: <input type="text" name="EXCLUDE" class="narrow" maxlength="150" value="<?=$recycle_bin_cfg['EXCLUDE'];?>">
 
 	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
 

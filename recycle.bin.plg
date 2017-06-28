@@ -6,7 +6,7 @@
 <!ENTITY version	"2017.06.25">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"42aa02b6aee2709caabef9b1fe47a6db">
+<!ENTITY MD5		"0d4ae9516739ec3f6cdec3ced0fb620f">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Increase the excluded files field size in the Recycle Bin settings to 150 characters.
+
+###2017.06.25
 - Fix: Don't display UD shares if UD recycle bin setting is off or there are no UD shares.
 - Fix: Some webui cleanup and changes.
 
