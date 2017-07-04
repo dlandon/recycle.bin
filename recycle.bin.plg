@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.06.28">
+<!ENTITY version	"2017.07.04">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"0d4ae9516739ec3f6cdec3ced0fb620f">
+<!ENTITY MD5		"8f4b645874b32bfb79cc5c714d4b0ee2">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Unassigned Devices with spaces in the share name would not show on the shares tab.
+
+###2017.06.28
 - Add: Increase the excluded files field size in the Recycle Bin settings to 150 characters.
 
 ###2017.06.25

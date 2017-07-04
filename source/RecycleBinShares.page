@@ -59,7 +59,7 @@ if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
 		echo "<thead><tr><th>Unassigned Devices Shares</th><th></th><th></th></tr></thead>";
 		foreach ($files as $file) {
 			$ud_config = parse_ini_file($file, true, INI_SCANNER_RAW);
-			$share_name = basename($file, ".conf");
+			$share_name = key($ud_config);
 			if (strpos($ud_config[$share_name]['vfs objects'], "recycle") !== FALSE) {
 				$recycle_bin_trashsize = exec( "du -shc /mnt/disks/'$share_name'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 				$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
