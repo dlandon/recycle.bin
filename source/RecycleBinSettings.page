@@ -2,7 +2,7 @@ Menu="RecycleBin:1"
 Title="Settings"
 ---
 <?php
-/* Copyright 2015-2017 Dan Landon.
+/* Copyright 2015-2018 Dan Landon.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -14,9 +14,9 @@ Title="Settings"
 
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
 if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
-	$recycle_bin_enabled = yes;
+	$recycle_bin_enabled = "yes";
 } else {
-	$recycle_bin_enabled = no;
+	$recycle_bin_enabled = "no";
 }
 $recycle_bin_trashsize = exec( "du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 $recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );

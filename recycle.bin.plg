@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2017.07.04">
+<!ENTITY version	"2018.03.03">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"8f4b645874b32bfb79cc5c714d4b0ee2">
+<!ENTITY MD5		"a59910573c85e92f25212b5333c2553f">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+2018.03.03
+- Fix: Php warnings in unRAID 6.5.
+
+2017.07.04
 - Fix: Unassigned Devices with spaces in the share name would not show on the shares tab.
 
 ###2017.06.28
@@ -340,7 +344,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " Plugin &name; is installed."
-echo " Copyright 2015-2017 Dan Landon"
+echo " Copyright 2015-2018 Dan Landon"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
