@@ -18,10 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
-2018.03.03
 - Fix: Php warnings in unRAID 6.5.
 
-2017.07.04
+###2017.07.04
 - Fix: Unassigned Devices with spaces in the share name would not show on the shares tab.
 
 ###2017.06.28
