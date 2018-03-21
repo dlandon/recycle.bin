@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2018.03.03">
+<!ENTITY version	"2018.03.21">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"a59910573c85e92f25212b5333c2553f">
+<!ENTITY MD5		"5f67822d569f6581ba2105d9b61b9a01">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Minimum unRAID version check.
+
+###2018.03.03
 - Fix: Php warnings in unRAID 6.5.
 
 ###2017.07.04
@@ -250,23 +253,37 @@
 </CHANGES>
 
 <!--
-Copyright 2015-2017, Dan Landon
+Copyright 2015-2018, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba on unRAID.
 -->
+
+<!-- The 'version-check' script. -->
+<FILE Run="/usr/bin/php">
+<INLINE>
+<![CDATA[
+<?
+  $version = parse_ini_file("/etc/unraid-version");
+  
+  if ( version_compare($version['version'],"6.3", "<") )
+  {
+    echo "**********************************************************\n";
+    echo "\n";
+    echo "Recycle Bin Requires unRAID version 6.3 or greater to run.\n";
+    echo "\n";
+    echo "**********************************************************\n";
+    exit(1);
+  }
+?>
+]]>
+</INLINE>
+</FILE>
 
 <!--
 The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-# Check unRAID version
-source /etc/unraid-version
-if [[ ${version:0:3} == 6.2 ]]; then
-  echo "unRAID version 6.3 or higher is required"
-  exit 1
-fi
-
 # Remove old cron files.
 rm -rf /boot/config/plugins/dynamix/share_exclude.cron
 
@@ -342,8 +359,8 @@ fi
 
 echo ""
 echo "-----------------------------------------------------------"
-echo " Plugin &name; is installed."
-echo " Copyright 2015-2018 Dan Landon"
+echo " &name; has been installed."
+echo " Copyright 2015-2018 &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
@@ -391,7 +408,7 @@ rm -rf /mnt/RecycleBin
 
 echo ""
 echo "-----------------------------------------------------------"
-echo " Plugin &name; has been removed."
+echo " &name; has been removed."
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
