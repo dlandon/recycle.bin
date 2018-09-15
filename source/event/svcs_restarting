@@ -1,15 +1,6 @@
-#!/usr/bin/php
-<?php
+#!/bin/bash
+#
+plugin="recycle.bin"
 
-// Update the smb-shares configuration.
-exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin");
+/usr/local/emhttp/plugins/${plugin}/scripts/restart_services
 
-// Update unassigned devices configurations.
-$files = glob("/etc/samba/unassigned-shares/*.conf");
-foreach ($files as $file) {
-	exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin '$file'");
-}
-
-// Update the RecycleBin symlinks.
-exec("/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse");
-?>

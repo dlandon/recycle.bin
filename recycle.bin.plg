@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2018.03.21">
+<!ENTITY version	"2018.09.15">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY MD5		"5f67822d569f6581ba2105d9b61b9a01">
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Recycle bin parameters are not applied when changes are made.
+
+###2018.03.21
 - Fix: Minimum unRAID version check.
 
 ###2018.03.03

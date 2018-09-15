@@ -43,8 +43,12 @@ vfs_recycle_start()
 		# Create pid file to show the recycle bin is running.
 		echo $$ > /var/run/${plugin}/${plugin}.pid
 
+		# Run recycle bin setup to configure vfs_recycle
+		${DOCROOT}/plugins/${plugin}/scripts/restart_services
+		sleep 1
+
 		# Reload samba configuration
-		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		/etc/rc.d/rc.samba restart
 		sleep 2
 	else
 		echo "Recycle Bin is already running"
@@ -79,8 +83,12 @@ vfs_recycle_stop()
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
 
+		# Run recycle bin setup to configure vfs_recycle
+		${DOCROOT}/plugins/${plugin}/scripts/restart_services
+		sleep 1
+
 		# Reload samba configuration
-		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		/etc/rc.d/rc.samba restart
 		sleep 2
 	else
 		echo "Recycle Bin is not running"
