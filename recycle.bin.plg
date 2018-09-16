@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2018.09.15">
+<!ENTITY version	"2018.09.15a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"8cfa5086025bc14144f4f27dd4dd7635">
+<!ENTITY MD5		"82d6b3db7ba2ce56a32fb3392b83d96b">
 ]>
 
 <PLUGIN	name="&name;"

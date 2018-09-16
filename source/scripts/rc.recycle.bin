@@ -48,7 +48,7 @@ vfs_recycle_start()
 		sleep 1
 
 		# Reload samba configuration
-		/etc/rc.d/rc.samba restart
+		/etc/rc.d/rc.samba restart 1>/dev/null
 		sleep 2
 	else
 		echo "Recycle Bin is already running"
@@ -88,7 +88,7 @@ vfs_recycle_stop()
 		sleep 1
 
 		# Reload samba configuration
-		/etc/rc.d/rc.samba restart
+		/etc/rc.d/rc.samba restart 1>/dev/null
 		sleep 2
 	else
 		echo "Recycle Bin is not running"
