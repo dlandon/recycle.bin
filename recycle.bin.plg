@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2018.09.15a">
+<!ENTITY version	"2018.11.04">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"82d6b3db7ba2ce56a32fb3392b83d96b">
+<!ENTITY MD5		"b3f484c334449e89153b46ab8cb1a228">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,13 +18,16 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Unraid capitalization.
+
+###2018.09.15a
 - Fix: Recycle bin parameters are not applied when changes are made.
 
 ###2018.03.21
-- Fix: Minimum unRAID version check.
+- Fix: Minimum Unraid version check.
 
 ###2018.03.03
-- Fix: Php warnings in unRAID 6.5.
+- Fix: Php warnings in Unraid 6.5.
 
 ###2017.07.04
 - Fix: Unassigned Devices with spaces in the share name would not show on the shares tab.
@@ -40,7 +43,7 @@
 - Add: Recyle Bin shares tab shows only shares with Recycle Bin contents and Recycle Bins can now be emptied per share.
 
 ###2017.06.11
-- Fix: Modifications for unRAID 6.4 Azure and Gray themes.
+- Fix: Modifications for Unraid 6.4 Azure and Gray themes.
 
 ###2017.05.14b
 - Fix: Change menu tabs.
@@ -101,7 +104,7 @@
 - Fix: Changed absolute path using $docroot in preparation for moving from emhttp.
 
 ###2016.10.22a
-- Fix: Updates for compatibility with unRAID 6.2 and later.
+- Fix: Updates for compatibility with Unraid 6.2 and later.
 
 ###2016.10.20
 - Fix: Recursion where unmounting_disks event was left in.
@@ -135,7 +138,7 @@
 - Add: Ability to exclude shares.  A cron is run once an hour to remove deleted files from the share.  Note: Disks may spin up to remove the deleted files.
 
 ###2016.01.16
-- Add: Compatibility with unRAID 6.1.7.
+- Add: Compatibility with Unraid 6.1.7.
 
 ###2015.12.31
 - Add: Deleted files log now scrolls in preparation for next release of Dynamix.
@@ -144,7 +147,7 @@
 - Add: MD5 checksum to bundle file.
 
 ###2015.12.14
-- Add: unRaid version check.  Only unRaid 6.1 and higher.
+- Add: Unraid version check.  Only Unraid 6.1 and higher.
 
 ###2015.11.30
 - Fix: Dynamix cron entries not always updated.
@@ -252,13 +255,13 @@
 - Add: Help information.
 
 ###2015.09.05
-- Initial unRAID V6.1 release.
+- Initial Unraid V6.1 release.
 </CHANGES>
 
 <!--
 Copyright 2015-2018, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
-the vfs recycle functionality in samba on unRAID.
+the vfs recycle functionality in samba on Unraid.
 -->
 
 <!-- The 'version-check' script. -->
@@ -272,7 +275,7 @@ the vfs recycle functionality in samba on unRAID.
   {
     echo "**********************************************************\n";
     echo "\n";
-    echo "Recycle Bin Requires unRAID version 6.3 or greater to run.\n";
+    echo "Recycle Bin Requires Unraid version 6.3 or greater to run.\n";
     echo "\n";
     echo "**********************************************************\n";
     exit(1);

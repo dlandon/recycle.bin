@@ -136,7 +136,7 @@ $(function() {
 	> Hint: Use the '/' for more control of the directory structure in the Recycle Bin.
 	> For example '%m/%S' will organize the deleted files by the machine name that deleted the file and then the share name structure.
 	>
-	> + '%S' Samba share name (which in unRaid equals the share name), eg. Storage
+	> + '%S' Samba share name (which in Unraid equals the share name), eg. Storage
 	> + '%P' User share full path, eg /mnt/user/Storage, /mnt/disk1, /mnt/disks/unassigned_device, /flash
 	> + '%u' Username of the current service, if any
 	> + '%m' Machine name of the user who deleted the file
