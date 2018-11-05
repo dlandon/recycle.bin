@@ -192,7 +192,7 @@ vfs_recycle_cron()
 	logger "Scheduled: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
 	if [ "$NOTIFY" = "yes" ]; then
-		${DOCROOT}/webGui/scripts/notify -e "unRAID Server Notice" -s "Recycle Bin" -d "Scheduled: Files older than $AGE days have been removed" -i "normal"
+		${DOCROOT}/webGui/scripts/notify -e "Unraid Server Notice" -s "Recycle Bin" -d "Scheduled: Files older than $AGE days have been removed" -i "normal"
 	fi
 }
 
