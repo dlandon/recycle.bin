@@ -3,4 +3,3 @@
 plugin="recycle.bin"
 
 /usr/local/emhttp/plugins/${plugin}/scripts/restart_services
-

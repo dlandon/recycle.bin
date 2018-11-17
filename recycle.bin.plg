@@ -6,7 +6,7 @@
 <!ENTITY version	"2018.11.05">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"68b319e37ebb83a4847c54f3f975f05b">
+<!ENTITY MD5		"43d8152be158c9bdab1cbd8a0e346cc4">
 ]>
 
 <PLUGIN	name="&name;"
@@ -18,6 +18,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Timeout on trying to caclulate the recycle bin size after 10 seconds.
+
+2018.11.05
 - Fix: Unraid capitalization.
 
 ###2018.09.15a
