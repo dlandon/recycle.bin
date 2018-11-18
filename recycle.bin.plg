@@ -21,7 +21,7 @@
 - Add: Timeout on trying to caclulate the recycle bin size after 10 seconds.
 - Fix: Arranged the recycle bin calculation to a more appropriate place.
 
-2018.11.05
+###2018.11.05
 - Fix: Unraid capitalization.
 
 ###2018.09.15a
