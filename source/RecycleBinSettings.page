@@ -45,11 +45,12 @@ $(function() {
 	</div>
 	<?if ($recycle_bin_enabled=="yes"):?>
 		<?
+			$cmd = "";
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 			if ($recycle_bin_trashsize == "") {
 				$recycle_bin_trashsize = "?";
 			} else {
-				$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
+				$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize ));
 			}
 		?>
 		<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
@@ -66,7 +67,7 @@ $(function() {
 				<input type="submit" value="Restart" title="Restart the Recycle Bin.">
 			</form>
 		</div>
-		<?if (($files = count(glob('/mnt/user/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disk*/.Recycle.Bin/' . '*')) + count(glob('/mnt/disks/*/.Recycle.Bin/' . '*')) + count(glob('/mnt/cache/.Recycle.Bin/' . '*')) + count(glob('/boot/.Recycle.Bin/' . '*'))) && $files > 0):?>
+		<?if ($recycle_bin_trashsize!="0"):?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
 				<a href='/Settings/RecycleBin/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares."><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>

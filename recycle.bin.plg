@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2018.11.18">
+<!ENTITY version	"2018.11.18a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"f7dd5a650dc8d0739a97a387f2a8fd39">
+<!ENTITY MD5		"7a5c39fda102638076bf57ad3f3d581a">
 ]>
 
 <PLUGIN	name="&name;"
@@ -20,6 +20,7 @@
 ###&version;
 - Add: Ability to browse individual shares on shares tab.
 - Add: Timeout on determining share recycle bin size.
+- Fix: False empty recycle bin status.
 
 ###2018.11.17a
 - Add: Timeout on trying to caclulate the recycle bin size after 10 seconds.
