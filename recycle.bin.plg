@@ -6,7 +6,7 @@
 <!ENTITY version	"2018.11.18a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"7a5c39fda102638076bf57ad3f3d581a">
+<!ENTITY MD5		"1f1c9eca06c6fe955ca5fbb8cd7cd177">
 ]>
 
 <PLUGIN	name="&name;"
