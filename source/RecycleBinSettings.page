@@ -18,14 +18,6 @@ if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 } else {
 	$recycle_bin_enabled = "no";
 }
-
-$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
-
-if ($recycle_bin_trashsize == "") {
-	$recycle_bin_trashsize = "?";
-} else {
-	$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
-}
 ?>
 
 <script>
@@ -52,6 +44,14 @@ $(function() {
 		</blockquote>
 	</div>
 	<?if ($recycle_bin_enabled=="yes"):?>
+		<?
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -shc /mnt/user/*/.Recycle.Bin/ /mnt/disk*/.Recycle.Bin/ /mnt/disks/*/.Recycle.Bin/ /mnt/cache/.Recycle.Bin/ /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+			if ($recycle_bin_trashsize == "") {
+				$recycle_bin_trashsize = "?";
+			} else {
+				$recycle_bin_trashsize = str_replace( 'total', '', $recycle_bin_trashsize );
+			}
+		?>
 		<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
 			<form name="stop_recycle_bin" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
