@@ -2,7 +2,7 @@ Menu="RecycleBin:1"
 Title="Settings"
 ---
 <?php
-/* Copyright 2015-2018 Dan Landon.
+/* Copyright 2015-2019 Dan Landon.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -39,7 +39,7 @@ $(function() {
 		<list>
 		<li>Click on the <strong>Trash Can Icon</strong> to browse the deleted files Recycle Bin.</li>
 		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
-		<li>Click on <strong>Empty Trash</strong> to remove all deleted files.</li>
+		<li>Click on <strong>Empty All Trash</strong> to remove all deleted files.</li>
 		</list>
 		</blockquote>
 	</div>
@@ -79,7 +79,7 @@ $(function() {
 				<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 					<input type="hidden" name="#arg[1]" value="empty">
-					<input type="submit" value="Empty Trash" title="Remove all files from the Recycle Bin.">
+					<input type="submit" value="Empty All Trash" title="Remove all files from the Recycle Bin.">
 				</form>
 			</div>
 		<?else:?>

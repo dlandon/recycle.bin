@@ -3,21 +3,28 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2018.11.18a">
+<!ENTITY version	"2019.01.14">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
-<!ENTITY MD5		"1f1c9eca06c6fe955ca5fbb8cd7cd177">
+<!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
+<!ENTITY MD5		"7f92c9ad5da4fd35396b6155da21839e">
 ]>
 
 <PLUGIN	name="&name;"
 		author="&author;"
 		version="&version;"
 		launch="&launch;"
-		pluginURL="&pluginURL;">
+		pluginURL="&pluginURL;"
+		support="&supportURL;"
+		icon="trash"
+		min="6.4.0">
 
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Icons for v6.
+
+#2018.11.18a
 - Add: Ability to browse individual shares on shares tab.
 - Add: Timeout on determining share recycle bin size.
 - Fix: False empty recycle bin status.
@@ -273,27 +280,6 @@ VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and m
 the vfs recycle functionality in samba on Unraid.
 -->
 
-<!-- The 'version-check' script. -->
-<FILE Run="/usr/bin/php">
-<INLINE>
-<![CDATA[
-<?
-  $version = parse_ini_file("/etc/unraid-version");
-  
-  if ( version_compare($version['version'],"6.3", "<") )
-  {
-    echo "**********************************************************\n";
-    echo "\n";
-    echo "Recycle Bin Requires Unraid version 6.3 or greater to run.\n";
-    echo "\n";
-    echo "**********************************************************\n";
-    exit(1);
-  }
-?>
-]]>
-</INLINE>
-</FILE>
-
 <!--
 The 'pre-install' script.
 -->
@@ -375,7 +361,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
-echo " Copyright 2015-2018 &author;"
+echo " Copyright 2015-2019 &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
