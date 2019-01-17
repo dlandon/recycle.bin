@@ -7,7 +7,7 @@
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"baedb3ee68a06cff18b741311302c035">
+<!ENTITY MD5		"52dd756ae3da39f9ec65b547c36083ab">
 ]>
 
 <PLUGIN	name="&name;"
