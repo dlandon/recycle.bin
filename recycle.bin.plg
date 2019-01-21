@@ -30,7 +30,7 @@
 ###2019.01.14
 - Fix: Icons for v6.
 
-#2018.11.18a
+###2018.11.18a
 - Add: Ability to browse individual shares on shares tab.
 - Add: Timeout on determining share recycle bin size.
 - Fix: False empty recycle bin status.
