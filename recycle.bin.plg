@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.01.21">
+<!ENTITY version	"2019.01.17">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"e3d858d4691cc2b8aa90b891f0bae180">
+<!ENTITY MD5		"cfdc42ffe9490d4009bf11bfb20ccce6">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,9 +22,6 @@
 <CHANGES>
 ##&name;
 ###&version;
-- Fix: Change trash can icon to fa icon.  Fix UD browse icon.
-
-###2019.01.17
 - Fix: Samba shares configuration for 6.7.
 
 ###2019.01.14
