@@ -69,7 +69,8 @@ $(function() {
 		</div>
 		<?if ($recycle_bin_trashsize!="0"):?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
-				<a href='/Settings/RecycleBin/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares."><img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
+				<a href='/Settings/RecycleBin/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares.">
+				<img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
 				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
 				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
