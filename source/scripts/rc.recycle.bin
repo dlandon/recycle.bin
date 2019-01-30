@@ -136,7 +136,9 @@ vfs_recycle_empty()
 	# Remove deleted files from all shares.
 	rm -rf /mnt/user/*/.Recycle.Bin
 	rm -rf /mnt/disk*/.Recycle.Bin
-	rm -rf /mnt/disks/*/.Recycle.Bin
+	if [ "$INCLUDE_UD" == "yes" ]; then
+		rm -rf /mnt/disks/*/.Recycle.Bin
+	fi
 	rm -rf /mnt/cache/.Recycle.Bin
 	rm -rf /boot/.Recycle.Bin
 
@@ -149,7 +151,9 @@ vfs_recycle_remove()
 	# Remove aged files.
 	find /mnt/user/*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/disk*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-	find /mnt/disks/*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+	if [ "$INCLUDE_UD" == "yes" ]; then
+		find /mnt/disks/*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+	fi
 	find /mnt/cache/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /boot/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 
@@ -216,10 +220,12 @@ vfs_recycle_browse()
 		for DIR in $DIRS
 		do
 			if [ "${DIR}" = "disks" ]; then
-				ls /mnt/disks | while read line
-				do
-					ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
-				done
+				if [ "$INCLUDE_UD" == "yes" ]; then
+					ls /mnt/disks | while read line
+					do
+						ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+					done
+				fi
 			elif [ "${DIR}" = "cache" ]; then
 				ln -sf /mnt/cache/.Recycle.Bin RecycleBin/Cache
 			elif [ "${DIR}" = "user" ]; then
