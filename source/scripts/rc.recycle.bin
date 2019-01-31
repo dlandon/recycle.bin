@@ -223,7 +223,9 @@ vfs_recycle_browse()
 				if [ "$INCLUDE_UD" == "yes" ]; then
 					ls /mnt/disks | while read line
 					do
-						ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+						if [ -f /etc/samba/unassigned-shares/"${line}".conf ]; then
+							ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+						fi
 					done
 				fi
 			elif [ "${DIR}" = "cache" ]; then
