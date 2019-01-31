@@ -41,7 +41,7 @@ foreach($shares as $share) {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 1 du -shc /boot/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 			$browse = "Flash";
 		} else {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 1 du -shc /mnt/user/'$share'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 du -shc /mnt/user/'$share'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 			$browse = "User Shares/".$share;
 		}
 		if ($recycle_bin_trashsize == "") {
@@ -73,7 +73,7 @@ if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
 			$ud_config = parse_ini_file($file, true, INI_SCANNER_RAW);
 			$share_name = key($ud_config);
 			$browse = "Unassigned/".$share_name;
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 1 du -shc /mnt/disks/'$share_name'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 du -shc /mnt/disks/'$share_name'/.Recycle.Bin/ 2>/dev/null | grep total 2>/dev/null" );
 			if ($recycle_bin_trashsize == "") {
 				$recycle_bin_trashsize = "?";
 			} else {
