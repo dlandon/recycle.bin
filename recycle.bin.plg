@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.01.31">
+<!ENTITY version	"2019.01.31a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"c7f2b585a698b868be19d06a6a1191db">
+<!ENTITY MD5		"038a54d2c634fe0a637ac42e8d13008e">
 ]>
 
 <PLUGIN	name="&name;"
@@ -25,6 +25,7 @@
 - Fix: Refresh Recycle Bin share browse when entering recycle bin settings.
 - Fix: Add all UD shares to the 'Shares' tab.
 - Fix: Properly handle when unassigned devices are not included in the recycle bin.
+- Fix: Check recycle bin size based on browse links.
 
 ###2019.01.22
 - Fix: Revert back to trash can icon on settings page.

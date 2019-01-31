@@ -213,7 +213,9 @@ vfs_recycle_browse()
 		mkdir "RecycleBin"
 		mkdir "RecycleBin/Disk"
 		mkdir "RecycleBin/User Shares"
-		mkdir "RecycleBin/Unassigned"
+		if [ "$INCLUDE_UD" == "yes" ]; then
+			mkdir "RecycleBin/Unassigned"
+		fi
 
 		# Disk, unassigned, and cache symlinks.
 		DIRS=`ls /mnt/`
@@ -228,8 +230,6 @@ vfs_recycle_browse()
 						fi
 					done
 				fi
-			elif [ "${DIR}" = "cache" ]; then
-				ln -sf /mnt/cache/.Recycle.Bin RecycleBin/Cache
 			elif [ "${DIR}" = "user" ]; then
 				ls /mnt/user | while read line
 				do
