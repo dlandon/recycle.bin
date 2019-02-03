@@ -18,6 +18,13 @@ vfs_recycle_start()
 			rm -f smb.tmp
 		fi
 
+		# Adjust smb-extra.conf user set parameters.
+		if [ "$LOG" = "yes" ]; then
+			sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/${plugin}/config/smb-extra.conf
+		else
+			sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/plugins/${plugin}/config/smb-extra.conf
+		fi
+
 		# Add vfs_recycle to smb-extra.conf.
 		printf "\n" >> /boot/config/smb-extra.conf
 		cat /boot/config/plugins/${plugin}/config/smb-extra.conf >> /boot/config/smb-extra.conf
@@ -115,13 +122,6 @@ vfs_recycle_update()
 {
 	# Stop vfs recycle.
 	vfs_recycle_stop
-
-	# Adjust smb-extra.conf user set parameters.
-	if [ "$LOG" = "yes" ]; then
-		sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/${plugin}/config/smb-extra.conf
-	else
-		sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/plugins/${plugin}/config/smb-extra.conf
-	fi
 
 	# Start vfs recycle if service is enabled and not already running.
 	if [ "$SERVICE" = "enable" ]; then

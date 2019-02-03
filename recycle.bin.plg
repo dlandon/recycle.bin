@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.03a">
+<!ENTITY version	"2019.02.03b">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"43df1d55d8136d13c47e6bc05de08352">
+<!ENTITY MD5		"0776d324c2deb2e10f503e7a0f02b0b6">
 ]>
 
 <PLUGIN	name="&name;"
@@ -31,6 +31,7 @@
 - Fix: Optimizations so the Recycle Bin will load faster.
 - Fix: Disk and cache shares not showing in the 'Shares'.
 - Add: Stop the Recycle Bin and then restart it when updating the plugin.
+- Fix: Logging not always turned on.
 
 ###2019.01.31b
 - Fix: Refresh Recycle Bin share browse when entering recycle bin settings.
