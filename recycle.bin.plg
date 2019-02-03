@@ -333,6 +333,7 @@ The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+# Stop the recycle bin if it is running
 if [ -e /var/run/&name;/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
