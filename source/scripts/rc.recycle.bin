@@ -160,7 +160,7 @@ vfs_recycle_remove()
 	if [ "$INCLUDE_UD" == "yes" ]; then
 		find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	fi
-	find /mnt/RecycleBin/Fash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 
 	# Remove all empty .Recycle.Bin directories.
 	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null

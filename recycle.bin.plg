@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.03">
+<!ENTITY version	"2019.02.03a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"3e7a0fa29b5db24242f14a8b33c4a7c3">
+<!ENTITY MD5		"43df1d55d8136d13c47e6bc05de08352">
 ]>
 
 <PLUGIN	name="&name;"
@@ -333,7 +333,6 @@ The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-# Stop the recycle bin
 if [ -e /var/run/&name;/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
@@ -413,7 +412,7 @@ fi
 # Restart the recycle bin if it was already running
 if [ -f /tmp/recycle.bin/stopped ]; then
 	# Start recycle bin in the background.
-	echo "Re-starting Recycle Bin..."
+	echo "Starting Recycle Bin..."
 	at -M -f /usr/local/emhttp/plugins/&name;/event/disks_mounted now 2>/dev/null
 
 	rm -rf /tmp/recycle.bin/stopped
@@ -434,7 +433,7 @@ The 'remove' script.
 -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
-# Stop the recycle bin
+# Stop the recycle bin if it is running
 if [ -e /var/run/&name;/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."

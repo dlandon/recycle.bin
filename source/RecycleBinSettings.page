@@ -137,8 +137,6 @@ $(function() {
 	  </select>
 
 	> Set to 'Yes' to enable the Recycle Bin deleted file functionality on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin functionality on this server.  Enable the Recycle Bin on the remote server where the remote share originates if it is an Unraid server.
-	>
-	> Note: Files in the existing .Recycle.Bin folder on remote SMB/NFS shares will show in the total size and on the 'Shares' tab and will be managed by the Recycle Bin 'Remove Aged Files', and 'Empty All Trash'.
 
 	Recycle Bin parameters:
 	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">
