@@ -25,7 +25,6 @@ if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 $(function() {
   showStatus('pid','recycle.bin/recycle.bin');
 });
-
 </script>
 
 <table class="tablesorter shift ups">
@@ -44,20 +43,20 @@ $(function() {
 		</list>
 		</blockquote>
 	</div>
+	<?
+		exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
+		$cmd = "/mnt/RecycleBin/User\ Shares/*/ /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/*";
+		if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
+			$cmd .= " /mnt/RecycleBin/Unassigned/*/";
+		}
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -shc {$cmd} 2>/dev/null | grep total 2>/dev/null" );
+		if ($recycle_bin_trashsize == "") {
+			$recycle_bin_trashsize = "?";
+		} else {
+			$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize ));
+		}
+	?>
 	<?if ($recycle_bin_enabled=="yes"):?>
-		<?
-			exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
-			$cmd = "/mnt/RecycleBin/User\ Shares/*/ /mnt/RecycleBin/Disk/* /mnt/RecycleBin/Flash/";
-			if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
-				$cmd .= " /mnt/RecycleBin/Unassigned/*/";
-			}
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -shc {$cmd} 2>/dev/null | grep total 2>/dev/null" );
-			if ($recycle_bin_trashsize == "") {
-				$recycle_bin_trashsize = "?";
-			} else {
-				$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize ));
-			}
-		?>
 		<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
 			<form name="stop_recycle_bin" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
@@ -72,43 +71,8 @@ $(function() {
 				<input type="submit" value="Restart" title="Restart the Recycle Bin.">
 			</form>
 		</div>
-		<?if ($recycle_bin_trashsize!="0"):?>
-			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
-				<a href='/Settings/RecycleBin/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares.">
-				<img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
-				<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
-				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
-					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
-					<input type="hidden" name="#arg[1]" value="purge">
-					<input type="submit" value="Remove Aged Files" title="Remove aged files from the Recycle Bin.">
-				</form>
-				<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
-					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
-					<input type="hidden" name="#arg[1]" value="empty">
-					<input type="submit" value="Empty All Trash" title="Remove all files from the Recycle Bin.">
-				</form>
-			</div>
-		<?else:?>
-			<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:35px">
-				<img src='/plugins/recycle.bin/images/recycle.bin_empty.png'><br />
-				<b>Recycle Bin is empty</b>
-				<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
-					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
-					<input type="hidden" name="#arg[1]" value="purge">
-					<input type="submit" value="Remove Aged Files" disabled>
-				</form>
-				<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
-					<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
-					<input type="hidden" name="#arg[1]" value="empty">
-					<input type="submit" value="Empty Trash" disabled>
-				</form>
-			</div>
-		<?endif;?>
-			<div style="position:relative;float:right;width:100%;text-align:center">
-			<input type="button" value="Refresh" onclick="refresh()" title="Refresh the Recycle Bin page.">
-		</div>
 	<?else:?>
-		<div style="position:relative;float:left;width:100%;text-align:center">
+		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px;margin-left:10px">
             <form name="start_recycle_bin" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="buttonstart">
@@ -116,6 +80,41 @@ $(function() {
             </form>
 		</div>
 	<?endif;?>
+	<?if ($recycle_bin_trashsize != "0"):?>
+		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
+			<a href='/Settings/RecycleBin/Browse?dir=/mnt/RecycleBin' title="Browse the Recycle Bin shares.">
+			<img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
+			<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
+			<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
+				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+				<input type="hidden" name="#arg[1]" value="purge">
+				<input type="submit" value="Remove Aged Files" title="Remove aged files from the Recycle Bin.">
+			</form>
+			<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
+				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+				<input type="hidden" name="#arg[1]" value="empty">
+				<input type="submit" value="Empty All Trash" title="Remove all files from the Recycle Bin.">
+			</form>
+		</div>
+	<?else:?>
+		<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:35px">
+			<img src='/plugins/recycle.bin/images/recycle.bin_empty.png'><br />
+			<b>Recycle Bin is empty</b>
+			<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
+				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+				<input type="hidden" name="#arg[1]" value="purge">
+				<input type="submit" value="Remove Aged Files" disabled>
+			</form>
+			<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
+				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+				<input type="hidden" name="#arg[1]" value="empty">
+				<input type="submit" value="Empty Trash" disabled>
+			</form>
+		</div>
+	<?endif;?>
+		<div style="position:relative;float:right;width:100%;text-align:center">
+		<input type="button" value="Refresh" onclick="refresh()" title="Refresh the Recycle Bin page.">
+	</div>
 </div>
 <div style="width: 65%; float:right">
 	<form markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
@@ -123,21 +122,23 @@ $(function() {
 	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 	<input type="hidden" name="#arg[1]" value="update">
 
-	Enable Recycle Bin?
+	Enable Recycle Bin for Deleted Files?
 	: <select name="SERVICE" size="1">
 		<?=mk_option($recycle_bin_cfg['SERVICE'], "disable", "No");?>
 		<?=mk_option($recycle_bin_cfg['SERVICE'], "enable", "Yes");?>
 	  </select>
 
-	> Set to 'Yes' to enable the Recycle Bin when the server is started.
+	> Set to 'Yes' to enable the Recycle Bin functionality for deleted files when the server is started.
 
-	Enable on Unassigned Devices?
+	Enable on Unassigned Devices for Deleted Files?
 	: <select name="INCLUDE_UD" size="1">
 		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "no", "No");?>
 		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "yes", "Yes");?>
 	  </select>
 
-	> Set to 'Yes' to enable the Recycle Bin on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin.
+	> Set to 'Yes' to enable the Recycle Bin deleted file functionality on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin functionality on this server.  Enable the Recycle Bin on the remote server where the remote share originates if it is an Unraid server.
+	>
+	> Note: Files in the existing .Recycle.Bin folder on remote SMB/NFS shares will show in the total size and on the 'Shares' tab and will be managed by the Recycle Bin 'Remove Aged Files', and 'Empty All Trash'.
 
 	Recycle Bin parameters:
 	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">
@@ -167,10 +168,9 @@ $(function() {
 	>
 	> The excluded share can include part of a share name and will exclude all shares with the excluded share in the actual share name.  If you want an exact match, use 'share name'.
 	>
-	> For example:
+	> For example: 'Squidbait' will exclude all shares created by the Ransom Ware plugin.
 	>
-	> 'Squidbait' will exclude all shares created by the Ransom Ware plugin.
-	>
+	> Note: Excluding a share only excludes it from deleted files going to the .Recycle.Bin folder on the share.  Files in the existing .Recycle.Bin folder will still show in the total size and on the 'Shares' tab.
 
 	Age Days:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">

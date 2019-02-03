@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.01.31b">
+<!ENTITY version	"2019.02.03">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"cd3ad89f797e659928424eed0d34d333">
+<!ENTITY MD5		"3e7a0fa29b5db24242f14a8b33c4a7c3">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,17 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Check Recycle Bin shares sizes based on browse links.
+- Fix: Show all shares with Recycle Bin contents even if excluded from the recycle bin deleted files functionality.
+- Fix: Allow management of the Recycle Bin when the deleted files functionality is disabled.
+- Fix: The Recycle Bin was enabled on UD remote and iso mounts when the Recycle Bin was started from the UI.
+- Add: Remote mounted UD shares are not managed or shown in the Recycle Bin.
+- Add: Additional help explanations.
+- Fix: Optimizations so the Recycle Bin will load faster.
+- Fix: Disk cna cache shares not showing in the 'Shares'.
+- Add: Stop the Recycle Bin and then restart it when updating the plugin.
+
+###2019.01.31b
 - Fix: Refresh Recycle Bin share browse when entering recycle bin settings.
 - Fix: Add all UD shares to the 'Shares' tab.
 - Fix: Properly handle when unassigned devices are not included in the recycle bin.
@@ -291,16 +302,49 @@
 </CHANGES>
 
 <!--
-Copyright 2015-2018, Dan Landon
+Copyright 2015-2019, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba on Unraid.
 -->
+
+<!--
+Get the plugin bundle.
+-->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
+<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
+<MD5>&MD5;</MD5>
+</FILE>
+
+<!--
+Recycle bin background wait script.
+-->
+<FILE Name="/tmp/&name;/wait_recycle.bin" Mode="0770">
+<INLINE>
+#!/bin/bash
+# Wait for the recycle bin to stop.
+while [ -e /var/run/&name;/&name;.pid ]; do
+	sleep 1
+done
+</INLINE>
+</FILE>
 
 <!--
 The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+# Stop the recycle bin
+if [ -e /var/run/&name;/&name;.pid ]; then
+	# Stop recycle bin in the background.
+	echo "Stopping Recycle Bin..."
+	at -M -f /usr/local/emhttp/plugins/&name;/event/stopping_svcs now 2>/dev/null
+
+	timeout 5 /tmp/&name;/wait_recycle.bin
+
+	# Show that the	recycle bin was already running
+	echo "" > /tmp/recycle.bin/stopped
+fi
+
 # Remove old cron files.
 rm -rf /boot/config/plugins/dynamix/share_exclude.cron
 
@@ -310,14 +354,6 @@ rm -rf /usr/local/emhttp/plugins/&name;/* 2>/dev/null
 # Remove old 'bundle' files.
 rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&version;')
 </INLINE>
-</FILE>
-
-<!--
-Get the plugin bundle.
--->
-<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
-<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
-<MD5>&MD5;</MD5>
 </FILE>
 
 <!--
@@ -374,6 +410,15 @@ if [ ! -e /var/run/&name; ]; then
 	chmod 0755 /var/run/&name;
 fi
 
+# Restart the recycle bin if it was already running
+if [ -f /tmp/recycle.bin/stopped ]; then
+	# Start recycle bin in the background.
+	echo "Re-starting Recycle Bin..."
+	at -M -f /usr/local/emhttp/plugins/&name;/event/disks_mounted now 2>/dev/null
+
+	rm -rf /tmp/recycle.bin/stopped
+fi
+
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
@@ -385,43 +430,33 @@ echo ""
 </FILE>
 
 <!--
-Recycle bin background stop script.
--->
-<FILE Name="/tmp/&name;/stop_recycle.bin" Mode="0770">
-<INLINE>
-#!/bin/bash
-# Stop recycle bin.
-/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop 2>/dev/null
-
-# Remove the pid file directory.
-rmdir /var/run/&name; 2>/dev/null
-
-# Remove plugin files.
-rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
-
-# Remove the background stop script.
-rm -rf /tmp/&name; 2>/dev/null
-</INLINE>
-</FILE>
-
-<!--
 The 'remove' script.
 -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
-# Remove svcs_restarting event to stop the updates
-rm -rf /usr/local/emhttp/plugins/&name;/event/svcs_restarting 2>/dev/null
-sleep 1
+# Stop the recycle bin
+if [ -e /var/run/&name;/&name;.pid ]; then
+	# Stop recycle bin in the background.
+	echo "Stopping Recycle Bin..."
+	at -M -f /usr/local/emhttp/plugins/&name;/event/stopping_svcs now 2>/dev/null
 
-# Run the stop recycle bin script in the background.
-echo "Stopping Recycle Bin..."
-at -M -f /tmp/&name;/stop_recycle.bin now 2>/dev/null
+	timeout 5 /tmp/&name;/wait_recycle.bin
+fi
+
+# Remove the background wait script.
+rm -rf /tmp/&name; 2>/dev/null
+
+# Remove plugin files from emhttp.
+rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
 
 # Remove plugin files from the flash drive.
 rm -rf /boot/config/plugins/&name; 2>/dev/null
 
 # Remove RecycleBin browse symlinks.
 rm -rf /mnt/RecycleBin
+
+# Remove the pid file directory.
+rmdir /var/run/&name; 2>/dev/null
 
 echo ""
 echo "-----------------------------------------------------------"

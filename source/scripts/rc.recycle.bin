@@ -134,13 +134,19 @@ vfs_recycle_empty()
 	echo "Emptying Recycle Bin..."
 
 	# Remove deleted files from all shares.
-	rm -rf /mnt/user/*/.Recycle.Bin
-	rm -rf /mnt/disk*/.Recycle.Bin
+	rm -rf /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null
+	rm -rf /mnt/RecycleBin/disk/*/ 2>/dev/null
 	if [ "$INCLUDE_UD" == "yes" ]; then
-		rm -rf /mnt/disks/*/.Recycle.Bin
+		rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
 	fi
-	rm -rf /mnt/cache/.Recycle.Bin
-	rm -rf /boot/.Recycle.Bin
+	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
+
+	# Remove all empty .Recycle.Bin directories.
+	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
 
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
@@ -149,13 +155,12 @@ vfs_recycle_empty()
 vfs_recycle_remove()
 {
 	# Remove aged files.
-	find /mnt/user/*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-	find /mnt/disk*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/RecycleBin/User\ Shares/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/RecycleBin/disk/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	if [ "$INCLUDE_UD" == "yes" ]; then
-		find /mnt/disks/*/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+		find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	fi
-	find /mnt/cache/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-	find /boot/.Recycle.Bin/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+	find /mnt/RecycleBin/Fash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 
 	# Remove all empty .Recycle.Bin directories.
 	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
@@ -177,14 +182,9 @@ vfs_recycle_purge()
 
 vfs_recycle_share()
 {
-	if [ "$share_empty" = "/mnt/user/flash" ];then
-		recycle_bin="/boot/.Recycle.Bin"
-	else
-		recycle_bin=$share_empty"/.Recycle.Bin"
-	fi
 	echo Emptying \'$(basename "$share_empty")\' Recycle Bin...
 
-	rm -rf "$recycle_bin"
+	rm -rf "$share_empty"
 
 	sleep 1
 }	
@@ -205,47 +205,45 @@ vfs_recycle_browse()
 	# Remove browsing directory.
 	rm -rf /mnt/RecycleBin
 
-	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
-		# Recycle bin browsing directory contains symlinks to shares.
-		cd /tmp
+	# Recycle bin browsing directory contains symlinks to shares.
+	cd /tmp
 
-		# Set up browsing directories for symlinks.
-		mkdir "RecycleBin"
-		mkdir "RecycleBin/Disk"
-		mkdir "RecycleBin/User Shares"
-		if [ "$INCLUDE_UD" == "yes" ]; then
-			mkdir "RecycleBin/Unassigned"
-		fi
-
-		# Disk, unassigned, and cache symlinks.
-		DIRS=`ls /mnt/`
-		for DIR in $DIRS
-		do
-			if [ "${DIR}" = "disks" ]; then
-				if [ "$INCLUDE_UD" == "yes" ]; then
-					ls /mnt/disks | while read line
-					do
-						if [ -f /etc/samba/unassigned-shares/"${line}".conf ]; then
-							ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
-						fi
-					done
-				fi
-			elif [ "${DIR}" = "user" ]; then
-				ls /mnt/user | while read line
-				do
-					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
-				done
-			elif [ "${DIR}" != "user0" ]; then
-				ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
-			fi
-		done
-
-		# Flash symlink.
-		ln -sf /boot/.Recycle.Bin RecycleBin/Flash
-
-		# Move the RecycleBin to /mnt.
-		mv /tmp/RecycleBin /mnt/RecycleBin
+	# Set up browsing directories for symlinks.
+	mkdir "RecycleBin"
+	mkdir "RecycleBin/Disk"
+	mkdir "RecycleBin/User Shares"
+	if [ "$INCLUDE_UD" == "yes" ]; then
+		mkdir "RecycleBin/Unassigned"
 	fi
+
+	# Disk, unassigned, and cache symlinks.
+	DIRS=`ls /mnt/`
+	for DIR in $DIRS
+	do
+		if [ "${DIR}" = "disks" ]; then
+			if [ "$INCLUDE_UD" == "yes" ]; then
+				ls /mnt/disks | while read line
+				do
+					if [ "`grep recycle /etc/samba/unassigned-shares/${line}.conf`" != "" ]; then
+						ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+					fi
+				done
+			fi
+		elif [ "${DIR}" = "user" ]; then
+			ls /mnt/user | while read line
+			do
+				ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
+			done
+		elif [ "${DIR}" != "user0" ]; then
+			ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
+		fi
+	done
+
+	# Flash symlink.
+	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
+
+	# Move the RecycleBin to /mnt.
+	mv /tmp/RecycleBin /mnt/RecycleBin
 }
 
 vfs_recycle_clear() {

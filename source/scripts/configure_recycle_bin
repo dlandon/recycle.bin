@@ -18,6 +18,13 @@ if (isset($argv[1])) {
 	$ud_config_file = FALSE;
 }
 
+if (file_exists("plugins/unassigned.devices/include/lib.php")) {
+	require_once("plugins/unassigned.devices/include/lib.php");
+	$UD_installed = TRUE;
+} else {
+	$UD_installed = FALSE;
+}	
+
 if (!is_file($smb_file)) {
 	$smb_file = "";
 }
@@ -60,6 +67,21 @@ if ($smb_file != "") {
 		$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
 	} else {
 		$excluded_shares = array();
+	}
+
+	// If UD is installed, we need to exclude any samba and iso mounts
+	if ($UD_installed) {
+		// Get the samba mounts
+		$samba_mounts = get_samba_mounts();
+		foreach (get_samba_mounts() as $name => $info) {
+			$s = basename($info['target']);
+			$excluded_shares[] .= $s;
+		}
+		// Get ISO File Mounts
+		foreach (get_iso_mounts() as $name => $info) {
+			$s = basename($info['target']);
+			$excluded_shares[] .= $s;
+		}
 	}
 
 	// Get all shares from the smb configuration file.
@@ -112,6 +134,8 @@ if ($smb_file != "") {
 
 
 	// Write the new configuration.
-	file_put_contents($smb_file, $iniFile);
+	if ($iniFile != "") {
+		file_put_contents($smb_file, $iniFile);
+	}
 }
 ?>
