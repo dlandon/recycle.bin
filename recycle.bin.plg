@@ -29,7 +29,7 @@
 - Add: Remote mounted UD shares are not managed or shown in the Recycle Bin.
 - Add: Additional help explanations.
 - Fix: Optimizations so the Recycle Bin will load faster.
-- Fix: Disk cna cache shares not showing in the 'Shares'.
+- Fix: Disk and cache shares not showing in the 'Shares'.
 - Add: Stop the Recycle Bin and then restart it when updating the plugin.
 
 ###2019.01.31b
