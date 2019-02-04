@@ -144,13 +144,6 @@ vfs_recycle_empty()
 	fi
 	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
 
-	# Remove all empty .Recycle.Bin directories.
-	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
-
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
 }	
@@ -164,13 +157,6 @@ vfs_recycle_remove()
 		find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	fi
 	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-
-	# Remove all empty .Recycle.Bin directories.
-	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
 }
 
 vfs_recycle_purge()
@@ -205,6 +191,13 @@ vfs_recycle_cron()
 
 vfs_recycle_browse()
 {
+	# Remove all empty .Recycle.Bin directories.
+	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
+
 	# Remove browsing directory.
 	rm -rf /mnt/RecycleBin
 
