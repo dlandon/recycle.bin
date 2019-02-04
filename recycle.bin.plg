@@ -25,7 +25,6 @@
 - Fix: Don't create a RecycleBin symlink if the recycle bin doesn't exist on the share.
 - Fix: Deal with shares with special characters in the share name - like apostrophies.
 
-
 ###2019.02.03b
 - Fix: Check Recycle Bin shares sizes based on browse links.
 - Fix: Show all shares with Recycle Bin contents even if excluded from the recycle bin deleted files functionality.
