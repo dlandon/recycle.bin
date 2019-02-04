@@ -105,7 +105,10 @@ vfs_recycle_stop()
 
 vfs_recycle_restart()
 {
+	# Stop vfs recycle.
 	vfs_recycle_stop
+
+	# Start vfs recycle
 	vfs_recycle_start
 }
 
@@ -216,7 +219,7 @@ vfs_recycle_browse()
 		mkdir "RecycleBin/Unassigned"
 	fi
 
-	# Disk, unassigned, and cache symlinks.
+	# Disk, user, cache, and unassigned symlinks.
 	DIRS=`ls /mnt/`
 	for DIR in $DIRS
 	do
@@ -225,17 +228,23 @@ vfs_recycle_browse()
 				ls /mnt/disks | while read line
 				do
 					if [ "`grep recycle /etc/samba/unassigned-shares/${line}.conf`" != "" ]; then
-						ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+						if [ -d /mnt/disks/"${line}"/.Recycle.Bin ]; then
+							ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+						fi
 					fi
 				done
 			fi
 		elif [ "${DIR}" = "user" ]; then
 			ls /mnt/user | while read line
 			do
-				ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
+				if [ -d /mnt/user/"${line}"/.Recycle.Bin ]; then
+					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
+				fi
 			done
 		elif [ "${DIR}" != "user0" ]; then
-			ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
+			if [ -d /mnt/${DIR}/.Recycle.Bin ]; then
+				ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
+			fi
 		fi
 	done
 
