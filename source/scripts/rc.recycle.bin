@@ -139,7 +139,7 @@ vfs_recycle_empty()
 	# Remove deleted files from all shares.
 	rm -rf /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/disk/*/ 2>/dev/null
-	if [ "$INCLUDE_UD" == "yes" ]; then
+	if [ "$INCLUDE_UD" = "yes" ]; then
 		rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
 	fi
 	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
@@ -153,7 +153,7 @@ vfs_recycle_remove()
 	# Remove aged files.
 	find /mnt/RecycleBin/User\ Shares/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/RecycleBin/disk/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-	if [ "$INCLUDE_UD" == "yes" ]; then
+	if [ "$INCLUDE_UD" = "yes" ]; then
 		find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	fi
 	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
@@ -173,16 +173,17 @@ vfs_recycle_share()
 {
 	echo Emptying \'$(basename "$share_empty")\' Recycle Bin...
 
-	# Be sure we onlu remove files from /mnt/RecycleBin/
+	# Be sure we only remove files from /mnt/RecycleBin/
 	DIR=$(dirname "${share_empty}")
 	if [[ "$DIR" == *"/mnt/RecycleBin"* ]]; then
 		rm -rf "$share_empty"
+		logger "Share '$share_empty' Recycle Bin has been emptied." -t"$PROG_NAME"
 	else
 		logger "Error: Share '$share_empty' cannot be emptied!  Invalid Recycle Bin share path." -t"$PROG_NAME"
 	fi
 
 	sleep 1
-}	
+}
 
 vfs_recycle_cron()
 {
@@ -214,7 +215,7 @@ vfs_recycle_browse()
 	mkdir "RecycleBin"
 	mkdir "RecycleBin/Disk"
 	mkdir "RecycleBin/User Shares"
-	if [ "$INCLUDE_UD" == "yes" ]; then
+	if [ "$INCLUDE_UD" = "yes" ]; then
 		mkdir "RecycleBin/Unassigned"
 	fi
 
@@ -223,7 +224,7 @@ vfs_recycle_browse()
 	for DIR in $DIRS
 	do
 		if [ "${DIR}" = "disks" ]; then
-			if [ "$INCLUDE_UD" == "yes" ]; then
+			if [ "$INCLUDE_UD" = "yes" ]; then
 				ls /mnt/disks | while read line
 				do
 					if [ "`grep recycle /etc/samba/unassigned-shares/${line}.conf`" != "" ]; then

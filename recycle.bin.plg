@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.04b">
+<!ENTITY version	"2019.02.05">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"07f3565e6f88829728cf8a0f7fad4315">
+<!ENTITY MD5		"081e6422878b7423df3e864dec16a7fa">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Additional logging when emptying a share recyce bin.
+
+###2019.02.04b
 - Fix: Don't create a RecycleBin symlink if the recycle bin doesn't exist on the share.
 - Fix: Deal with shares with special characters in the share name - like apostrophies.
 - Fix: Remove all empty .Recycle.Bin directories before setting up the RecycleBin browse.
