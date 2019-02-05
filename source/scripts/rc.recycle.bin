@@ -173,7 +173,13 @@ vfs_recycle_share()
 {
 	echo Emptying \'$(basename "$share_empty")\' Recycle Bin...
 
-	rm -rf "$share_empty"
+	# Be sure we onlu remove files from /mnt/RecycleBin/
+	DIR=$(dirname "${share_empty}")
+	if [[ "$DIR" == *"/mnt/RecycleBin"* ]]; then
+		rm -rf "$share_empty"
+	else
+		logger "Error: Share '$share_empty' cannot be emptied!  Invalid Recycle Bin share path." -t"$PROG_NAME"
+	fi
 
 	sleep 1
 }	
