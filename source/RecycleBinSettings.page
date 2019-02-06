@@ -25,6 +25,8 @@ if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 $(function() {
   showStatus('pid','recycle.bin/recycle.bin');
 });
+}
+
 </script>
 
 <table class="tablesorter shift ups">
@@ -164,9 +166,9 @@ $(function() {
 
 	> List of shares to exclude from the Recycle Bin separated by commas.  This list can include Unassigned Devices shares.  The share name is case sensitive.
 	>
-	> The excluded share can include part of a share name and will exclude all shares with the excluded share in the actual share name.  If you want an exact match, use 'share name'.
+	> The excluded share can include part of a share name and will exclude all shares with the excluded share text in the actual share name.  If you want an exact match, use the full share name.
 	>
-	> For example: 'Squidbait' will exclude all shares created by the Ransom Ware plugin.
+	> For example: 'Squidbait' (without quotes) will exclude all shares created by the Ransom Ware plugin.
 	>
 	> Note: Excluding a share only excludes it from deleted files going to the .Recycle.Bin folder on the share.  Files in the existing .Recycle.Bin folder will still show in the total size and on the 'Shares' tab.
 

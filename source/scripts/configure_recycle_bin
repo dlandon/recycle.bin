@@ -35,7 +35,7 @@ if ($smb_file != "") {
 	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
 
 	// Array of recycle bin parameters
-	$parms =  array("recycle:repository"		=> "%P/.Recycle.Bin/",
+	$parms =  array("recycle:repository"		=> ".Recycle.Bin",
 					"recycle:directory_mode"	=> "0777",
 					"recycle:keeptree"			=> "Yes",
 					"recycle:touch"				=> "Yes",
@@ -57,7 +57,9 @@ if ($smb_file != "") {
 	$parms['recycle:exclude'] = $recycle_bin_cfg['EXCLUDE'];
 
 	// Adjust repository with user parameters.
-	$parms['recycle:repository'] .= $recycle_bin_cfg['PARAMETERS'];
+	if ($recycle_bin_cfg['PARAMETERS'] != "") {
+		$parms['recycle:repository'] .= "/".$recycle_bin_cfg['PARAMETERS'];
+	}
 
 	// Parse the samba config file.
 	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);

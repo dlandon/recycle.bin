@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.05">
+<!ENTITY version	"2019.02.06">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"081e6422878b7423df3e864dec16a7fa">
+<!ENTITY MD5		"a3904e2aadd32254b68214d578170ae7">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Change vfs_recycle repository setting.
+- Fix: Recycle Bin parameters not working properly.
+
+###2019.02.05
 - Add: Additional logging when emptying a share recyce bin.
 
 ###2019.02.04b
