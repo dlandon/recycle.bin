@@ -26,7 +26,6 @@ $(function() {
   showStatus('pid','recycle.bin/recycle.bin');
 });
 }
-
 </script>
 
 <table class="tablesorter shift ups">

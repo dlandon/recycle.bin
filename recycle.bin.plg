@@ -7,7 +7,7 @@
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"a3904e2aadd32254b68214d578170ae7">
+<!ENTITY MD5		"b7c343cc7e368a6d91d66b6c265f3f59">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Empty all trash and aged files not working properly on disk shares.
+
+###2019.02.06
 - Fix: Change vfs_recycle repository setting.
 - Fix: Recycle Bin parameters not working properly.
 
