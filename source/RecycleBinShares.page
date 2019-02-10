@@ -13,24 +13,25 @@ Title="Shares"
  */
 
 $plugin = "recycle.bin";
+?>
 
-echo "<div>";
-echo	"<blockquote class='inline_help'>";
-echo	"<p>Recycle Bin Shares:</p>";
-echo	"<p>The shares with Recycle Bin contents will be displayed along with the size of the share's Trash Bin.  Click on the <strong>Browse</strong> icon to browse the deleted files in that share.  Click on the <strong>Empty</strong> button to remove the deleted files.</p>";
-echo	"<p>Unassigned Devices shares will only show if the Recycle Bin is enabled for Unassigned Devices and there are Unassigned Devices that are mounted and shared and have Recycle Bin contents.</p>";
-echo	"<p>Click on the 'SMB Share', 'Share Type', or 'Trash Size' columns of the table header and the contents will be sorted.  The 'Trash Size' is an alpha numeric and not a numeric sort.</p>";
-echo	"</blockquote>";
-echo	"<br />";
-echo "</div><br />";
+<blockquote class='inline_help'>
+<p>Recycle Bin Shares:</p>
+<p>The shares with Recycle Bin contents will be displayed along with the size of the share's Trash Bin.  Click on the <strong>Browse</strong> icon to browse the deleted files in that share.  Click on the <strong>Empty</strong> button to remove the deleted files.</p>
+<p>Unassigned Devices shares will only show if the Recycle Bin is enabled for Unassigned Devices and there are Unassigned Devices that are mounted and shared and have Recycle Bin contents.</p>
+<p>Click on the 'SMB Share', 'Share Type', or 'Trash Size' columns of the table header and the contents will be sorted.  The 'Trash Size' is an alpha numeric and not a numeric sort.</p>
+<br />
+</blockquote>
 
-echo "<table class='tablesorter shift ups' id='tblRecycleShares'>";
-echo "<tbody>";
+<table class='tablesorter shift ups' id='tblRecycleShares'>
+<thead><tr><th>SMB Share</th><th>Share Type</th><th>Trash Size</th><th>Browse</th><th>Empty Trash</th></tr></thead>
+<tbody>
+
+<?
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/${plugin}/${plugin}.cfg" );
 $smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
 $shares = array_keys($smb_shares);
 natcasesort($shares);
-echo "<thead><tr><th>SMB Share</th><th>Share Type</th><th>Trash Size</th><th>Browse</th><th>Empty Trash</th></tr></thead>";
 
 foreach($shares as $share) {
 	$du_share = str_replace("'", "\'", $share);
@@ -100,8 +101,8 @@ if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
 		}
 	}
 }
-echo "</tbody></table>";
 ?>
+</tbody></table>
 
 <form name="clear log" method="POST" action="/update.php" target="progressFrame">
 	<input type="button" value="Refresh" onclick="refresh()">

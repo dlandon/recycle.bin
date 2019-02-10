@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.08">
+<!ENTITY version	"2019.02.10">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"b7c343cc7e368a6d91d66b6c265f3f59">
+<!ENTITY MD5		"f41c0ebc1857303a36da49649333f1a9">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+-Fix: Minor cosmetic issues and code cleanup.
+
+###2019.02.08
 - Fix: Empty all trash and aged files not working properly on disk shares.
 
 ###2019.02.06
