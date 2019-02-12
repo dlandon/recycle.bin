@@ -52,11 +52,9 @@ vfs_recycle_start()
 
 		# Run recycle bin setup to configure vfs_recycle
 		${DOCROOT}/plugins/${plugin}/scripts/restart_services
-		sleep 1
 
 		# Restart samba
 		/etc/rc.d/rc.samba restart 1>/dev/null
-		sleep 2
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -93,11 +91,9 @@ vfs_recycle_stop()
 		if [ "$shutdown" != "shutdown" ]; then
 			# Run recycle bin setup to configure vfs_recycle
 			${DOCROOT}/plugins/${plugin}/scripts/restart_services
-			sleep 1
 
 			# Restart samba configuration
 			/etc/rc.d/rc.samba restart 1>/dev/null
-			sleep 2
 		fi
 	else
 		echo "Recycle Bin is not running"
@@ -183,8 +179,6 @@ vfs_recycle_share()
 	else
 		logger "Error: Share '$share_empty' cannot be emptied!  Invalid Recycle Bin share path." -t"$PROG_NAME"
 	fi
-
-	sleep 1
 }
 
 vfs_recycle_cron()
