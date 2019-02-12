@@ -54,7 +54,7 @@ vfs_recycle_start()
 		${DOCROOT}/plugins/${plugin}/scripts/restart_services
 		sleep 1
 
-		# Reload samba configuration
+		# Restart samba
 		/etc/rc.d/rc.samba restart 1>/dev/null
 		sleep 2
 	else
@@ -90,13 +90,15 @@ vfs_recycle_stop()
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
 
-		# Run recycle bin setup to configure vfs_recycle
-		${DOCROOT}/plugins/${plugin}/scripts/restart_services
-		sleep 1
+		if [ "$shutdown" != "shutdown" ]; then
+			# Run recycle bin setup to configure vfs_recycle
+			${DOCROOT}/plugins/${plugin}/scripts/restart_services
+			sleep 1
 
-		# Reload samba configuration
-		/etc/rc.d/rc.samba restart 1>/dev/null
-		sleep 2
+			# Restart samba configuration
+			/etc/rc.d/rc.samba restart 1>/dev/null
+			sleep 2
+		fi
 	else
 		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -275,6 +277,7 @@ case "$1" in
 		vfs_recycle_start
 	;;
 	'stop')
+		shutdown=$2
 		vfs_recycle_stop
 	;;
 	'restart')

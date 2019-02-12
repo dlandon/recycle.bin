@@ -25,7 +25,6 @@ if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 $(function() {
   showStatus('pid','recycle.bin/recycle.bin');
 });
-}
 </script>
 
 <table class="tablesorter shift ups">
