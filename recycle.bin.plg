@@ -369,7 +369,7 @@ if [ -e /var/run/&name;/&name;.pid ]; then
 	timeout 5 /tmp/&name;/wait_recycle.bin
 
 	# Show that the	recycle bin was already running
-	echo "" > /tmp/recycle.bin/stopped
+	echo "" > /tmp/recycle.bin/started
 fi
 
 # Remove old cron files.
@@ -438,12 +438,13 @@ if [ ! -e /var/run/&name; ]; then
 fi
 
 # Restart the recycle bin if it was already running
-if [ -f /tmp/recycle.bin/stopped ]; then
+if [ -f /tmp/recycle.bin/started ]; then
 	# Start recycle bin in the background.
 	echo "Starting Recycle Bin..."
 	at -M -f /usr/local/emhttp/plugins/&name;/event/disks_mounted now 2>/dev/null
 
-	rm -rf /tmp/recycle.bin/stopped
+	# Remove started status file
+	rm -rf /tmp/recycle.bin/started
 fi
 
 echo ""
@@ -465,17 +466,11 @@ The 'remove' script.
 if [ -e /var/run/&name;/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
-	at -M -f /usr/local/emhttp/plugins/&name;/event/stopping_svcs now 2>/dev/null
+	echo "/usr/local/emhttp/plugins/&name;/scripts/rc.recycle.bin stop" > /tmp/&name;/recycle_bin_stop
+	at -M -f /tmp/&name;/recycle_bin_stop now 2>/dev/null
 
 	# Wait for the recycle bin to stop
 	timeout 5 /tmp/&name;/wait_recycle.bin
-
-	# Reconfigure samba shares without the recycle bin	
-	/usr/local/emhttp/plugins/&name;/scripts/configure_recycle_bin 2>/dev/null
-
-	# Restart samba to remove the recycle bin parameters
-	echo "/etc/rc.d/rc.samba restart" > /tmp/&name;/samba_restart
-	at -M -f /tmp/&name;/samba_restart now 1>/dev/null
 fi
 
 # Remove the background wait script.
