@@ -185,6 +185,13 @@ vfs_recycle_cron()
 {
 	vfs_recycle_remove
 
+	# Remove all empty .Recycle.Bin directories.
+	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
+	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
+
 	logger "Scheduled: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
 	if [ "$NOTIFY" = "yes" ]; then
@@ -194,13 +201,6 @@ vfs_recycle_cron()
 
 vfs_recycle_browse()
 {
-	# Remove all empty .Recycle.Bin directories.
-	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
-
 	# Remove browsing directory.
 	rm -rf /mnt/RecycleBin
 

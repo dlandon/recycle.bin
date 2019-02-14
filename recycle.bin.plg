@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.12a">
+<!ENTITY version	"2019.02.14">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"1e8175dabc3af8ce77b83044f224618a">
+<!ENTITY MD5		"fc52954866745741ccb7fb1acd0e9210">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Move delete empty .Recycle.Bin folders to cron task.
+
+###2019.02.12a
 - Fix: Running status indicator.
 - Fix: Don't restart samba on event 'stopping_svcs".
 - Fix: Plugin removal cleanup.
