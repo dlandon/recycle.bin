@@ -137,9 +137,7 @@ vfs_recycle_empty()
 	# Remove deleted files from all shares.
 	rm -rf /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/Disk/*/ 2>/dev/null
-	if [ "$INCLUDE_UD" = "yes" ]; then
-		rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
-	fi
+	rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
 
 	echo "Recycle Bin has been emptied"
@@ -151,9 +149,7 @@ vfs_recycle_remove()
 	# Remove aged files.
 	find /mnt/RecycleBin/User\ Shares/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/RecycleBin/Disk/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-	if [ "$INCLUDE_UD" = "yes" ]; then
-		find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
-	fi
+	find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 }
 
@@ -175,22 +171,16 @@ vfs_recycle_share()
 	DIR=$(dirname "${share_empty}")
 	if [[ "$DIR" == *"/mnt/RecycleBin"* ]]; then
 		rm -rf "$share_empty"
+
 		logger "Share '$share_empty' Recycle Bin has been emptied." -t"$PROG_NAME"
 	else
-		logger "Error: Share '$share_empty' cannot be emptied!  Invalid Recycle Bin share path." -t"$PROG_NAME"
+		logger "Error: Share '$share_empty' cannot be emptied!  Not a valid Recycle Bin." -t"$PROG_NAME"
 	fi
 }
 
 vfs_recycle_cron()
 {
 	vfs_recycle_remove
-
-	# Remove all empty .Recycle.Bin directories.
-	find /mnt/user/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disk*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/disks/*/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /mnt/cache/.Recycle.Bin -empty -type d -delete 2>/dev/null
-	find /boot/.Recycle.Bin -empty -type d -delete 2>/dev/null
 
 	logger "Scheduled: Files older than $AGE days have been removed" -t"$PROG_NAME"
 
@@ -211,30 +201,24 @@ vfs_recycle_browse()
 	mkdir "RecycleBin"
 	mkdir "RecycleBin/Disk"
 	mkdir "RecycleBin/User Shares"
-	if [ "$INCLUDE_UD" = "yes" ]; then
-		mkdir "RecycleBin/Unassigned"
-	fi
+	mkdir "RecycleBin/Unassigned"
 
 	# Disk, user, cache, and unassigned symlinks.
 	DIRS=`ls /mnt/`
 	for DIR in $DIRS
 	do
 		if [ "${DIR}" = "disks" ]; then
-			if [ "$INCLUDE_UD" = "yes" ]; then
-				ls /mnt/disks | while read line
-				do
-					if [ "`grep recycle /etc/samba/unassigned-shares/${line}.conf`" != "" ]; then
-						if [ -d /mnt/disks/"${line}"/.Recycle.Bin ]; then
-							ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
-						fi
-					fi
-				done
-			fi
+			ls /mnt/disks | while read line
+			do
+				if [ -d /mnt/disks/"${line}"/.Recycle.Bin ]; then
+					ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
+				fi
+			done
 		elif [ "${DIR}" = "user" ]; then
 			ls /mnt/user | while read line
 			do
 				if [ -d /mnt/user/"${line}"/.Recycle.Bin ]; then
-					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/'User Shares'/"${line}"
+					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/User\ Shares/"${line}"
 				fi
 			done
 		elif [ "${DIR}" != "user0" ]; then
