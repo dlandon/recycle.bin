@@ -37,7 +37,7 @@ foreach($shares as $share) {
 	$du_share = str_replace("'", "\'", $share);
 	$du_share = str_replace(" ", "\ ", $du_share);
 	if ($share == 'flash') {
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 1 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 1 du -shc /mnt/RecycleBin/Flash/*/*/ 2>/dev/null | grep total 2>/dev/null" );
 		$browse = "/mnt/RecycleBin/Flash";
 		$share_type = "Flash";
 	} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
@@ -74,31 +74,29 @@ foreach($shares as $share) {
 	}
 }
 
-if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
-	$files = glob("/mnt/RecycleBin/Unassigned/*");
-	foreach ($files as $file) {
-		$share_name = basename($file);
-		$du_share_name = str_replace("'", "\'", $share_name);
-		$du_share_name = str_replace(" ", "\ ", $du_share_name);
-		$browse = "/mnt/RecycleBin/Unassigned/".$share_name;
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 2 du -shc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
-		$mount_point = $browse."/";
-		$browse = urlencode($browse);
-		if ($recycle_bin_trashsize == "") {
-			$recycle_bin_trashsize = "?";
-		} else {
-			$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
-		}
-		if ($recycle_bin_trashsize != "0") {
-			$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='Browse the Share Recycle Bin.'><img src='/plugins/recycle.bin/icons/browse.png'></a>";
-			$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-			$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
-			$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
-			$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
-			$bb .= '<input type="submit" value="Empty" title="Empty the '.$share_name.' Recycle Bin.">';
-			$bb .= "</form>";
-			echo "<tr><td>$share_name</td><td>Unassigned Device</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
-		}
+$files = glob("/mnt/RecycleBin/Unassigned/*");
+foreach ($files as $file) {
+	$share_name = basename($file);
+	$du_share_name = str_replace("'", "\'", $share_name);
+	$du_share_name = str_replace(" ", "\ ", $du_share_name);
+	$browse = "/mnt/RecycleBin/Unassigned/".$share_name;
+	$recycle_bin_trashsize = exec( "/usr/bin/timeout 2 du -shc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+	$mount_point = $browse."/";
+	$browse = urlencode($browse);
+	if ($recycle_bin_trashsize == "") {
+		$recycle_bin_trashsize = "?";
+	} else {
+		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
+	}
+	if ($recycle_bin_trashsize != "0") {
+		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='Browse the Share Recycle Bin.'><img src='/plugins/recycle.bin/icons/browse.png'></a>";
+		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
+		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
+		$bb .= '<input type="submit" value="Empty" title="Empty the '.$share_name.' Recycle Bin.">';
+		$bb .= "</form>";
+		echo "<tr><td>$share_name</td><td>Unassigned Device</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
 }
 ?>

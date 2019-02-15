@@ -45,11 +45,7 @@ $(function() {
 	</div>
 	<?
 		exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
-		$cmd = "/mnt/RecycleBin/User\ Shares/*/ /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/*";
-		if ($recycle_bin_cfg['INCLUDE_UD'] == 'yes') {
-			$cmd .= " /mnt/RecycleBin/Unassigned/*/";
-		}
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -shc {$cmd} 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 5 /usr/bin/du -shc /mnt/RecycleBin/*/*/ 2>/dev/null | grep total 2>/dev/null" );
 		if ($recycle_bin_trashsize == "") {
 			$recycle_bin_trashsize = "?";
 		} else {
