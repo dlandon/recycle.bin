@@ -106,6 +106,8 @@ vfs_recycle_restart()
 	# Stop vfs recycle.
 	vfs_recycle_stop
 
+	sleep 3
+
 	# Start vfs recycle
 	vfs_recycle_start
 }
@@ -121,8 +123,12 @@ vfs_recycle_buttonstart()
 
 vfs_recycle_update()
 {
-	# Stop vfs recycle.
-	vfs_recycle_stop
+	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
+		# Stop vfs recycle.
+		vfs_recycle_stop
+
+		sleep 3
+	fi
 
 	# Start vfs recycle if service is enabled and not already running.
 	if [ "$SERVICE" = "enable" ]; then
