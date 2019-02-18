@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.15b">
+<!ENTITY version	"2019.02.17">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"ce098cde858aa2be954eb30594d36b8e">
+<!ENTITY MD5		"b591ce22f7d83772f333356693f2c3bd">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+### Add: Cron task to keep trash sizes up to date.  This makes the recycle bin more responsive without spinning up array disks.
+### Add: Background trash size update configurable.  When set to 'Yes' a cron task will run every minute to update the Recycle Bin size.
+
+###2019.02.15b
 - Fix: rc.recycle.bin script cleanup.
 - Fix: Remove delete empty .Recycle.Bin folders completely from rc.recycle.bin script.  It takes too much time when the array is busy.
 
@@ -407,6 +411,7 @@ chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
 <INLINE>
 <![CDATA[
 SERVICE="disable"
+BACKGROUND="yes"
 PARAMETERS=""
 EXCLUDE="*.tmp"
 EXCLUDE_SHARES=""

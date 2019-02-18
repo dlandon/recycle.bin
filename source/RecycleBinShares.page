@@ -13,6 +13,13 @@ Title="Shares"
  */
 
 $plugin = "recycle.bin";
+
+$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
+if (is_file("/tmp/{$plugin}/share_trashsize")) {
+	$share_trashsize = json_decode(file_get_contents("/tmp/{$plugin}/share_trashsize"), true);
+} else {
+	$share_trashsize = array();
+}
 ?>
 
 <blockquote class='inline_help'>
@@ -34,22 +41,17 @@ $shares = array_keys($smb_shares);
 natcasesort($shares);
 
 foreach($shares as $share) {
-	$du_share = str_replace("'", "\'", $share);
-	$du_share = str_replace(" ", "\ ", $du_share);
+	$recycle_bin_trashsize = $share_trashsize[$share]['trashsize'];
 	if ($share == 'flash') {
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 1 du -shc /mnt/RecycleBin/Flash/*/*/ 2>/dev/null | grep total 2>/dev/null" );
 		$browse = "/mnt/RecycleBin/Flash";
 		$share_type = "Flash";
 	} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 2 du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
 		$browse = "/mnt/RecycleBin/Disk/".$share;
 		$share_type = "Disk";
 	} elseif (strcmp($share, 'cache') == 0) {
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 2 du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
 		$browse = "/mnt/RecycleBin/Disk/".$share;
 		$share_type = "Disk";
 	} else {
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 2 du -shc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
 		$brow_share = 
 		$browse = "/mnt/RecycleBin/User Shares/".$share;
 		$share_type = "Share";
@@ -57,12 +59,7 @@ foreach($shares as $share) {
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
 
-	if ($recycle_bin_trashsize == "") {
-		$recycle_bin_trashsize = "?";
-	} else {
-		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
-	}
-	if ($recycle_bin_trashsize != "0") {
+	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='Browse the Share Recycle Bin.'><img src='/plugins/recycle.bin/icons/browse.png'></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
 		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
@@ -77,18 +74,12 @@ foreach($shares as $share) {
 $files = glob("/mnt/RecycleBin/Unassigned/*");
 foreach ($files as $file) {
 	$share_name = basename($file);
-	$du_share_name = str_replace("'", "\'", $share_name);
-	$du_share_name = str_replace(" ", "\ ", $du_share_name);
 	$browse = "/mnt/RecycleBin/Unassigned/".$share_name;
-	$recycle_bin_trashsize = exec( "/usr/bin/timeout 2 du -shc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+	$recycle_bin_trashsize = $share_trashsize[$share_name]['trashsize'];
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
-	if ($recycle_bin_trashsize == "") {
-		$recycle_bin_trashsize = "?";
-	} else {
-		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
-	}
-	if ($recycle_bin_trashsize != "0") {
+
+	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='Browse the Share Recycle Bin.'><img src='/plugins/recycle.bin/icons/browse.png'></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
 		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
@@ -102,8 +93,14 @@ foreach ($files as $file) {
 ?>
 </tbody></table>
 
-<form name="clear log" method="POST" action="/update.php" target="progressFrame">
+<form name="refresh_page" method="POST" action="/update.php" target="progressFrame">
+	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+<?if ($recycle_bin_cfg['BACKGROUND'] != "no"):?>
 	<input type="button" value="Refresh" onclick="refresh()">
+<?else:?>
+	<input type="hidden" name="#arg[1]" value="refresh">
+	<input type="submit" value="Refresh" title="Refresh the Recycle Bin page.">
+<?endif;?>
 	<input type="button" value="Done" onclick="done()">
 </form>
 

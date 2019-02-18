@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage:
-# start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear|share.
+# start|stop|restart|buttonstart|refresh|empty|update|purge|cron|browse|clear|share.
 #
 
 vfs_recycle_start()
@@ -44,6 +44,11 @@ vfs_recycle_start()
 			rm -f /boot/config/plugins/${plugin}/recyclebin.cron
 		fi
 
+		if [ "$BACKGROUND" != "no" ]; then
+			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+		fi
+
 		# Reload crons.
 		/usr/local/sbin/update_cron
 
@@ -55,6 +60,9 @@ vfs_recycle_start()
 
 		# Restart samba
 		/etc/rc.d/rc.samba restart 1>/dev/null
+
+		# Refresh trash sizes
+		vfs_recycle_refresh
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -94,6 +102,9 @@ vfs_recycle_stop()
 
 			# Restart samba configuration
 			/etc/rc.d/rc.samba restart 1>/dev/null
+
+			# Refresh trash sizes
+			vfs_recycle_refresh
 		fi
 	else
 		echo "Recycle Bin is not running"
@@ -136,6 +147,12 @@ vfs_recycle_update()
 	fi
 }
 
+vfs_recycle_refresh()
+{
+	# Refresh trash sizes
+	${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes
+}	
+
 vfs_recycle_empty()
 {
 	echo "Emptying Recycle Bin..."
@@ -145,6 +162,9 @@ vfs_recycle_empty()
 	rm -rf /mnt/RecycleBin/Disk/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
+
+	# Refresh trash sizes
+	vfs_recycle_refresh
 
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
@@ -157,6 +177,9 @@ vfs_recycle_remove()
 	find /mnt/RecycleBin/Disk/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/RecycleBin/Unassigned/*/*/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
 	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rf {} \; 2>/dev/null
+
+	# Refresh trash sizes
+	vfs_recycle_refresh
 }
 
 vfs_recycle_purge()
@@ -177,6 +200,9 @@ vfs_recycle_share()
 	DIR=$(dirname "${share_empty}")
 	if [[ "$DIR" == *"/mnt/RecycleBin"* ]]; then
 		rm -rf "$share_empty"
+
+		# Refresh trash sizes
+		vfs_recycle_refresh
 
 		logger "Share '$share_empty' Recycle Bin has been emptied." -t"$PROG_NAME"
 	else
@@ -223,7 +249,7 @@ vfs_recycle_browse()
 				fi
 			done
 		elif [ "${DIR}" = "user" ]; then
-			ls /mnt/user | while read line
+			ls /mnt/user/ | while read line
 			do
 				if [ -d /mnt/user/"${line}"/.Recycle.Bin ]; then
 					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/User\ Shares/"${line}"
@@ -272,6 +298,9 @@ case "$1" in
 	'buttonstart')
 		vfs_recycle_buttonstart
 	;;
+	'refresh')
+		vfs_recycle_refresh
+	;;
 	'empty')
 		vfs_recycle_empty
 	;;
@@ -295,5 +324,5 @@ case "$1" in
 		vfs_recycle_share
 	;;
 	*)
-		echo "usage $0 start|stop|restart|buttonstart|empty|update|purge|cron|browse|clear|share"
+		echo "usage $0 start|stop|restart|buttonstart|refresh|empty|update|purge|cron|browse|clear|share"
 esac

@@ -12,9 +12,21 @@ Title="Settings"
  * all copies or substantial portions of the Software.
  */
 
-$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
+$plugin = "recycle.bin";
+
+$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
 $docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
+$recycle_bin_trashsize = "";
+if (is_file("/tmp/{$plugin}/trashsize")) {
+	$recycle_bin_trashsize = file_get_contents("/tmp/{$plugin}/trashsize");
+}
+
+if ($recycle_bin_trashsize == "")
+{
+	$recycle_bin_trashsize = "?";
+}
+
+if (is_file("/var/run/{$plugin}/{$plugin}.pid")) {
 	$recycle_bin_enabled = "yes";
 } else {
 	$recycle_bin_enabled = "no";
@@ -43,15 +55,6 @@ $(function() {
 		</list>
 		</blockquote>
 	</div>
-	<?
-		exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 5 /usr/bin/du -shc /mnt/RecycleBin/*/*/ 2>/dev/null | grep total 2>/dev/null" );
-		if ($recycle_bin_trashsize == "") {
-			$recycle_bin_trashsize = "?";
-		} else {
-			$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize ));
-		}
-	?>
 	<?if ($recycle_bin_enabled=="yes"):?>
 		<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
 			<form name="stop_recycle_bin" method="POST" action="/update.php" target="progressFrame">
@@ -109,7 +112,15 @@ $(function() {
 		</div>
 	<?endif;?>
 		<div style="position:relative;float:right;width:100%;text-align:center">
-		<input type="button" value="Refresh" onclick="refresh()" title="Refresh the Recycle Bin page.">
+		<?if ($recycle_bin_cfg['BACKGROUND'] != "no"):?>
+			<input type="button" value="Refresh" onclick="refresh()">
+		<?else:?>
+			<form name="refresh_page" method="POST" action="/update.php" target="progressFrame">
+				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
+				<input type="hidden" name="#arg[1]" value="refresh">
+				<input type="submit" value="Refresh" title="Refresh the Recycle Bin page.">
+			</form>
+		<?endif;?>
 	</div>
 </div>
 <div style="width: 65%; float:right">
@@ -125,6 +136,14 @@ $(function() {
 	  </select>
 
 	> Set to 'Yes' to enable the Recycle Bin functionality for deleted files when the server is started.
+
+	Update Recycle Bin Size in Background?
+	: <select name="BACKGROUND" size="1">
+		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "yes", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "no", "No");?>
+	  </select>
+
+	> Set to 'Yes' to enable the Recycle Bin Size to be updated in the background every minute.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to a minute to refresh when this is enabled.
 
 	Enable on Unassigned Devices for Deleted Files?
 	: <select name="INCLUDE_UD" size="1">
