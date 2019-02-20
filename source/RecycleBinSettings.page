@@ -47,6 +47,7 @@ $(function() {
 <div style="width: 35%; float:left">
 	<div>
 		<blockquote class='inline_help'>
+		<p><strong>Note: Starting and stopping the Recycle Bin can cause SMB shares to go offline for a short period.</strong></p>
 		<p>These actions apply to all shares:</p>
 		<list>
 		<li>Click on the <strong>Trash Can Icon</strong> to browse the deleted files Recycle Bin.</li>
