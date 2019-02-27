@@ -44,14 +44,6 @@ vfs_recycle_start()
 			rm -f /boot/config/plugins/${plugin}/recyclebin.cron
 		fi
 
-		if [ "$BACKGROUND" != "no" ]; then
-			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
-			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
-		fi
-
-		# Reload crons.
-		/usr/local/sbin/update_cron
-
 		# Create pid file to show the recycle bin is running.
 		echo $$ > /var/run/${plugin}/${plugin}.pid
 
@@ -61,8 +53,16 @@ vfs_recycle_start()
 		# Restart samba
 		/etc/rc.d/rc.samba restart 1>/dev/null
 
-		# Refresh trash sizes
-		vfs_recycle_refresh
+		if [ "$BACKGROUND" != "no" ]; then
+			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+		else
+			# Refresh trash sizes
+			vfs_recycle_refresh
+		fi
+
+		# Reload crons.
+		/usr/local/sbin/update_cron
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -102,9 +102,6 @@ vfs_recycle_stop()
 
 			# Restart samba configuration
 			/etc/rc.d/rc.samba restart 1>/dev/null
-
-			# Refresh trash sizes
-			vfs_recycle_refresh
 		fi
 	else
 		echo "Recycle Bin is not running"
@@ -149,7 +146,7 @@ vfs_recycle_update()
 
 vfs_recycle_refresh()
 {
-	# Refresh trash sizes iin the background
+	# Refresh trash sizes in the background
 	${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes 2>/dev/null &
 }	
 

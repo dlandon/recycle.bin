@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.27">
+<!ENTITY version	"2019.02.27a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"4cab5a48935a91e4123f268af9dd1655">
+<!ENTITY MD5		"c8b5379a92f873f0d0e31e6447cf12ca">
 ]>
 
 <PLUGIN	name="&name;"
@@ -23,6 +23,7 @@
 ##&name;
 ###&version;
 - Fix: Run trash size update in the background when performing web UI operations.  This can help with hangs from large recycle bins or a busy server.
+- Fix: Additional rc.recycle.bin script cleanup.
 
 ###2019.02.22
 - Fix: Remove trash bin browse from the trash bin icon.  It's not necessary and can be confusing.  Share browsing makes more sense.
