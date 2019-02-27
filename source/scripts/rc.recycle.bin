@@ -45,9 +45,6 @@ vfs_recycle_start()
 		fi
 
 		if [ "$BACKGROUND" != "no" ]; then
-			# Remove trashsize running pid
-			rm /var/run/${plugin}/trashsize.pid
-
 			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
 			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
 		fi
@@ -95,9 +92,6 @@ vfs_recycle_stop()
 			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
 			rm -f smb.tmp
 		fi
-
-		# Remove trashsize running pid
-		rm /var/run/${plugin}/trashsize.pid
 
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
@@ -155,8 +149,8 @@ vfs_recycle_update()
 
 vfs_recycle_refresh()
 {
-	# Refresh trash sizes
-	${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes
+	# Refresh trash sizes iin the background
+	${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes 2>/dev/null &
 }	
 
 vfs_recycle_empty()
