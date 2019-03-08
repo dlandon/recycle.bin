@@ -30,17 +30,17 @@ vfs_recycle_start()
 
 		# If cron run is enabled, add cron job.
 		if [ "$SCHEDRUN" = "hourly" ]; then
-			printf "# Purge recycle bin every hour on the hour:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
-			printf "0 * * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "# Purge recycle bin every hour on the hour:\n" > /tmp/${plugin}/recyclebin.cron
+			printf "0 * * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		elif [ "$SCHEDRUN" = "daily" ]; then
 			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
-			printf "0 3 * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "0 3 * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		elif [ "$SCHEDRUN" = "weekly" ]; then
-			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
-			printf "0 3 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /tmp/${plugin}/recyclebin.cron
+			printf "0 3 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		else
 			# Remove recycle bin cron file.
-			rm -f /boot/config/plugins/${plugin}/recyclebin.cron
+			rm -f /tmp/${plugin}/recyclebin.cron
 		fi
 
 		# Create pid file to show the recycle bin is running.
@@ -53,12 +53,15 @@ vfs_recycle_start()
 		/etc/rc.d/rc.samba restart 1>/dev/null
 
 		if [ "$BACKGROUND" != "no" ]; then
-			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
-			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /tmp/${plugin}/recyclebin.cron
+			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		else
 			# Refresh trash sizes
 			vfs_recycle_refresh
 		fi
+
+		# Move cron file to flash
+		mv /tmp/${plugin}/recyclebin.cron /boot/config/plugins/${plugin}/recyclebin.cron 2>/dev/null
 
 		# Reload crons.
 		/usr/local/sbin/update_cron
@@ -78,12 +81,6 @@ vfs_recycle_stop()
 
 		# Remove dynamix recycle bin cron file (Fix for cron being in the wrong directory).
 		rm -f /boot/config/plugins/dynamix/recyclebin.cron
-
-		# Remove recycle bin cron file.
-		rm -f /boot/config/plugins/${plugin}/recyclebin.cron
-
-		# Reload crons.
-		/usr/local/sbin/update_cron
 
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
