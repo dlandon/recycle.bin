@@ -9,3 +9,6 @@ fi
 
 # Remove RecycleBin browse symlinks.
 rm -rf /mnt/RecycleBin
+
+# Remove cron file
+rm -rf /boot/config/plugins/${plugin}/recyclebin.cron
