@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.02.27a">
+<!ENTITY version	"2019.03.07">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"c8b5379a92f873f0d0e31e6447cf12ca">
+<!ENTITY MD5		"0d9493f9f304cae897de4e542a5295d4">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Cut down on writes of smb-extra.conf on flash drive.
+
+###2019.02.27a
 - Fix: Run trash size update in the background when performing web UI operations.  This can help with hangs from large recycle bins or a busy server.
 - Fix: Additional rc.recycle.bin script cleanup.
 
@@ -368,11 +371,27 @@ Recycle bin background wait script.
 -->
 <FILE Name="/tmp/&name;/wait_recycle.bin" Mode="0770">
 <INLINE>
+<![CDATA[
 #!/bin/bash
 # Wait for the recycle bin to stop.
 while [ -e /var/run/&name;/&name;.pid ]; do
 	sleep 1
 done
+]]>
+</INLINE>
+</FILE>
+
+<!--
+Remove smb-extra parameters.
+-->
+<FILE Name="/tmp/&name;/remove-smb-extra" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/bash
+sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
+printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
+rm -f smb.tmp
+]]>
 </INLINE>
 </FILE>
 
@@ -441,7 +460,7 @@ INCLUDE_UD="no"
 #vfs_recycle_start
 #Recycle bin configuration
 [global]
-   syslog only = Yes
+   syslog only = No
    log level = 0 vfs:0
 #vfs_recycle_end
 ]]>
@@ -496,9 +515,6 @@ if [ -e /var/run/&name;/&name;.pid ]; then
 	timeout 5 /tmp/&name;/wait_recycle.bin
 fi
 
-# Remove the background wait script.
-rm -rf /tmp/&name; 2>/dev/null
-
 # Remove plugin files from emhttp.
 rm -rf /usr/local/emhttp/plugins/&name; 2>/dev/null
 
@@ -510,6 +526,12 @@ rm -rf /mnt/RecycleBin
 
 # Remove the pid file directory.
 rmdir /var/run/&name; 2>/dev/null
+
+# Remove vfs_recycle from smb-extra.conf.
+at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
+
+# Remove the tmp directory.
+rm -rf /tmp/&name; 2>/dev/null
 
 echo ""
 echo "-----------------------------------------------------------"

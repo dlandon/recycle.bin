@@ -11,23 +11,22 @@ vfs_recycle_start()
 	if [ ! -e /var/run/${plugin}/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
-		# Remove vfs_recycle from smb-extra.conf if we had an unclean shutdown.
-		if [ -f "/boot/config/smb-extra.conf" ]; then
-			sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
-			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-			rm -f smb.tmp
+		# Add vfs_recycle to smb-extra.conf.
+		if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
+			printf "\n" >> /boot/config/smb-extra.conf
+			cat /boot/config/plugins/${plugin}/config/smb-extra.conf >> /boot/config/smb-extra.conf
 		fi
 
 		# Adjust smb-extra.conf user set parameters.
 		if [ "$LOG" = "yes" ]; then
-			sed -i "/syslog only =/c\   syslog only = No" /boot/config/plugins/${plugin}/config/smb-extra.conf
+			if [[ `grep 'syslog only = No' /boot/config/smb-extra.conf` = "" ]]; then
+				sed -i "/syslog only =/c\   syslog only = No" /boot/config/smb-extra.conf
+			fi
 		else
-			sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/plugins/${plugin}/config/smb-extra.conf
+			if [[ `grep 'syslog only = Yes' /boot/config/smb-extra.conf` = "" ]]; then
+				sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/smb-extra.conf
+			fi
 		fi
-
-		# Add vfs_recycle to smb-extra.conf.
-		printf "\n" >> /boot/config/smb-extra.conf
-		cat /boot/config/plugins/${plugin}/config/smb-extra.conf >> /boot/config/smb-extra.conf
 
 		# If cron run is enabled, add cron job.
 		if [ "$SCHEDRUN" = "hourly" ]; then
@@ -85,13 +84,6 @@ vfs_recycle_stop()
 
 		# Reload crons.
 		/usr/local/sbin/update_cron
-
-		# Remove vfs_recycle from smb-extra.conf.
-		if [ -f "/boot/config/smb-extra.conf" ]; then
-			sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
-			printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-			rm -f smb.tmp
-		fi
 
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
