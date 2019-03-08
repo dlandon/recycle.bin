@@ -33,14 +33,11 @@ vfs_recycle_start()
 			printf "# Purge recycle bin every hour on the hour:\n" > /tmp/${plugin}/recyclebin.cron
 			printf "0 * * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		elif [ "$SCHEDRUN" = "daily" ]; then
-			printf "# Purge recycle bin at 3:00 every day:\n" > /boot/config/plugins/${plugin}/recyclebin.cron
+			printf "# Purge recycle bin at 3:00 every day:\n" > /tmp/${plugin}/recyclebin.cron
 			printf "0 3 * * * ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		elif [ "$SCHEDRUN" = "weekly" ]; then
 			printf "# Purge recycle bin at 3:00 on the first day of the week:\n" > /tmp/${plugin}/recyclebin.cron
 			printf "0 3 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
-		else
-			# Remove recycle bin cron file.
-			rm -f /tmp/${plugin}/recyclebin.cron
 		fi
 
 		# Create pid file to show the recycle bin is running.
@@ -61,7 +58,13 @@ vfs_recycle_start()
 		fi
 
 		# Move cron file to flash
-		mv /tmp/${plugin}/recyclebin.cron /boot/config/plugins/${plugin}/recyclebin.cron 2>/dev/null
+		if [ -f /tmp/${plugin}/recyclebin.cron ]; then
+			# Move the cron file
+			mv /tmp/${plugin}/recyclebin.cron /boot/config/plugins/${plugin}/recyclebin.cron 2>/dev/null
+		else
+			# Remove recycle bin cron file.
+			rm -f /boot/config/plugins/${plugin}/recyclebin.cron
+		fi
 
 		# Reload crons.
 		/usr/local/sbin/update_cron
