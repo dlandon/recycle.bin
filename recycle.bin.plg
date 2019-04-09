@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.03.08b">
+<!ENTITY version	"2019.04.08">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"17a9c6f5db27f9f6fd87ae66ca6977e6">
+<!ENTITY MD5		"9a8639d415ce6e1110066a4ee6256066">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Purge not deleting aged files properly.
+
+###2019.03.08b
 - Fix: Cut down on writes of cron file on flash drive.
 
 ###2019.03.07
