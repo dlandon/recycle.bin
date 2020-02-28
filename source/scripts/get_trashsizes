@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* Copyright 2017-2019, Dan Landon
+/* Copyright 2017-2020, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -35,7 +35,7 @@ if (! is_file("/var/run/{$plugin}/trashsize.pid")) {
 		$du_share = str_replace("'", "\'", $share);
 		$du_share = str_replace(" ", "\ ", $du_share);
 		if ($share == 'flash') {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Flash/*/*/ 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
 		} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
 		} elseif (strcmp($share, 'cache') == 0) {

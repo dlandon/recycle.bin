@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2019.04.08">
+<!ENTITY version	"2020.02.27">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"9a8639d415ce6e1110066a4ee6256066">
+<!ENTITY MD5		"fb701e04a9bde8d1ecd7cf403f7143a2">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Flash share not displaying correctly.
+
+###2019.04.08
 - Fix: Purge not deleting aged files properly.
 
 ###2019.03.08b
