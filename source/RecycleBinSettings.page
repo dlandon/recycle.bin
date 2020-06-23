@@ -47,7 +47,7 @@ $(function() {
 </script>
 
 <table class="tablesorter shift ups">
-<thead><tr><th>Recycle Bin</th></tr></thead>
+<thead><tr><th>_(Recycle Bin)_</th></tr></thead>
 </table>
 
 <?if ($var['mdState']=="STARTED"):?>
@@ -247,6 +247,6 @@ $(function() {
 	</form>
 </div>
 <?else:?>
-	<p>Array is stopped!</p>
+	<p>_(Array is stopped)_!</p>
 <?endif;?>
 <?endif;?>

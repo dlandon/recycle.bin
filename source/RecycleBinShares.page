@@ -52,17 +52,17 @@ foreach($shares as $share) {
 	$recycle_bin_trashsize = $share_trashsize[$share]['trashsize'];
 	if ($share == 'flash') {
 		$browse = "/mnt/RecycleBin/Flash";
-		$share_type = "Flash";
+		$share_type = _('Flash');
 	} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
 		$browse = "/mnt/RecycleBin/Disk/".$share;
-		$share_type = "Disk";
+		$share_type = _('Disk');
 	} elseif (strcmp($share, 'cache') == 0) {
 		$browse = "/mnt/RecycleBin/Disk/".$share;
-		$share_type = "Disk";
+		$share_type = _('Disk');
 	} else {
 		$brow_share = 
 		$browse = "/mnt/RecycleBin/User Shares/".$share;
-		$share_type = "Share";
+		$share_type = _('Share');
 	}
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
@@ -75,7 +75,7 @@ foreach($shares as $share) {
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
-		echo "<tr><td>$share</td><td>_(Array $share_type)_</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
+		echo "<tr><td>$share</td><td>_(Array)_ $share_type</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
 }
 
