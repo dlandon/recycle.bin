@@ -13,9 +13,16 @@ Title="Settings"
  */
 
 $plugin = "recycle.bin";
+$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+$translations = file_exists("$docroot/webGui/include/Translations.php");
+require_once "$docroot/plugins/$plugin/include/Legacy.php";
+?>
+<?if (!$translations):?>
+<?eval('?>'.parse_file("$docroot/plugins/$plugin/RecycleBinSettings.page"))?>
+<?else:?>
+<?
 
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
-$docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $recycle_bin_trashsize = "";
 if (is_file("/tmp/{$plugin}/trashsize")) {
 	$recycle_bin_trashsize = file_get_contents("/tmp/{$plugin}/trashsize");
@@ -47,12 +54,11 @@ $(function() {
 <div style="width: 35%; float:left">
 	<div>
 		<blockquote class='inline_help'>
-		<p><strong>Note: Starting and stopping the Recycle Bin can cause SMB shares to go offline for a short period.</strong></p>
-		<p>These actions apply to all shares:</p>
+		<p><strong>_(Note)_: _(Starting and stopping the Recycle Bin can cause SMB shares to go offline for a short period)_.</strong></p>
+		<p>_(These actions apply to all shares)_:</p>
 		<list>
-		<li>Click on the <strong>Trash Can Icon</strong> to browse the deleted files Recycle Bin.</li>
-		<li>Click on <strong>Remove Aged Files</strong> to remove deleted files older than the 'Age Days' setting.</li>
-		<li>Click on <strong>Empty All Trash</strong> to remove all deleted files.</li>
+		<li>_(Click on)_ <strong>_(Remove Aged Files)_</strong> _(to remove deleted files older than the 'Age Days' setting)_.</li>
+		<li>_(Click on)_ <strong>_(Empty All Trash)_</strong> _(to remove all deleted files)_.</li>
 		</list>
 		</blockquote>
 	</div>
@@ -61,14 +67,14 @@ $(function() {
 			<form name="stop_recycle_bin" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="stop">
-				<input type="submit" value="Stop" title="Stop the Recycle Bin.">
+				<input type="submit" value="_(Stop)_" title="_(Stop the Recycle Bin)_.">
 			</form>
 		</div>
 		<div style="position:relative;float:left;width:20%;text-align:left;margin-bottom:24px">
 			<form name="restart_recycle_bin" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="restart">
-				<input type="submit" value="Restart" title="Restart the Recycle Bin.">
+				<input type="submit" value="_(Restart)_" title="_(Restart the Recycle Bin)_.">
 			</form>
 		</div>
 	<?else:?>
@@ -76,23 +82,23 @@ $(function() {
             <form name="start_recycle_bin" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="buttonstart">
-				<input type="submit" value="Start" title="Start the Recycle Bin.">
+				<input type="submit" value="_(Start)_" title="_(Start the Recycle Bin)_.">
             </form>
 		</div>
 	<?endif;?>
 	<?if ($recycle_bin_trashsize != "0"):?>
 		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:35px">
 			<img src='/plugins/recycle.bin/images/recycle.bin_full.png'></a><br />
-			<b>Recycle Bin Total Size: <?=$recycle_bin_trashsize?></b>
+			<b>_(Recycle Bin Total Size)_: <?=$recycle_bin_trashsize?></b>
 			<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="purge">
-				<input type="submit" value="Remove Aged Files" title="Remove aged files from the Recycle Bin.">
+				<input type="submit" value="_(Remove Aged Files)_" title="_(Remove aged files from the Recycle Bin)_.">
 			</form>
 			<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="empty">
-				<input type="submit" value="Empty All Trash" title="Remove all files from the Recycle Bin.">
+				<input type="submit" value="_(Empty All Trash)_" title="_(Remove all files from the Recycle Bin)_.">
 			</form>
 		</div>
 	<?else:?>
@@ -102,23 +108,23 @@ $(function() {
 			<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="purge">
-				<input type="submit" value="Remove Aged Files" disabled>
+				<input type="submit" value="_(Remove Aged Files)_" disabled>
 			</form>
 			<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="empty">
-				<input type="submit" value="Empty Trash" disabled>
+				<input type="submit" value="_(Empty Trash)_" disabled>
 			</form>
 		</div>
 	<?endif;?>
 		<div style="position:relative;float:right;width:100%;text-align:center">
 		<?if ($recycle_bin_cfg['BACKGROUND'] != "no"):?>
-			<input type="button" value="Refresh" onclick="refresh()">
+			<input type="button" value="_(Refresh)_" title="_(Refresh the Recycle Bin page)_." onclick="refresh()">
 		<?else:?>
 			<form name="refresh_page" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="refresh">
-				<input type="submit" value="Refresh" title="Refresh the Recycle Bin page.">
+				<input type="submit" value="_(Refresh)_" title="_(Refresh the Recycle Bin page)_.">
 			</form>
 		<?endif;?>
 	</div>
@@ -129,33 +135,40 @@ $(function() {
 	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 	<input type="hidden" name="#arg[1]" value="update">
 
-	Enable Recycle Bin for Deleted Files?
+	_(Enable Recycle Bin for Deleted Files)_?
 	: <select name="SERVICE" size="1">
-		<?=mk_option($recycle_bin_cfg['SERVICE'], "disable", "No");?>
-		<?=mk_option($recycle_bin_cfg['SERVICE'], "enable", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['SERVICE'], "disable", "_(No)_");?>
+		<?=mk_option($recycle_bin_cfg['SERVICE'], "enable", "_(Yes)_");?>
 	  </select>
 
+:recycle_bin_enable_plug:
 	> Set to 'Yes' to enable the Recycle Bin functionality for deleted files when the server is started.
+:end
 
-	Update Recycle Bin Size in Background?
+	_(Update Recycle Bin Size in Background)_?
 	: <select name="BACKGROUND" size="1">
-		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "yes", "Yes");?>
-		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "no", "No");?>
+		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "yes", "_(Yes)_");?>
+		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "no", "_(No)_");?>
 	  </select>
 
+:recycle_bin_background_plug:
 	> Set to 'Yes' to enable the Recycle Bin Size to be updated in the background every minute.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to a minute to refresh when this is enabled.
+:end
 
-	Enable on Unassigned Devices for Deleted Files?
+	_(Enable on Unassigned Devices for Deleted Files)_?
 	: <select name="INCLUDE_UD" size="1">
-		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "no", "No");?>
-		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "yes", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "no", "_(No)_");?>
+		<?=mk_option($recycle_bin_cfg['INCLUDE_UD'], "yes", "_(Yes)_");?>
 	  </select>
 
+:recycle_bin_ud_plug:
 	> Set to 'Yes' to enable the Recycle Bin deleted file functionality on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin functionality on this server.  Enable the Recycle Bin on the remote server where the remote share originates if it is an Unraid server.
+:end
 
-	Recycle Bin parameters:
+	_(Recycle Bin parameters)_:
 	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">
 
+:recycle_bin_parameters_plug:
 	> Additional parameters for Recycle Bin.  The following are some options you can set to control the file structure of the deleted files.
 	> Enter the parameters in a list with no spaces or commas between them.
 	> The order of the parameters will affect the file structure in the Recycle Bin.
@@ -168,15 +181,19 @@ $(function() {
 	> + '%P' User share full path, eg /mnt/user/Storage, /mnt/disk1, /mnt/disks/unassigned_device, /flash
 	> + '%u' Username of the current service, if any
 	> + '%m' Machine name of the user who deleted the file
+:end
 
-	Excluded Files:
+	_(Excluded Files)_:
 	: <input type="text" name="EXCLUDE" class="narrow" maxlength="150" value="<?=$recycle_bin_cfg['EXCLUDE'];?>">
 
+:recycle_bin_excluded_files_plug:
 	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
+:end
 
-	Excluded Shares:
+	_(Excluded Shares)_:
 	: <input type="text" name="EXCLUDE_SHARES" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE_SHARES'];?>">
 
+:recycle_bin_excluded_shares_plug:
 	> List of shares to exclude from the Recycle Bin separated by commas.  This list can include Unassigned Devices shares.  The share name is case sensitive.
 	>
 	> The excluded share can include part of a share name and will exclude all shares with the excluded share text in the actual share name.  If you want an exact match, use the full share name.
@@ -184,42 +201,52 @@ $(function() {
 	> For example: 'Squidbait' (without quotes) will exclude all shares created by the Ransom Ware plugin.
 	>
 	> Note: Excluding a share only excludes it from deleted files going to the .Recycle.Bin folder on the share.  Files in the existing .Recycle.Bin folder will still show in the total size and on the 'Shares' tab.
+:end
 
-	Age Days:
+	_(Age Days)_:
 	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
 
+:recycle_bin_age_day_plug:
 	> Any files older than the set number of days are removed on the schedule or when the 'Remove Aged Files' button is clicked.
+:end
 
-	Remove Aged Files on Schedule?
+	_(Remove Aged Files on Schedule)_?
 	: <select name="SCHEDRUN" size="1";>
-		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "no", "No");?>
-		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "hourly", "Hourly");?>
-		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "daily", "Daily");?>
-		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "weekly", "Weekly");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "no", "_(No)_");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "hourly", "_(Hourly)_");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "daily", "_(Daily)_");?>
+		<?=mk_option($recycle_bin_cfg['SCHEDRUN'], "weekly", "_(Weekly)_");?>
 	 </select>
 
+:recycle_bin_remove_age_files_plug:
 	> Set the desired schedule to remove aged files.  Hourly will be on the hour every hour.  Daily will be every day at 3 AM.  Weekly will be every week at 3 AM on Sunday.
+:end
 
-	Remove Aged Files Notification?
+	_(Remove Aged Files Notification)_?
 	: <select name="NOTIFY" size="1";>
-		<?=mk_option($recycle_bin_cfg['NOTIFY'], "no", "No");?>
-		<?=mk_option($recycle_bin_cfg['NOTIFY'], "yes", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['NOTIFY'], "no", "_(No)_");?>
+		<?=mk_option($recycle_bin_cfg['NOTIFY'], "yes", "_(Yes)_");?>
 	 </select>
 
+:recycle_bin_age_files_notification_plug:
 	> When set to "Yes" a notification will be sent when the scheduled remove files task runs.
+:end
 
-	Log Deleted Files?
+	_(Log Deleted Files)_?
 	: <select name="LOG" size="1";>
-		<?=mk_option($recycle_bin_cfg['LOG'], "no", "No");?>
-		<?=mk_option($recycle_bin_cfg['LOG'], "yes", "Yes");?>
+		<?=mk_option($recycle_bin_cfg['LOG'], "no", "_(No)_");?>
+		<?=mk_option($recycle_bin_cfg['LOG'], "yes", "_(Yes)_");?>
 	 </select>
 
+:recycle_bin_log_deleted_files_plug:
 	> When set to "Yes" deleted files will be logged.
+:end
 
-	<input type="submit" name="#default" value="Default" title="Load and apply default values.">
-	: <input type="submit" name="#apply" value="Apply"><input type="button" value="Done" onclick="done()">
+	<input type="submit" name="#default" value="<?=_('Default')?>" title="<?=_('Load and apply default values')?>.">
+	: <input type="submit" name="#apply" value="<?=_('Apply')?>"><input type="button" value="<?=_('Done')?>" onclick="done()">
 	</form>
 </div>
 <?else:?>
 	<p>Array is stopped!</p>
+<?endif;?>
 <?endif;?>

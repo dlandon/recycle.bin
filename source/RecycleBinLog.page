@@ -11,16 +11,24 @@ Title="Deleted Files"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
+
+$plugin = "recycle.bin";
+$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+$translations = file_exists("$docroot/webGui/include/Translations.php");
+require_once "$docroot/plugins/$plugin/include/Legacy.php";
 ?>
+<?if (!$translations):?>
+<?eval('?>'.parse_file("$docroot/plugins/$plugin/RecycleBinLog.page"))?>
+<?else:?>
 
 <blockquote class='inline_help'>
-<p>Recycle Bin Log:</p>
-<p>The deleted files will show in the log as unlinked files.  Click on the 'Clear' button to clear the log.</p>
+<p>_(Recycle Bin Log)_:</p>
+<p>_(The deleted files will show in the log as unlinked files)_. _(Click on the 'Clear' button to clear the log)_.</p>
 <br />
 </blockquote>
 
 <table class='tablesorter shift ups'>
-<thead><tr><th>Deleted Files Log</th></tr></thead>
+<thead><tr><th>_(Deleted Files Log)_</th></tr></thead>
 </table>
 <br />
 
@@ -31,11 +39,11 @@ echo "</pre>";
 ?>
 
 <form name="clear log" method="POST" action="/update.php" target="progressFrame">
-	<input type="button" value="Refresh" onclick="refresh()">
+	<input type="button" value="_(Refresh)_" onclick="refresh()">
 	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 	<input type="hidden" name="#arg[1]" value="clear">
-	<input type="submit" value="Clear" title="Clear the log.">
-	<input type="button" value="Done" onclick="done()">
+	<input type="submit" value="_(Clear)_" title="_(Clear the log)_.">
+	<input type="button" value="_(Done)_" onclick="done()">
 </form>
 
 <script>
@@ -49,3 +57,4 @@ $(function() {
 });
 <?endif;?>
 </script>
+<?endif;?>
