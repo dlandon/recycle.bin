@@ -21,11 +21,12 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?eval('?>'.parse_file("$docroot/plugins/$plugin/RecycleBinLog.page"))?>
 <?else:?>
 
-<blockquote class='inline_help'>
-<p>_(Recycle Bin Log)_:</p>
-<p>_(The deleted files will show in the log as unlinked files)_. _(Click on the 'Clear' button to clear the log)_.</p>
-<br />
-</blockquote>
+:recycle_bin_show_log_plug:
+> Recycle Bin Log:
+>
+> The deleted files will show in the log as unlinked files.
+> Click on the 'Clear' button to clear the log.
+:end
 
 <table class='tablesorter shift ups'>
 <thead><tr><th>_(Deleted Files Log)_</th></tr></thead>

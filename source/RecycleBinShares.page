@@ -30,13 +30,17 @@ if (is_file("/tmp/{$plugin}/share_trashsize")) {
 }
 ?>
 
-<blockquote class='inline_help'>
-<p>Recycle Bin Shares:</p>
-<p>The shares with Recycle Bin contents will be displayed along with the size of the share's Trash Bin.  Click on the <strong>Browse</strong> icon to browse the deleted files in that share.  Click on the <strong>Empty</strong> button to remove the deleted files.</p>
-<p>Unassigned Devices shares will only show if the Recycle Bin is enabled for Unassigned Devices and there are Unassigned Devices that are mounted and shared and have Recycle Bin contents.</p>
-<p>Click on the 'SMB Share', 'Share Type', or 'Trash Size' columns of the table header and the contents will be sorted.  The 'Trash Size' is an alpha numeric and not a numeric sort.</p>
-<br />
-</blockquote>
+:recycle_bin_shares_plug:
+> Recycle Bin Shares:
+>
+> The shares with Recycle Bin contents will be displayed along with the size of the share's Trash Bin.
+> Click on the <strong>Browse</strong> icon to browse the deleted files in that share.
+> Click on the <strong>Empty</strong> button to remove the deleted files.
+>
+> Unassigned Devices shares will only show if the Recycle Bin is enabled for Unassigned Devices and there are Unassigned Devices that are mounted and shared and have Recycle Bin contents.
+>
+> Click on the 'SMB Share', 'Share Type', or 'Trash Size' columns of the table header and the contents will be sorted.  The 'Trash Size' is an alpha numeric and not a numeric sort.
+:end
 
 <table class='tablesorter shift ups' id='tblRecycleShares'>
 <thead><tr><th>_(SMB Share)_</th><th>_(Share Type)_</th><th>_(Trash Size)_</th><th>_(Browse)_</th><th>_(Empty Trash)_</th></tr></thead>
