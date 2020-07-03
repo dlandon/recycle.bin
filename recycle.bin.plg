@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2020.06.26">
+<!ENTITY version	"2020.07.03">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"669e1b46911fa1c8fc33d1f856ff7302">
+<!ENTITY MD5		"e97ce2ccaeae955477e415a5e3a50e84">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Ownership of recycle bin browse at /mnt.
+- Fix: Modify settings titles to remove redundancy.
+
+2020.06.26
 - Fix: Help changes.
 
 ###2020.06.23
