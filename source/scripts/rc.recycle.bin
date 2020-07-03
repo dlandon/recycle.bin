@@ -256,6 +256,7 @@ vfs_recycle_browse()
 
 	# Move the RecycleBin to /mnt.
 	mv /tmp/RecycleBin /mnt/RecycleBin
+	chown nobody:users /mnt/RecycleBin
 }
 
 vfs_recycle_clear() {
