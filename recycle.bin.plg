@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2020.07.08">
+<!ENTITY version	"2020.07.08a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"5b74adb4371b58b48bd627bea426362d">
+<!ENTITY MD5		"fbd6bd4002e0d3b26c3f4096955ac266">
 ]>
 
 <PLUGIN	name="&name;"
@@ -24,6 +24,7 @@
 ###&version;
 - Fix: Samba share config parameters not set properly.
 - Fix: Excessive smbd logging in 6.9.
+- Fix: Remove smb-extra.conf settings when the recycle bin is stopped.
 
 ###2020.07.03
 - Fix: Ownership of recycle bin browse at /mnt.
