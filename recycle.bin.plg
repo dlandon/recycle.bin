@@ -489,6 +489,7 @@ INCLUDE_UD="no"
 [global]
    syslog only = No
    syslog = 0
+   logging = 0
    log level = 0 vfs:0
 #vfs_recycle_end
 ]]>
