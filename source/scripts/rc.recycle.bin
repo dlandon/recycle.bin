@@ -73,7 +73,7 @@ vfs_recycle_start()
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
 	fi
 }
-	
+
 vfs_recycle_stop()
 {
 	logger "Stopping Recycle Bin" -t"$PROG_NAME"
@@ -143,7 +143,7 @@ vfs_recycle_refresh()
 {
 	# Refresh trash sizes in the background
 	${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes 2>/dev/null &
-}	
+}
 
 vfs_recycle_empty()
 {
@@ -160,15 +160,15 @@ vfs_recycle_empty()
 
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
-}	
+}
 
 vfs_recycle_remove()
 {
 	# Remove aged files.
-	find /mnt/RecycleBin/User\ Shares/*/* -atime +$AGE -exec rm -rf {} \; &>/dev/null
-	find /mnt/RecycleBin/Disk/*/* -atime +$AGE -exec rm -rf {} \; &>/dev/null
-	find /mnt/RecycleBin/Unassigned/*/* -atime +$AGE -exec rm -rf {} \; &>/dev/null
-	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rf {} \; &>/dev/null
+	find /mnt/RecycleBin/User\ Shares/*/* -atime +$AGE -exec rm -rdf {} \; &>/dev/null
+	find /mnt/RecycleBin/Disk/*/* -atime +$AGE -exec rm -rdf {} \; &>/dev/null
+	find /mnt/RecycleBin/Unassigned/*/* -atime +$AGE -exec rm -rdf {} \; &>/dev/null
+	find /mnt/RecycleBin/Flash/* -atime +$AGE -exec rm -rdf {} \; &>/dev/null
 
 	# Refresh trash sizes
 	vfs_recycle_refresh

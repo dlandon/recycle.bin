@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2020.07.08c">
+<!ENTITY version	"2020.09.12">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"c079e338d4a03682cefdbb846f71990c">
+<!ENTITY MD5		"998effe55a5c3635040da1d1909d6918">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Remove empty directories when the recycle bin is purged.
+
+###2020.07.08c
 - Fix: Samba share config parameters not set properly.
 - Fix: Excessive smbd logging in 6.9.
 - Fix: Remove smb-extra.conf settings when the recycle bin is stopped.
