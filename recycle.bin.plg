@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2020.09.12">
+<!ENTITY version	"2020.09.16">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"998effe55a5c3635040da1d1909d6918">
+<!ENTITY MD5		"06d2f89a3477694ed52d47352501c769">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Use 'find -delete' to remove aged files instead of 'find -exec rm'.  Some files were deleted before they were aged.
+
+###2020.09.12
 - Add: Remove empty directories when the recycle bin is purged.
 
 ###2020.07.08c
@@ -380,7 +383,7 @@
 </CHANGES>
 
 <!--
-Copyright 2015-2019, Dan Landon
+Copyright 2015-2020, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba on Unraid.
 -->
@@ -533,7 +536,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
-echo " Copyright 2015-2019 &author;"
+echo " Copyright 2015-2020 &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
