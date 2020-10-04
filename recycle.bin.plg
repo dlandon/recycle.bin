@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2020.09.16">
+<!ENTITY version	"2020.10.04">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"06d2f89a3477694ed52d47352501c769">
+<!ENTITY MD5		"a03710abbd597d72b639eee95d521583">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Samba deleted file logging in 6.8.  Samba logging changed in 6.9 and broke the logging in 6.8.
+
+###2020.09.16
 - Fix: Use 'find -delete' to remove aged files instead of 'find -exec rm'.  Some files were deleted before they were aged.
 
 ###2020.09.12
@@ -487,17 +490,18 @@ INCLUDE_UD="no"
 </INLINE>
 </FILE>
 
-<FILE Name="/boot/config/plugins/&name;/config/smb-extra.conf">
+<FILE Run="/usr/bin/php">
 <INLINE>
 <![CDATA[
-#vfs_recycle_start
-#Recycle bin configuration
-[global]
-   syslog only = No
-   syslog = 0
-   logging = 0
-   log level = 0 vfs:0
-#vfs_recycle_end
+<?
+$version = parse_ini_file("/etc/unraid-version");
+$file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
+if ( version_compare($version['version'],"6.8.9", "<=") ) {
+	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
+} else {
+	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
+}
+?>
 ]]>
 </INLINE>
 </FILE>
