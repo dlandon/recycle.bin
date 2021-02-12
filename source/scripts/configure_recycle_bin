@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* Copyright 2017-2020, Dan Landon
+/* Copyright 2017-2021, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -53,6 +53,11 @@ if ($smb_file != "") {
 		$vfs_objects = "recycle";
 	}
 	
+	// Set the directory mode.
+	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'] != "")) {
+		$parms['recycle:directory_mode'] = $recycle_bin_cfg['DIR_MODE'];
+	}
+
 	// Set the excluded files.
 	$parms['recycle:exclude'] = $recycle_bin_cfg['EXCLUDE'];
 
@@ -134,10 +139,12 @@ if ($smb_file != "") {
 		}
 	}
 
-
 	// Write the new configuration.
 	if ($iniFile != "") {
 		file_put_contents($smb_file, $iniFile);
 	}
+
+	// Update recycle bin permissions
+	exec("chmod {$parms['recycle:directory_mode']} $(find /mnt/*/*/.Recycle.Bin -type d) 2>/dev/null");
 }
 ?>

@@ -2,7 +2,7 @@ Menu="RecycleBin:1"
 Title="Settings"
 ---
 <?php
-/* Copyright 2015-2020 Dan Landon.
+/* Copyright 2015-2021 Dan Landon.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -181,6 +181,13 @@ $(function() {
 	> + '%P' User share full path, eg /mnt/user/Storage, /mnt/disk1, /mnt/disks/unassigned_device, /flash
 	> + '%u' Username of the current service, if any
 	> + '%m' Machine name of the user who deleted the file
+:end
+
+	_(Recycle Bin permissions)_:
+	: <input type="text" name="DIR_MODE" class="narrow" maxlength="4" value="<?=$recycle_bin_cfg['DIR_MODE'];?>" placeholder="0777">
+
+:recycle_bin_permissions_plug:
+	> Set the directory and sub-directory permissions of the Recycle Bin.
 :end
 
 	_(Excluded Files)_:
