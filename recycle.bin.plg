@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.02.10">
+<!ENTITY version	"2021.02.12">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"ca5b73eb79c66f62782dc1dc71808fb7">
+<!ENTITY MD5		"374161ed9893501cadd59bf65fa95a19">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Configuration parameter to set recycle bin directory permissions.
+
+###2021.02.10
 - Fix: Failure to create smb-extra.conf on flash drive.
 
 ##2020.10.04
@@ -389,7 +392,7 @@
 </CHANGES>
 
 <!--
-Copyright 2015-2020, Dan Landon
+Copyright 2015-2021, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba on Unraid.
 -->
@@ -481,6 +484,7 @@ chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
 <![CDATA[
 SERVICE="disable"
 BACKGROUND="yes"
+DIR_MODE="0777"
 PARAMETERS=""
 EXCLUDE="*.tmp"
 EXCLUDE_SHARES=""
@@ -544,7 +548,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
-echo " Copyright 2015-2020 &author;"
+echo " Copyright 2015-2021 &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
