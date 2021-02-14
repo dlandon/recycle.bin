@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.02.12">
+<!ENTITY version	"2021.02.14">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"374161ed9893501cadd59bf65fa95a19">
+<!ENTITY MD5		"ca9042a8d8f1a26d8c8454d45f7eecea">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: 'Yes i want to do this' confirmation to enable dectructive buttons.
+- Add: Additional explanation on permissions help.
+
+###2020.02.12
 - Add: Configuration parameter to set recycle bin directory permissions.
 
 ###2021.02.10
