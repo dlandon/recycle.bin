@@ -93,12 +93,18 @@ $(function() {
 			<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="purge">
-				<input type="submit" value="_(Remove Aged Files)_" title="_(Remove aged files from the Recycle Bin)_.">
+				<input type="submit" id="remove_aged" disabled value="_(Remove Aged Files)_" title="_(Remove aged files from the Recycle Bin)_.">
+			</form>
+			<form>
+				<input type="checkbox" onclick='$("#remove_aged").prop("disabled",!this.checked);'> <small>_(Yes I want to do this)_</small>
 			</form>
 			<form name="empty_trash" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="empty">
-				<input type="submit" value="_(Empty All Trash)_" title="_(Remove all files from the Recycle Bin)_.">
+				<input type="submit" id="empty_trash" disabled value="_(Empty All Trash)_" title="_(Remove all files from the Recycle Bin)_.">
+			</form>
+			<form>
+				<input type="checkbox" onclick='$("#empty_trash").prop("disabled",!this.checked);'> <small>_(Yes I want to do this)_</small>
 			</form>
 		</div>
 	<?else:?>
@@ -187,7 +193,7 @@ $(function() {
 	: <input type="text" name="DIR_MODE" class="narrow" maxlength="4" value="<?=$recycle_bin_cfg['DIR_MODE'];?>" placeholder="0777">
 
 :recycle_bin_permissions_plug:
-	> Set the directory and sub-directory permissions of the Recycle Bin.
+	> Set the directory and sub-directory permissions of the Recycle Bin.  Set permissions to 07xx for the Recycle Bin to operate properly.
 :end
 
 	_(Excluded Files)_:
