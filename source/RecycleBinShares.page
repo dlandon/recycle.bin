@@ -70,6 +70,7 @@ foreach($shares as $share) {
 	}
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
+	$check_id = str_replace(" ", "", $share);
 
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><img src='/plugins/recycle.bin/icons/browse.png'></a>";
@@ -77,8 +78,8 @@ foreach($shares as $share) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
-		$bb .= '<input id="'.$share.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share.' _(Recycle Bin)_.">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$share.'").prop("disabled",!this.checked);\'> <small>_(Yes I want to do this)_</small>';
+		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share.' _(Recycle Bin)_.">';
+		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'> <small>_(Yes I want to do this)_</small>';
 		$bb .= "</form>";
 		echo "<tr><td>$share</td><td>_(Array)_ $share_type</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
@@ -91,6 +92,7 @@ foreach ($files as $file) {
 	$recycle_bin_trashsize = $share_trashsize[$share_name]['trashsize'];
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
+	$check_id = str_replace(" ", "", $share_name);
 
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><img src='/plugins/recycle.bin/icons/browse.png'></a>";
@@ -98,8 +100,8 @@ foreach ($files as $file) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
-		$bb .= '<input id="'.$share_name.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$share_name.'").prop("disabled",!this.checked);\'> <small>_(Yes I want to do this)_</small>';
+		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
+		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'> <small>_(Yes I want to do this)_</small>';
 		$bb .= "</form>";
 		echo "<tr><td>$share_name</td><td>_(Unassigned Device)_</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
