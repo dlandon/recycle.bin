@@ -31,7 +31,7 @@
 ###2021.02.10
 - Fix: Failure to create smb-extra.conf on flash drive.
 
-##2020.10.04
+###2020.10.04
 - Fix: Samba deleted file logging in 6.8.  Samba logging changed in 6.9 and broke the logging in 6.8.
 
 ###2020.09.16
