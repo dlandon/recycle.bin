@@ -203,6 +203,13 @@ $(function() {
 	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
 :end
 
+	_(Excluded Directories)_:
+	: <input type="text" name="EXCLUDE_DIRS" class="narrow" maxlength="150" value="<?=$recycle_bin_cfg['EXCLUDE_DIRS'];?>">
+
+:recycle_bin_excluded_dirs_plug:
+	> List of directories to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
+:end
+
 	_(Excluded Shares)_:
 	: <input type="text" name="EXCLUDE_SHARES" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE_SHARES'];?>">
 

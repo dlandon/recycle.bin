@@ -59,7 +59,10 @@ if ($smb_file != "") {
 	}
 
 	// Set the excluded files.
-	$parms['recycle:exclude'] = $recycle_bin_cfg['EXCLUDE'];
+	$parms['recycle:exclude'] = trim($recycle_bin_cfg['EXCLUDE']);
+
+	// Set the excluded directories.
+	$parms['recycle:exclude_dir'] .= trim($recycle_bin_cfg['EXCLUDE_DIRS']) != "" ? ",".$recycle_bin_cfg['EXCLUDE_DIRS'] : "";
 
 	// Adjust repository with user parameters.
 	if ($recycle_bin_cfg['PARAMETERS'] != "") {
