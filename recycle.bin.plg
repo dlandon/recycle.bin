@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.03.20">
+<!ENTITY version	"2021.03.27">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"9c82325fe2a896858d44a5b114f96b02">
+<!ENTITY MD5		"222db15008cfbf8d300913ef6f2b5c6c">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Ability to exclude directories.
+
+###2021.03.20
 - Fix: Plugin permissions.
 
 ###2021.02.14a
@@ -494,6 +497,7 @@ BACKGROUND="yes"
 DIR_MODE="0777"
 PARAMETERS=""
 EXCLUDE="*.tmp"
+EXCLUDE_DIRS=""
 EXCLUDE_SHARES=""
 SCHEDRUN="no"
 AGE="7"
