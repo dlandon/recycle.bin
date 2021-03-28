@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.03.27">
+<!ENTITY version	"2021.03.28">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"222db15008cfbf8d300913ef6f2b5c6c">
+<!ENTITY MD5		"3bf0a025e5c08cde79b0983b90fbdf57">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,13 +22,16 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Ability to exclude directories by share.
+
+###2021.03.27
 - Add: Ability to exclude directories.
 
 ###2021.03.20
 - Fix: Plugin permissions.
 
 ###2021.02.14a
-- Add: 'Yes i want to do this' confirmation to enable dectructive buttons.
+- Add: 'Yes i want to do this' confirmation to enable destructive buttons.
 - Add: Additional explanation on permissions help.
 
 ###2020.02.12
