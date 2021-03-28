@@ -62,7 +62,12 @@ if ($smb_file != "") {
 	$parms['recycle:exclude'] = trim($recycle_bin_cfg['EXCLUDE']);
 
 	// Set the excluded directories.
-	$parms['recycle:exclude_dir'] .= trim($recycle_bin_cfg['EXCLUDE_DIRS']) != "" ? ",".$recycle_bin_cfg['EXCLUDE_DIRS'] : "";
+	$exclude_dirs = explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']);
+	foreach ($exclude_dirs as $d) {
+		$d = pathinfo($d);
+		$b = basename($d['dirname']);
+		$b == "." ? $parms['recycle:exclude_dir'] .= ",".$d['basename'] : $excluded_dirs[$b] = $d['basename'];
+	}
 
 	// Adjust repository with user parameters.
 	if ($recycle_bin_cfg['PARAMETERS'] != "") {
@@ -72,7 +77,7 @@ if ($smb_file != "") {
 	// Parse the samba config file.
 	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);
 
-	// Get the excluded files from recycle bin configuration.
+	// Get the excluded shares from recycle bin configuration.
 	if ($recycle_bin_cfg['EXCLUDE_SHARES'] != "") {
 		$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
 	} else {
@@ -127,7 +132,12 @@ if ($smb_file != "") {
 			foreach ($shares as $s) {
 				$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
 				$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
+				$pd = $parms['recycle:exclude_dir'];
+				if ($excluded_dirs[$s] != "") {
+					$parms['recycle:exclude_dir'] .= ",".$excluded_dirs[$s];
+				}
 				$smb_config[$s] = array_merge($smb_config[$s], $parms);
+				$parms['recycle:exclude_dir'] = $pd;
 			}
 		}
 	}
