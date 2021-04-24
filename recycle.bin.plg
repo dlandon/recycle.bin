@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.03.28">
+<!ENTITY version	"2021.04.24">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-63-and-later-versions/">
-<!ENTITY MD5		"3bf0a025e5c08cde79b0983b90fbdf57">
+<!ENTITY MD5		"dcdc6441bbd1110a481d0101a0059a7d">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Link to remove aged files notification.
+- Fix: Change enable check box for destructive buttons to be more consistent with Unraid.
+
+###2021.03.28
 - Add: Ability to exclude directories by share.
 
 ###2021.03.27
