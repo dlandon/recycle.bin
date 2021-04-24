@@ -78,8 +78,8 @@ foreach($shares as $share) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
+		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share.' _(Recycle Bin)_.">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'> <small>_(Yes I want to do this)_</small>';
 		$bb .= "</form>";
 		echo "<tr><td>$share</td><td>_(Array)_ $share_type</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
@@ -100,8 +100,8 @@ foreach ($files as $file) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
+		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'> <small>_(Yes I want to do this)_</small>';
 		$bb .= "</form>";
 		echo "<tr><td>$share_name</td><td>_(Unassigned Device)_</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
