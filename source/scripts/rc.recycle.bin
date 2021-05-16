@@ -85,6 +85,9 @@ vfs_recycle_stop()
 		# Remove dynamix recycle bin cron file (Fix for cron being in the wrong directory).
 		rm -f /boot/config/plugins/dynamix/recyclebin.cron
 
+		# Remove recycle bin cron file.
+		rm -f /boot/config/plugins/${plugin}/recyclebin.cron
+
 		# Remove pid file to show recycle bin is not running.
 		rm -f /var/run/${plugin}/${plugin}.pid
 
