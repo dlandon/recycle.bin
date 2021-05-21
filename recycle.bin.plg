@@ -24,7 +24,7 @@
 ###&version;
 - Fix: Update support URL.
 - Fix: Minimum version changed to 6.7.
-- Fix: Keep recycle bin configuration files on flash drive when uninstalling.
+- Fix: Keep recycle bin configuration file on flash drive when uninstalling.
 - Fix: Plugin uninstall not removing pid file.
 
 ###2021.04.24
@@ -496,9 +496,6 @@ Install the plugin bundle.
 <INLINE>
 # Install the 'bundle'.
 tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/plugins 2>/dev/null
-
-# Adjust plugin permissions.
-chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
 </INLINE>
 </FILE>
 
