@@ -14,7 +14,7 @@ if (isset($argv[1])) {
 	$smb_file = $argv[1];
 	$ud_config_file = TRUE;
 } else {
-	$smb_file =  "/etc/samba/smb-shares.conf";
+	$smb_file = "/etc/samba/smb-shares.conf";
 	$ud_config_file = FALSE;
 }
 
@@ -29,12 +29,12 @@ if (!is_file($smb_file)) {
 	$smb_file = "";
 }
 
-// If smb_file is not defined then there is nothing to configure
+/* If smb_file is not defined then there is nothing to configure. */
 if ($smb_file != "") {
-	// Get the recycle bin confifuration.
+	/* Get the recycle bin confifuration. */
 	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
 
-	// Array of recycle bin parameters
+	/* Array of recycle bin parameters. */
 	$parms =  array("recycle:repository"		=> ".Recycle.Bin",
 					"recycle:directory_mode"	=> "0777",
 					"recycle:keeptree"			=> "Yes",
@@ -46,22 +46,22 @@ if ($smb_file != "") {
 					"recycle:exclude_dir"		=> ".Recycle.Bin"
 	);
 
-	// Adjust user set parameters.
+	/* Adjust user set parameters. */
 	if ($recycle_bin_cfg['LOG'] == "yes") {
 		$vfs_objects = "extd_audit recycle";
 	} else {
 		$vfs_objects = "recycle";
 	}
 	
-	// Set the directory mode.
+	/* Set the directory mode. */
 	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'] != "")) {
 		$parms['recycle:directory_mode'] = $recycle_bin_cfg['DIR_MODE'];
 	}
 
-	// Set the excluded files.
+	/* Set the excluded files. */
 	$parms['recycle:exclude'] = trim($recycle_bin_cfg['EXCLUDE']);
 
-	// Set the excluded directories.
+	/* Set the excluded directories. */
 	$exclude_dirs = explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']);
 	foreach ($exclude_dirs as $d) {
 		$d = pathinfo($d);
@@ -69,40 +69,40 @@ if ($smb_file != "") {
 		$b == "." ? $parms['recycle:exclude_dir'] .= ",".$d['basename'] : $excluded_dirs[$b] = $d['basename'];
 	}
 
-	// Adjust repository with user parameters.
+	/* Adjust repository with user parameters. */
 	if ($recycle_bin_cfg['PARAMETERS'] != "") {
 		$parms['recycle:repository'] .= "/".$recycle_bin_cfg['PARAMETERS'];
 	}
 
-	// Parse the samba config file.
+	/* Parse the samba config file. */
 	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);
 
-	// Get the excluded shares from recycle bin configuration.
+	/* Get the excluded shares from recycle bin configuration. */
 	if ($recycle_bin_cfg['EXCLUDE_SHARES'] != "") {
 		$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
 	} else {
 		$excluded_shares = array();
 	}
 
-	// If UD is installed, we need to exclude any samba and iso mounts
+	/* If UD is installed, we need to exclude any samba and iso mounts. */
 	if ($UD_installed) {
-		// Get the samba mounts
+		/* Get the samba mounts. */
 		$samba_mounts = get_samba_mounts();
 		foreach (get_samba_mounts() as $name => $info) {
 			$s = basename($info['target']);
 			$excluded_shares[] .= $s;
 		}
-		// Get ISO File Mounts
+		/* Get ISO File Mounts. */
 		foreach (get_iso_mounts() as $name => $info) {
 			$s = basename($info['target']);
 			$excluded_shares[] .= $s;
 		}
 	}
 
-	// Get all shares from the smb configuration file.
+	/* Get all shares from the smb configuration file. */
 	$smb_shares = array_keys($smb_config);
 
-	// Remove excluded shares - treat excluded share as a wildcard.
+	/* Remove excluded shares - treat excluded share as a wildcard. */
 	$shares = $smb_shares;
 	if (!empty($excluded_shares)) {
 		foreach ($excluded_shares as $e) {
@@ -110,7 +110,7 @@ if ($smb_file != "") {
 		}
 	}
 
-	// Remove recycle bin parameters from the configuration.
+	/* Remove recycle bin parameters from the configuration. */
 	foreach ($smb_shares as $s) {
 		if (isset($smb_config[$s]['vfs objects'])) {
 			$smb_config[$s]['vfs objects'] = str_replace(array("extd_audit", "recycle"), "", $smb_config[$s]['vfs objects']);
@@ -127,7 +127,7 @@ if ($smb_file != "") {
 	}
 
 	if ((! $ud_config_file) || (($ud_config_file) && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes'))) {
-		// Add parameters if recycle bin is running.
+		/* Add parameters if recycle bin is running. */
 		if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
 			foreach ($shares as $s) {
 				$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
@@ -142,7 +142,7 @@ if ($smb_file != "") {
 		}
 	}
 
-	// Rewrite the configuration file.
+	/* Rewrite the configuration file. */
 	$keys = array_keys($smb_config);
 	foreach ($keys as $key) {
 		$iniFile .= "[$key]\n";
@@ -152,12 +152,12 @@ if ($smb_file != "") {
 		}
 	}
 
-	// Write the new configuration.
+	/* Write the new configuration. */
 	if ($iniFile != "") {
 		file_put_contents($smb_file, $iniFile);
 	}
 
-	// Update recycle bin permissions
+	/* Update recycle bin permissions. */
 	exec("chmod {$parms['recycle:directory_mode']} $(find /mnt/*/*/.Recycle.Bin -type d) 2>/dev/null");
 }
 ?>

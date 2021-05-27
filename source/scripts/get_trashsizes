@@ -19,13 +19,13 @@ if (! is_file("/var/run/{$plugin}/trashsize.pid")) {
 	$trashsize_file ="/tmp/{$plugin}/trashsize";
 	$share_trashsize_file ="/tmp/{$plugin}/share_trashsize";
 
-	// Get the total recycle bin trashsize
+	/* Get the total recycle bin trashsize. */
 	exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 	$recycle_bin_trashsize = exec( "/usr/bin/timeout 60 /usr/bin/du -shc /mnt/RecycleBin/*/*/ 2>/dev/null | grep total 2>/dev/null" );
 	$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 	file_put_contents($trashsize_file, $recycle_bin_trashsize);
 
-	// Get array of share trashsizes
+	/* Get array of share trashsizes. */
 	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/${plugin}/${plugin}.cfg" );
 	$smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
 	$shares = array_keys($smb_shares);
@@ -36,9 +36,7 @@ if (! is_file("/var/run/{$plugin}/trashsize.pid")) {
 		$du_share = str_replace(" ", "\ ", $du_share);
 		if ($share == 'flash') {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
-		} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
-		} elseif (strcmp($share, 'cache') == 0) {
+		} elseif ((strcmp(substr($share, 0, 4), 'disk') == 0) || (strcmp($share, 'cache') == 0)) {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
 		} else {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
