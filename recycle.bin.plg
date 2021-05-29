@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.05.16">
+<!ENTITY version	"2021.05.29">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"95392e43aa43fcb64bf4148f3e3045b4">
+<!ENTITY MD5		"bafeb7b95d881f9db3823b4d687a01d2">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Change directory mode default.
+- Fix: Some code cleanup.
+
+###2021.05.16
 - Fix: Update support URL.
 - Fix: Minimum version changed to 6.7.
 - Fix: Keep recycle bin configuration file on flash drive when uninstalling.
@@ -504,7 +508,7 @@ tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/pl
 <![CDATA[
 SERVICE="disable"
 BACKGROUND="yes"
-DIR_MODE="0777"
+DIR_MODE=""
 PARAMETERS=""
 EXCLUDE="*.tmp"
 EXCLUDE_DIRS=""
