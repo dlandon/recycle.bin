@@ -40,12 +40,6 @@ if (is_file("/var/run/{$plugin}/{$plugin}.pid")) {
 }
 ?>
 
-<script>
-$(function() {
-  showStatus('pid','recycle.bin/recycle.bin');
-});
-</script>
-
 <table class="tablesorter shift ups">
 <thead><tr><th>_(Recycle Bin)_</th></tr></thead>
 </table>
@@ -54,7 +48,7 @@ $(function() {
 <div style="width: 35%; float:left">
 	<div>
 		<blockquote class='inline_help'>
-		<p><strong>_(Note)_: _(Starting and stopping the Recycle Bin can cause SMB shares to go offline for a short period)_.</strong></p>
+		<p><strong>_(Note)_:</strong> _(Starting and stopping the Recycle Bin can cause SMB shares to go offline for a short period)_.</p>
 		<p>_(These actions apply to all shares)_:</p>
 		<list>
 		<li>_(Click on)_ <strong>_(Remove Aged Files)_</strong> _(to remove deleted files older than the 'Age Days' setting)_.</li>
@@ -130,7 +124,7 @@ $(function() {
 	</div>
 </div>
 <div style="width: 65%; float:right">
-	<form markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
+	<form class="js-confirm-leave" markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="recycle.bin/recycle.bin.cfg">
 	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 	<input type="hidden" name="#arg[1]" value="update">
@@ -142,7 +136,7 @@ $(function() {
 	  </select>
 
 :recycle_bin_enable_plug:
-	> Set to 'Yes' to enable the Recycle Bin functionality for deleted files when the server is started.
+	> Set to **Yes** to enable the Recycle Bin functionality for deleted files when the server is started.
 :end
 
 	_(Update Recycle Bin Size in Background)_?
@@ -152,7 +146,7 @@ $(function() {
 	  </select>
 
 :recycle_bin_background_plug:
-	> Set to 'Yes' to enable the Recycle Bin Size to be updated in the background every minute.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to a minute to refresh when this is enabled.
+	> Set to **Yes** to enable the Recycle Bin Size to be updated in the background every minute.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to a minute to refresh when this is enabled.
 :end
 
 	_(Enable on Unassigned Devices)_?
@@ -162,7 +156,7 @@ $(function() {
 	  </select>
 
 :recycle_bin_ud_plug:
-	> Set to 'Yes' to enable the Recycle Bin deleted file functionality on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin functionality on this server.  Enable the Recycle Bin on the remote server where the remote share originates if it is an Unraid server.
+	> Set to **Yes** to enable the Recycle Bin deleted file functionality on Unassigned Devices drive shares when the Unassigned Devices plugin is installed.  SMB/NFS mounts and iso mounts are excluded from the Recycle Bin functionality on this server.  Enable the Recycle Bin on the remote server where the remote share originates if it is an Unraid server.
 :end
 
 	_(Recycle Bin parameters)_:
@@ -243,7 +237,7 @@ $(function() {
 	 </select>
 
 :recycle_bin_age_files_notification_plug:
-	> When set to "Yes" a notification will be sent when the scheduled remove files task runs.
+	> When set to **Yes** a notification will be sent when the scheduled remove files task runs.
 :end
 
 	_(Log Deleted Files)_?
@@ -253,7 +247,7 @@ $(function() {
 	 </select>
 
 :recycle_bin_log_deleted_files_plug:
-	> When set to "Yes" deleted files will be logged.
+	> When set to **Yes** deleted files will be logged.
 :end
 
 	<input type="submit" name="#default" value="<?=_('Default')?>" title="<?=_('Load and apply default values')?>.">
