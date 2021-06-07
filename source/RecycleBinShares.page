@@ -117,7 +117,7 @@ foreach ($files as $file) {
 	<input type="hidden" name="#arg[1]" value="refresh">
 	<input type="submit" value="_(Refresh)_" title="_(Refresh the Recycle Bin page)_.">
 <?endif;?>
-	<button type="button" onclick="done()">_(Done)_></button>
+	<input type="button" value="_(Done)_" onclick="done()">
 </form>
 
 <script>
