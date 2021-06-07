@@ -251,8 +251,7 @@ if (is_file("/var/run/{$plugin}/{$plugin}.pid")) {
 :end
 
 	<input type="submit" name="#default" value="<?=_('Default')?>" title="<?=_('Load and apply default values')?>.">
-	: <input type="submit" name="#apply" value="<?=_('Apply')?>">
-	<button onclick="done()"><?=_('Done')?></button>
+	: <input type="submit" name="#apply" value="<?=_('Apply')?>"><input type="button" value="<?=_('Done')?>" onclick="done()">
 	</form>
 </div>
 <?else:?>
