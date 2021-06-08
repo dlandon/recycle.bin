@@ -8,7 +8,7 @@ vfs_recycle_start()
 	logger "Starting Recycle Bin" -t"$PROG_NAME"
 
 	# Is vfs_recycle running?
-	if [ ! -e /var/run/${plugin}/${plugin}.pid ]; then
+	if [ ! -e /var/run/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
 		# Add vfs_recycle to smb-extra.conf.
@@ -41,7 +41,7 @@ vfs_recycle_start()
 		fi
 
 		# Create pid file to show the recycle bin is running.
-		echo $$ > /var/run/${plugin}/${plugin}.pid
+		echo $$ > /var/run/${plugin}.pid
 
 		# Run recycle bin setup to configure vfs_recycle
 		${DOCROOT}/plugins/${plugin}/scripts/restart_services
@@ -79,7 +79,7 @@ vfs_recycle_stop()
 	logger "Stopping Recycle Bin" -t"$PROG_NAME"
 
 	# Is vfs_recycle running?
-	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
+	if [ -e /var/run/${plugin}.pid ]; then
 		echo "Stopping Recycle Bin..."
 
 		# Remove dynamix recycle bin cron file (Fix for cron being in the wrong directory).
@@ -89,7 +89,7 @@ vfs_recycle_stop()
 		rm -f /boot/config/plugins/${plugin}/recyclebin.cron
 
 		# Remove pid file to show recycle bin is not running.
-		rm -f /var/run/${plugin}/${plugin}.pid
+		rm -f /var/run/${plugin}.pid
 
 		if [ "$shutdown" != "shutdown" ]; then
 			# Run recycle bin setup to configure vfs_recycle
@@ -129,7 +129,7 @@ vfs_recycle_buttonstart()
 
 vfs_recycle_update()
 {
-	if [ -e /var/run/${plugin}/${plugin}.pid ]; then
+	if [ -e /var/run/${plugin}.pid ]; then
 		# Stop vfs recycle.
 		vfs_recycle_stop
 

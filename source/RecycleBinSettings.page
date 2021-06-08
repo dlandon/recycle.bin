@@ -33,12 +33,18 @@ if ($recycle_bin_trashsize == "")
 	$recycle_bin_trashsize = "?";
 }
 
-if (is_file("/var/run/{$plugin}/{$plugin}.pid")) {
+if (is_file("/var/run/{$plugin}.pid")) {
 	$recycle_bin_enabled = "yes";
 } else {
 	$recycle_bin_enabled = "no";
 }
 ?>
+
+<script>
+$(function() {
+  showStatus('pid','recycle.bin');
+});
+</script>
 
 <table class="tablesorter shift ups">
 <thead><tr><th>_(Recycle Bin)_</th></tr></thead>

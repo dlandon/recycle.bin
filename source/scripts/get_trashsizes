@@ -12,8 +12,8 @@
 
 $plugin = "recycle.bin";
 
-if (! is_file("/var/run/{$plugin}/trashsize.pid")) {
-	file_put_contents("/var/run/{$plugin}/trashsize.pid", getmypid());
+if (! is_file("/var/run/trashsize.pid")) {
+	file_put_contents("/var/run/trashsize.pid", getmypid());
 
 	$docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 	$trashsize_file ="/tmp/{$plugin}/trashsize";
@@ -66,6 +66,6 @@ if (! is_file("/var/run/{$plugin}/trashsize.pid")) {
 
 	file_put_contents($share_trashsize_file, json_encode($share_trashsize));
 
-	unlink("/var/run/{$plugin}/trashsize.pid");
+	unlink("/var/run/trashsize.pid");
 }
 ?>
