@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.06.08">
+<!ENTITY version	"2021.06.08a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"72b81945f86500cfa4eacc55584591d2">
+<!ENTITY MD5		"55b8d3acce825ad6b9703400a8f2256f">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,7 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Status indicator for Running/Stopped.
 - Fix: Code cleanup.
 
 ###2021.05.29
@@ -443,7 +444,7 @@ Recycle bin background wait script.
 <![CDATA[
 #!/bin/bash
 # Wait for the recycle bin to stop.
-while [ -e /var/run/&name;/&name;.pid ]; do
+while [ -e /var/run/&name;.pid ]; do
 	sleep 1
 done
 ]]>
@@ -470,7 +471,7 @@ The 'pre-install' script.
 <FILE Run="/bin/bash">
 <INLINE>
 # Stop the recycle bin if it is running
-if [ -e /var/run/&name;/&name;.pid ]; then
+if [ -e /var/run/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
 	at -M -f /usr/local/emhttp/plugins/&name;/event/stopping_svcs now 2>/dev/null
@@ -547,13 +548,6 @@ The 'post-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-# create recycle.bin-writable directory for pid file
-if [ ! -e /var/run/&name; ]; then
-	mkdir /var/run/&name;
-	chown $RUNAS:root /var/run/&name;
-	chmod 0755 /var/run/&name;
-fi
-
 # Remove the recycle bin from the smb-extra.conf file.
 /tmp/&name;/remove-smb-extra
 
@@ -589,7 +583,7 @@ The 'remove' script.
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 # Stop the recycle bin if it is running
-if [ -e /var/run/&name;/&name;.pid ]; then
+if [ -e /var/run/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
 	echo "/usr/local/emhttp/plugins/&name;/scripts/rc.recycle.bin stop" > /tmp/&name;/recycle_bin_stop
@@ -611,8 +605,8 @@ rm -rf /boot/config/plugins/&name;/config/
 # Remove RecycleBin browse symlinks.
 rm -rf /mnt/RecycleBin
 
-# Remove the pid file directory.
-rm -rf /var/run/&name; 2>/dev/null
+# Remove the pid file.
+rm -rf /var/run/&name;.pid 2>/dev/null
 
 # Remove vfs_recycle from smb-extra.conf.
 at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
