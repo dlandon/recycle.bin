@@ -98,7 +98,7 @@ vfs_recycle_stop()
 			# Remove the recycle bin from the smb-extra.conf file.
 			/tmp/${plugin}/remove-smb-extra
 
-			# Restart samba configuration
+			# Restart samba
 			/etc/rc.d/rc.samba restart 1>/dev/null
 		fi
 	else

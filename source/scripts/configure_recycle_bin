@@ -128,7 +128,7 @@ if ($smb_file != "") {
 
 	if ((! $ud_config_file) || (($ud_config_file) && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes'))) {
 		/* Add parameters if recycle bin is running. */
-		if (is_file("/var/run/recycle.bin/recycle.bin.pid")) {
+		if (is_file("/var/run/recycle.bin.pid")) {
 			foreach ($shares as $s) {
 				$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
 				$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
