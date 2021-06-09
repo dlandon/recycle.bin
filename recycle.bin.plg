@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.06.08a">
+<!ENTITY version	"2021.06.09">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"55b8d3acce825ad6b9703400a8f2256f">
+<!ENTITY MD5		"5a8f24b9e19b732479ad2ad1c3ffddfb">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Failure to start because of moving the pid file.
+
+2021.06.08a
 - Add: Status indicator for Running/Stopped.
 - Fix: Code cleanup.
 
