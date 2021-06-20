@@ -218,7 +218,7 @@ $(function() {
 :end
 
 	_(Age Days)_:
-	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>">
+	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>" placeholder="7">
 
 :recycle_bin_age_day_plug:
 	> Any files older than the set number of days are removed on the schedule or when the 'Remove Aged Files' button is clicked.

@@ -279,6 +279,10 @@ vfs_recycle_clear() {
 plugin="recycle.bin"
 CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
+if [ "$AGE" = "" ]; then
+	AGE="7"
+fi
+
 PROG_NAME="Recycle Bin"
 DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf 2>/dev/null`
 if [ -z ${DOCROOT} ];then
