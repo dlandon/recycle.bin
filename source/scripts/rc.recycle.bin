@@ -70,7 +70,8 @@ vfs_recycle_start()
 		/usr/local/sbin/update_cron
 
 		# Update recycle bin permissions.
-		chmod $DIR_MODE $(find /mnt/*/*/.Recycle.Bin -type d) 2>/dev/null
+		chmod $DIR_MODE $(find /mnt/users/*/.Recycle.Bin -type d) 2>/dev/null
+		chmod $DIR_MODE $(find /mnt/disks/*/.Recycle.Bin -type d) 2>/dev/null
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
