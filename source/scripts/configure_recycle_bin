@@ -156,8 +156,5 @@ if ($smb_file != "") {
 	if ($iniFile != "") {
 		file_put_contents($smb_file, $iniFile);
 	}
-
-	/* Update recycle bin permissions. */
-	exec("chmod {$parms['recycle:directory_mode']} $(find /mnt/*/*/.Recycle.Bin -type d) 2>/dev/null");
 }
 ?>

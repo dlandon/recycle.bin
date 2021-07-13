@@ -68,6 +68,9 @@ vfs_recycle_start()
 
 		# Reload crons.
 		/usr/local/sbin/update_cron
+
+		# Update recycle bin permissions.
+		chmod $DIR_MODE $(find /mnt/*/*/.Recycle.Bin -type d) 2>/dev/null
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -281,6 +284,9 @@ CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
 if [ "$AGE" = "" ]; then
 	AGE="7"
+fi
+if [ "$DIR_MODE" = "" ]; then
+	DIR_MODE="0777"
 fi
 
 PROG_NAME="Recycle Bin"
