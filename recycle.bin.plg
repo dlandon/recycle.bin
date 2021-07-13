@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.06.09">
+<!ENTITY version	"2021.07.13">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"5a8f24b9e19b732479ad2ad1c3ffddfb">
+<!ENTITY MD5		"f993497de12488bd464126431be8a34c">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,12 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Directory permissions change.
+
+###2021.06.09
+- Add: Default age days to 7.
+
+###2021.06.09
 - Fix: Failure to start because of moving the pid file.
 
 2021.06.08a
