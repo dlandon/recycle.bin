@@ -245,10 +245,8 @@ vfs_recycle_browse()
 		if [ "${DIR}" = "disks" ]; then
 			ls /mnt/disks | while read line
 			do
-				if [ "`grep recycle /etc/samba/unassigned-shares/${line}.conf 2>/dev/null`" != "" ]; then
-					if [ -d /mnt/disks/"${line}"/.Recycle.Bin ]; then
-						ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
-					fi
+				if [ -d /mnt/disks/"${line}"/.Recycle.Bin ]; then
+					ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
 				fi
 			done
 		elif [ "${DIR}" = "user" ]; then
