@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.07.28">
+<!ENTITY version	"2021.08.10">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"2801874b18c528a2befd8b93b459a713">
+<!ENTITY MD5		"912e24d1fed2453f3fd9c7cad669ad0b">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Note about how to hide the Recycle Bin folder with the 'Hide Dot Files' SMB setting.
+
+###2021.07.28
 - Fix: Show Unassigned Devices Recycle Bin when mounted and not shared.
 
 ###2021.07.13b
