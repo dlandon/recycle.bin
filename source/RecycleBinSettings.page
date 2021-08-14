@@ -104,7 +104,7 @@ $(function() {
 	<?else:?>
 		<div style="position:relative;float:right;width:100%;text-align:center;margin-bottom:35px">
 			<img src='/plugins/recycle.bin/images/recycle.bin_empty.png'><br />
-			<b>Recycle Bin is empty</b>
+			<b>_(Recycle Bin is empty)_</b>
 			<form name="remove_aged_files" method="POST" action="/update.php" target="progressFrame">
 				<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
 				<input type="hidden" name="#arg[1]" value="purge">
