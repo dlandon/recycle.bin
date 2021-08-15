@@ -1,15 +1,15 @@
 #!/usr/bin/php
 <?php
 
-// Update the smb-shares configuration.
+/* Update the smb-shares configuration. */
 exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin");
 
-// Update unassigned devices configurations.
+/* Update unassigned devices configurations. */
 $files = glob("/etc/samba/unassigned-shares/*.conf");
 foreach ($files as $file) {
 	exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin '$file'");
 }
 
-// Update the RecycleBin symlinks.
+/* Update the RecycleBin symlinks. */
 exec("/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 ?>
