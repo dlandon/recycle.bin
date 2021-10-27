@@ -139,18 +139,19 @@ $(function() {
 	: <select name="SERVICE" size="1">
 		<?=mk_option($recycle_bin_cfg['SERVICE'], "disable", "_(No)_");?>
 		<?=mk_option($recycle_bin_cfg['SERVICE'], "enable", "_(Yes)_");?>
-	  </select>_(To hide the Recycle Bin folder, set 'Hide Dot Files')_
-
+	  </select>
 
 :recycle_bin_enable_plug:
-	> Set to **Yes** to enable the Recycle Bin functionality for deleted files when the server is started.
+	> Set to **Yes** to enable the Recycle Bin functionality for SMB deleted files when the server is started.
+	>
+	> To hide the Recycle Bin folder, set 'Hide Dot Files to 'Yes' in the SMB settings <a href='/Settings/SMB'>here</a>.
 :end
 
 	_(Update Recycle Bin Size in Background)_?
 	: <select name="BACKGROUND" size="1">
 		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "yes", "_(Yes)_");?>
 		<?=mk_option($recycle_bin_cfg['BACKGROUND'], "no", "_(No)_");?>
-	  </select>_(to 'Yes' in the SMB settings)_ <a href='/Settings/SMB'>_(here)_</a>.
+	  </select>
 
 :recycle_bin_background_plug:
 	> Set to **Yes** to enable the Recycle Bin Size to be updated in the background every minute.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to a minute to refresh when this is enabled.
