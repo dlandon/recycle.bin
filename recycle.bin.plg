@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.08.14">
+<!ENTITY version	"2021.10.27">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"681c08140ffb5545eef1f87b7d5d8f6b">
+<!ENTITY MD5		"590777fb92e7ce072be9af5ee971de96">
 ]>
 
 <PLUGIN	name="&name;"
@@ -23,6 +23,7 @@
 ##&name;
 ###&version;
 - Fix: Language translaton.
+- Fix: Put comment about hiding the recycle bin folder into the Help.
 
 ###2021.08.14
 - Add: Note about how to hide the Recycle Bin folder with the 'Hide Dot Files' SMB setting.
