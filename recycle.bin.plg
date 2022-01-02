@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2021.10.27">
+<!ENTITY version	"2022.01.01">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"590777fb92e7ce072be9af5ee971de96">
+<!ENTITY MD5		"13f242c4523d50f3826f4a72f10c3690">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Chenge browse icon to Unraid standard.
+
+###2021.10.27
 - Fix: Language translaton.
 - Fix: Put comment about hiding the recycle bin folder into the Help.
 
