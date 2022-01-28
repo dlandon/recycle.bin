@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* Copyright 2017-2021, Dan Landon
+/* Copyright 2017-2022 Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -30,7 +30,7 @@ if (!is_file($smb_file)) {
 }
 
 /* If smb_file is not defined then there is nothing to configure. */
-if ($smb_file != "") {
+if ($smb_file) {
 	/* Get the recycle bin confifuration. */
 	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
 
@@ -54,7 +54,7 @@ if ($smb_file != "") {
 	}
 	
 	/* Set the directory mode. */
-	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'] != "")) {
+	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'])) {
 		$parms['recycle:directory_mode'] = $recycle_bin_cfg['DIR_MODE'];
 	}
 
@@ -70,7 +70,7 @@ if ($smb_file != "") {
 	}
 
 	/* Adjust repository with user parameters. */
-	if ($recycle_bin_cfg['PARAMETERS'] != "") {
+	if ($recycle_bin_cfg['PARAMETERS']) {
 		$parms['recycle:repository'] .= "/".$recycle_bin_cfg['PARAMETERS'];
 	}
 
@@ -78,7 +78,7 @@ if ($smb_file != "") {
 	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);
 
 	/* Get the excluded shares from recycle bin configuration. */
-	if ($recycle_bin_cfg['EXCLUDE_SHARES'] != "") {
+	if ($recycle_bin_cfg['EXCLUDE_SHARES']) {
 		$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
 	} else {
 		$excluded_shares = array();
@@ -90,12 +90,16 @@ if ($smb_file != "") {
 		$samba_mounts = get_samba_mounts();
 		foreach (get_samba_mounts() as $name => $info) {
 			$s = basename($info['target']);
-			$excluded_shares[] .= $s;
+			if ($info['target']) {
+				$excluded_shares[] .= $s;
+			}
 		}
 		/* Get ISO File Mounts. */
 		foreach (get_iso_mounts() as $name => $info) {
 			$s = basename($info['target']);
-			$excluded_shares[] .= $s;
+			if ($info['target']) {
+				$excluded_shares[] .= $s;
+			}
 		}
 	}
 
@@ -133,7 +137,7 @@ if ($smb_file != "") {
 				$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
 				$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
 				$pd = $parms['recycle:exclude_dir'];
-				if ($excluded_dirs[$s] != "") {
+				if ($excluded_dirs[$s]) {
 					$parms['recycle:exclude_dir'] .= ",".$excluded_dirs[$s];
 				}
 				$smb_config[$s] = array_merge($smb_config[$s], $parms);
@@ -153,7 +157,7 @@ if ($smb_file != "") {
 	}
 
 	/* Write the new configuration. */
-	if ($iniFile != "") {
+	if ($iniFile) {
 		file_put_contents($smb_file, $iniFile);
 	}
 }
