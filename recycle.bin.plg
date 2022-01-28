@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.01.01">
+<!ENTITY version	"2022.01.27">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"13f242c4523d50f3826f4a72f10c3690">
+<!ENTITY MD5		"22960b9f8fbc62d343f8f04a0aae2be9">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Change in UD that broke the recycle bin.
+
+###2022.01.01
 - Fix: Change browse icon to Unraid standard.
 
 ###2021.10.27
@@ -445,7 +448,7 @@
 </CHANGES>
 
 <!--
-Copyright 2015-2021, Dan Landon
+Copyright 2015-2022, Dan Landon
 VFS Recycle Bin for samba deleted files.  This is the webGUI used to setup and manage
 the vfs recycle functionality in samba on Unraid.
 -->
@@ -592,7 +595,7 @@ fi
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
-echo " Copyright 2015-2021 &author;"
+echo " Copyright 2015-2022 &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
