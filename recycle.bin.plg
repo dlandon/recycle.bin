@@ -469,7 +469,7 @@ Recycle bin background wait script.
 <![CDATA[
 #!/bin/bash
 # Wait for the recycle bin to stop.
-while [ -e /var/run/&name;.pid ]; do
+while [ -e /var/run/recycle.bin.pid ]; do
 	sleep 1
 done
 ]]>
@@ -611,7 +611,7 @@ The 'remove' script.
 if [ -e /var/run/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
-	echo "/usr/local/emhttp/plugins/&name;/scripts/rc.recycle.bin stop" > /tmp/&name;/recycle_bin_stop
+	echo "/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop" > /tmp/recycle.bin/recycle_bin_stop
 	at -M -f /tmp/&name;/recycle_bin_stop now 2>/dev/null
 
 	# Wait for the recycle bin to stop
