@@ -42,7 +42,13 @@ if (is_file("/var/run/{$plugin}.pid")) {
 
 <script>
 $(function() {
-  showStatus('pid','recycle.bin');
+	showStatus('pid','recycle.bin');
+});
+
+$(function() {
+	if ( typeof caPluginUpdateCheck === "function" ) {
+		caPluginUpdateCheck("recycle.bin.plg");
+	}
 });
 </script>
 
