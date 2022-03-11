@@ -106,6 +106,28 @@ foreach ($files as $file) {
 		echo "<tr><td>$share_name</td><td>_(Unassigned Device)_</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
 	}
 }
+
+$files = glob("/mnt/RecycleBin/Root Shares/*");
+foreach ($files as $file) {
+	$share_name = basename($file);
+	$browse = "/mnt/RecycleBin/Root Shares/".$share_name;
+	$recycle_bin_trashsize = $share_trashsize[$share_name]['trashsize'];
+	$mount_point = $browse."/";
+	$browse = urlencode($browse);
+	$check_id = str_replace(" ", "", $share_name);
+
+	if ($recycle_bin_trashsize != "") {
+		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
+		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
+		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
+		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
+		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
+		$bb .= "</form>";
+		echo "<tr><td>$share_name</td><td>_(Root Share)_</td><td>$recycle_bin_trashsize</td><td>$aa</td><td>$bb</td></tr>";
+	}
+}
 ?>
 </tbody></table>
 

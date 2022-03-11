@@ -90,7 +90,7 @@ if ($smb_file) {
 		$samba_mounts = get_samba_mounts();
 		foreach (get_samba_mounts() as $name => $info) {
 			$s = basename($info['target']);
-			if ($info['target']) {
+			if ($info['target'] && ($info['fstype'] != "root")) {
 				$excluded_shares[] .= $s;
 			}
 		}

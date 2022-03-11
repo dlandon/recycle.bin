@@ -103,6 +103,14 @@ vfs_recycle_stop()
 
 			# Restart samba
 			/etc/rc.d/rc.samba restart 1>/dev/null
+
+			# Clear out the recycle bin browse and the trash sizes
+			# Remove browsing directory.
+			rm -rf /mnt/RecycleBin
+
+			# Clear trashsizes and start over
+			echo -n "0" > /tmp/recycle.bin/trashsize
+			rm -f /tmp/recycle.bin/share_trashsize
 		fi
 	else
 		echo "Recycle Bin is not running"
@@ -237,6 +245,7 @@ vfs_recycle_browse()
 	mkdir "RecycleBin/Disk"
 	mkdir "RecycleBin/User Shares"
 	mkdir "RecycleBin/Unassigned"
+	mkdir "RecycleBin/Root Shares"
 
 	# Disk, user, cache, and unassigned symlinks.
 	DIRS=`ls /mnt/`
@@ -256,7 +265,14 @@ vfs_recycle_browse()
 					ln -sf /mnt/user/"${line}"/.Recycle.Bin RecycleBin/User\ Shares/"${line}"
 				fi
 			done
-		elif [ "${DIR}" != "user0" ]; then
+		elif [ "${DIR}" = "rootshare" ]; then
+			ls /mnt/rootshare/ | while read line
+			do
+				if [ -d /mnt/rootshare/"${line}"/.Recycle.Bin ]; then
+					ln -sf /mnt/rootshare/"${line}"/.Recycle.Bin RecycleBin/Root\ Shares/"${line}"
+				fi
+			done
+		elif [ "${DIR}" != "user0" ] && [[ "${DIR}" != *"disk"* ]]; then
 			if [ -d /mnt/${DIR}/.Recycle.Bin ]; then
 				ln -sf /mnt/${DIR}/.Recycle.Bin RecycleBin/Disk/${DIR}
 			fi
