@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.01.27">
+<!ENTITY version	"2022.03.11">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"22960b9f8fbc62d343f8f04a0aae2be9">
+<!ENTITY MD5		"2a17b48ccaa5b9a1579942b52e3cf583">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Allow UD root shares to be added to the recycle bin.
+- Add: Recycle Bin plugin update check.
+
+###2022.01.27
 - Fix: Change in UD that broke the recycle bin.
 
 ###2022.01.01
