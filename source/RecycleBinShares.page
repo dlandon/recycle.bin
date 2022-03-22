@@ -60,7 +60,7 @@ foreach($shares as $share) {
 	} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
 		$browse = "/mnt/RecycleBin/Disk/".$share;
 		$share_type = _('Disk');
-	} elseif (strcmp($share, 'cache') == 0) {
+	} elseif (strcmp($share, 'cache') == 0 || strcmp(substr($share, 0, 4), 'disk') == 0) {
 		$browse = "/mnt/RecycleBin/Disk/".$share;
 		$share_type = _('Disk');
 	} else {
@@ -70,7 +70,7 @@ foreach($shares as $share) {
 	}
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
-	$check_id = str_replace(" ", "", $share);
+	$check_id = str_replace(array(" ", ".", "-"), "", $share);
 
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
@@ -92,7 +92,7 @@ foreach ($files as $file) {
 	$recycle_bin_trashsize = $share_trashsize[$share_name]['trashsize'];
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
-	$check_id = str_replace(" ", "", $share_name);
+	$check_id = str_replace(array(" ", ".", "-"), "", $share_name);
 
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
@@ -114,7 +114,7 @@ foreach ($files as $file) {
 	$recycle_bin_trashsize = $share_trashsize[$share_name]['trashsize'];
 	$mount_point = $browse."/";
 	$browse = urlencode($browse);
-	$check_id = str_replace(" ", "", $share_name);
+	$check_id = str_replace(array(" ", ".", "-"), "", $share_name);
 
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
