@@ -3,7 +3,7 @@
 plugin="recycle.bin"
 
 # Stop recycle bin if it is running.
-if [ -e "/var/run/${plugin}/${plugin}.pid" ]; then
+if [ -e "/var/run/${plugin}.pid" ]; then
 	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} stop shutdown
 fi
 
