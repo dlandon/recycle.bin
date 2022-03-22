@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.03.20">
+<!ENTITY version	"2022.03.22">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"2a17b48ccaa5b9a1579942b52e3cf583">
+<!ENTITY MD5		"8b798452f206c5e8073701ab8d05b024">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,12 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Disk shares not showing in shares tab.
+- Fix: Recycle Bin not stopping when array is stopped.
+- Fix: Additional work on Root Shares.
+- Fix: Enable check boxes on Share 'Empty' buttons not working with a '.', or '-' character in the share name.
+
+###2022.03.20
 - Add: Plugin update check.
 - Fix: Don't remove the vfs_recycle entries from the smb-extra.conf file when installing the plugin.
 
