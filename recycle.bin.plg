@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.03.22">
+<!ENTITY version	"2022.03.22a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"8b798452f206c5e8073701ab8d05b024">
+<!ENTITY MD5		"178c827e0c41c89f5fc6227571c29534">
 ]>
 
 <PLUGIN	name="&name;"
@@ -26,6 +26,7 @@
 - Fix: Recycle Bin not stopping when array is stopped.
 - Fix: Additional work on Root Shares.
 - Fix: Enable check boxes on Share 'Empty' buttons not working with a '.', or '-' character in the share name.
+- Fix: Recycle Bin total trash size was duplicating Disk and Root Share sizes.
 
 ###2022.03.20
 - Add: Plugin update check.
