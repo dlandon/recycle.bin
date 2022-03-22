@@ -20,11 +20,10 @@ if (! is_file("/var/run/trashsize.pid")) {
 	$share_trashsize_file ="/tmp/{$plugin}/share_trashsize";
 
 	/* Update /mnt/RecycleBin folder. */
-echo("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 	exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 
 	/* Get the total recycle bin trashsize. */
-	$recycle_bin_trashsize = exec( "/usr/bin/timeout 60 /usr/bin/du -shc /mnt/RecycleBin/*/*/ 2>/dev/null | grep total 2>/dev/null" );
+	$recycle_bin_trashsize = exec( "/usr/bin/timeout 60 /usr/bin/du -shc /usr/bin/du -shc /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/*/ /mnt/RecycleBin/Unassigned/*/ /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null | grep total 2>/dev/null" );
 	$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 	file_put_contents($trashsize_file, $recycle_bin_trashsize);
 
@@ -41,9 +40,7 @@ echo("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
 		} else if (strcmp($share, 'cache') == 0) {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
-		} else if (strcmp(substr($share, 0, 4), 'disk') == 0) {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
-		} else {
+		} else if (strcmp(substr($share, 0, 4), 'disk') != 0) {
 			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
 		}
 
@@ -51,6 +48,21 @@ echo("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 		if ($recycle_bin_trashsize != "0")
 		{
 			$share_trashsize[$share]['trashsize'] = $recycle_bin_trashsize;
+		}
+	}
+
+	$files = glob("/mnt/RecycleBin/Disk/*");
+	foreach ($files as $file) {
+		$share_name		= basename($file);
+		$du_share_name	= str_replace("'", "\'", $share_name);
+		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
+
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+
+		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
+		if ($recycle_bin_trashsize != "0")
+		{
+			$share_trashsize[$share_name]['trashsize'] = $recycle_bin_trashsize;
 		}
 	}
 
