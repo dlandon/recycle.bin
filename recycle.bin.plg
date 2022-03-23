@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.03.22a">
+<!ENTITY version	"2022.03.22b">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"178c827e0c41c89f5fc6227571c29534">
+<!ENTITY MD5		"a64e4ae9da2a2e75eb13199f122e4924">
 ]>
 
 <PLUGIN	name="&name;"
