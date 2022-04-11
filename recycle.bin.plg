@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.03.22b">
+<!ENTITY version	"2022.04.11">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"a64e4ae9da2a2e75eb13199f122e4924">
+<!ENTITY MD5		"e631aee6a883a5f93a78ce9d42491c1a">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: PATH to rc.recycle.bin for cron execution.
+- Fix: Change the way spaces are removed from the age days setting.
+
+###2022.03.22b
 - Fix: Disk shares not showing in shares tab.
 - Fix: Recycle Bin not stopping when array is stopped.
 - Fix: Additional work on Root Shares.
