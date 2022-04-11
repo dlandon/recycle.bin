@@ -2,6 +2,7 @@
 # Usage:
 # start|stop|restart|buttonstart|refresh|empty|update|purge|cron|browse|clear|share.
 #
+PATH=/sbin:/bin:/usr/bin
 
 vfs_recycle_start()
 {
@@ -175,11 +176,6 @@ vfs_recycle_empty()
 
 vfs_recycle_remove()
 {
-	# Trim leading spaces
-	shopt -s extglob
-	AGE="${AGE##*( )}"
-	shopt -u extglob
-
 	# Remove aged files.
 	find /mnt/RecycleBin/User\ Shares/*/* -atime +$AGE -delete &>/dev/null
 	find /mnt/RecycleBin/Disk/*/* -atime +$AGE -delete &>/dev/null
@@ -293,6 +289,11 @@ vfs_recycle_clear() {
 plugin="recycle.bin"
 CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
+
+# Trim leading and trailing spaces
+AGE=$AGE | tr -d ' '
+
+# Set default AGE if blank in settings
 if [ "$AGE" = "" ]; then
 	AGE="7"
 fi
