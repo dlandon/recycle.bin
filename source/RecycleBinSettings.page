@@ -160,7 +160,7 @@ $(function() {
 	  </select>
 
 :recycle_bin_background_plug:
-	> Set to **Yes** to enable the Recycle Bin Size to be updated in the background every minute.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to a minute to refresh when this is enabled.
+	> Set to **Yes** to enable the Recycle Bin Size to be updated in the background every five minutes.  This can make the Recycle Bin Settings and Shares pages more responsive and prevent disk spinups when accessing the Recycle Bin.  The Recycle Bin size can take up to five minutes to refresh when this is enabled.
 :end
 
 	_(Enable on Unassigned Devices)_?
