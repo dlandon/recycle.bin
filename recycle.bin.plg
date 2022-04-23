@@ -3,11 +3,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.04.11">
+<!ENTITY version	"2022.04.23">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"e631aee6a883a5f93a78ce9d42491c1a">
+<!ENTITY MD5		"075c80e2453f73e2d5e951818162ef9f">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,7 +22,17 @@
 <CHANGES>
 ##&name;
 ###&version;
-- Add: PATH to rc.recycle.bin for cron execution.
+- Add: Don't clear trash sizes when the Recycle Bin is started and trashsize updates are done in the background.
+- Add: Logic and semaphore flags to be sure the trashsize update is not running when a cron purge is running.  The trashsize script conflicts with the 'find' commands used to locate aged files.
+- Add: Ability to set up to one share sub-directory when excluding directories from shares.  i.e. /share/directory/sub-directory.
+- Fix: Change daily and weekly cron times to 5 AM.  The idea is to have the recycle bin purge occur when disks are already spinning.
+- Fix: Rewrite 'find' command to handle the symlinks in the /mnt/RecycleBin/ folder.
+- Fix: Tweak the RecycleBin mount point creation.
+- Fix: Change trash size refresh to every 5 minutes.  On large Recycle Bins every minute is too much processing and the Recycle Bin really doesn't change that much.
+- Fix: Remove the PATH environment variable from rc.recycle.bin.  It is not necessary.
+
+###2022.04.11
+- Add: PATH to rc.recycle.bin for cron purge execution.
 - Fix: Change the way spaces are removed from the age days setting.
 
 ###2022.03.22b
