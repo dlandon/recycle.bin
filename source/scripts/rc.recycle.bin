@@ -2,8 +2,8 @@
 # Usage:
 # start|stop|restart|buttonstart|refresh|empty|update|purge|cron|browse|clear|share.
 #
-PATH=.:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
-
+plugin="recycle.bin"
+#
 vfs_recycle_start()
 {
 	logger "Starting Recycle Bin" -t"$PROG_NAME"
@@ -50,12 +50,14 @@ vfs_recycle_start()
 		# Restart samba
 		/etc/rc.d/rc.samba restart 1>/dev/null
 
-		if [ "$BACKGROUND" != "no" ]; then
-			printf "# Refresh Recycle Bin trash sizes every minute:\n" >> /tmp/${plugin}/recyclebin.cron
-			printf "* * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
-		else
+		if [ "$BACKGROUND" != "yes" ]; then
 			# Refresh trash sizes
 			vfs_recycle_refresh
+		fi
+
+		if [ "$BACKGROUND" != "no" ]; then
+			printf "# Refresh Recycle Bin trash sizes every five minutes:\n" >> /tmp/${plugin}/recyclebin.cron
+			printf "*/5 * * * * ${DOCROOT}/plugins/${plugin}/scripts/get_trashsizes &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		fi
 
 		# Move cron file to flash
@@ -106,9 +108,14 @@ vfs_recycle_stop()
 			# Remove browsing directory.
 			rm -rf /mnt/RecycleBin
 
-			# Clear trashsizes and start over
-			echo -n "0" > /tmp/recycle.bin/trashsize
-			rm -f /tmp/recycle.bin/share_trashsize
+			if [ "$BACKGROUND" != "yes" ]; then
+				# Clear trashsizes and start over
+				echo -n "0" > /tmp/recycle.bin/trashsize
+				rm -f /tmp/recycle.bin/share_trashsize
+			fi
+
+			# Remove pid file to show cron script is not running.
+			rm -f /var/run/rc.${plugin}.pid
 		fi
 	else
 		echo "Recycle Bin is not running"
@@ -142,7 +149,7 @@ vfs_recycle_update()
 		# Stop vfs recycle.
 		vfs_recycle_stop
 
-		sleep 3
+		sleep 1
 	fi
 
 	# Start vfs recycle if service is enabled and not already running.
@@ -167,8 +174,10 @@ vfs_recycle_empty()
 	rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
 
-	# Refresh trash sizes
-	vfs_recycle_refresh
+	if [ "$BACKGROUND" != "yes" ]; then
+		# Refresh trash sizes
+		vfs_recycle_refresh
+	fi
 
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
@@ -176,14 +185,27 @@ vfs_recycle_empty()
 
 vfs_recycle_remove()
 {
-	# Remove aged files.
-	find /mnt/RecycleBin/User\ Shares/*/* -atime +$AGE -delete &>/dev/null
-	find /mnt/RecycleBin/Disk/*/* -atime +$AGE -delete &>/dev/null
-	find /mnt/RecycleBin/Unassigned/*/* -atime +$AGE -delete &>/dev/null
-	find /mnt/RecycleBin/Flash/* -atime +$AGE -delete &>/dev/null
+	# Wait for the trashsize to not be running.
+	while [ -e /var/run/trashsize.pid ]; do
+		sleep 1
+	done
 
-	# Refresh trash sizes
-	vfs_recycle_refresh
+	# Create pid file to show cron script is running.
+	echo $$ > /var/run/rc.${plugin}.pid
+
+	# Remove aged files.
+	find -L /mnt/RecycleBin/User\ Shares/ -ignore_readdir_race -mindepth 2 -atime +$AGE -delete &>/dev/null
+	find -L /mnt/RecycleBin/Disk/ -ignore_readdir_race -mindepth 2 -atime +$AGE -delete &>/dev/null
+	find -L /mnt/RecycleBin/Unassigned/ -ignore_readdir_race -mindepth 2 -atime +$AGE -delete &>/dev/null
+	find -L /mnt/RecycleBin/Flash/ -ignore_readdir_race -mindepth 2 -atime +$AGE -delete &>/dev/null
+
+	# Remove pid file to show cron script is not running.
+	rm -f /var/run/rc.${plugin}.pid
+
+	if [ "$BACKGROUND" != "yes" ]; then
+		# Refresh trash sizes
+		vfs_recycle_refresh
+	fi
 }
 
 vfs_recycle_purge()
@@ -227,9 +249,6 @@ vfs_recycle_cron()
 
 vfs_recycle_browse()
 {
-	# Remove browsing directory.
-	rm -rf /mnt/RecycleBin
-
 	# Recycle bin browsing directory contains symlinks to shares.
 	cd /tmp
 
@@ -275,7 +294,10 @@ vfs_recycle_browse()
 	# Flash symlink.
 	ln -sf /boot/.Recycle.Bin RecycleBin/Flash
 
-	# Move the RecycleBin to /mnt.
+	# Remove /mnt browsing directory.
+	rm -rf /mnt/RecycleBin
+
+	# Move the new RecycleBin to /mnt.
 	mv /tmp/RecycleBin /mnt/RecycleBin
 	chown nobody:users /mnt/RecycleBin
 }
@@ -286,7 +308,6 @@ vfs_recycle_clear() {
 }
 
 # read our configuration.
-plugin="recycle.bin"
 CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
 source $CONFIG
 
