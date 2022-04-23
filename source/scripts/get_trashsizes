@@ -12,7 +12,11 @@
 
 $plugin = "recycle.bin";
 
-if (! is_file("/var/run/trashsize.pid")) {
+/* Wait a bit before we start. */
+sleep(5);
+
+/* If this sxcript is already running or the cron job is running, don't update trashsizes. */
+if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.pid"))) {
 	file_put_contents("/var/run/trashsize.pid", getmypid());
 
 	$docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
@@ -37,11 +41,11 @@ if (! is_file("/var/run/trashsize.pid")) {
 		$du_share = str_replace("'", "\'", $share);
 		$du_share = str_replace(" ", "\ ", $du_share);
 		if ($share == 'flash') {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
 		} else if (strcmp($share, 'cache') == 0) {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
 		} else if (strcmp(substr($share, 0, 4), 'disk') != 0) {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
 		} else {
 			$recycle_bin_trashsize = 0;
 		}
@@ -59,7 +63,7 @@ if (! is_file("/var/run/trashsize.pid")) {
 		$du_share_name	= str_replace("'", "\'", $share_name);
 		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
 
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share_name/ 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share_name/ 2>/dev/null | grep total 2>/dev/null" );
 
 		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 
@@ -75,7 +79,7 @@ if (! is_file("/var/run/trashsize.pid")) {
 		$du_share_name	= str_replace("'", "\'", $share_name);
 		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
 
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
 
 		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 		if ($recycle_bin_trashsize != "0")
@@ -90,7 +94,7 @@ if (! is_file("/var/run/trashsize.pid")) {
 		$du_share_name	= str_replace("'", "\'", $share_name);
 		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
 
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 15 /usr/bin/du -shc /mnt/RecycleBin/Root\ Shares/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Root\ Shares/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
 
 		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 		if ($recycle_bin_trashsize != "0")
