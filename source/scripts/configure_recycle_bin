@@ -65,6 +65,10 @@ if ($smb_file) {
 	$exclude_dirs = explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']);
 	foreach ($exclude_dirs as $d) {
 		$d = pathinfo($d);
+		$i = dirname($d['dirname']);
+		if ($i != ".") {
+			$d['dirname'] = $i;
+		}
 		$b = basename($d['dirname']);
 		$b == "." ? $parms['recycle:exclude_dir'] .= ",".$d['basename'] : $excluded_dirs[$b] = $d['basename'];
 	}
