@@ -1,13 +1,13 @@
 <?xml version='1.0' standalone='yes'?>
-
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.04.23">
+<!ENTITY version	"2022.08.19">
 <!ENTITY launch		"Settings/RecycleBin">
-<!ENTITY pluginURL	"https://github.com/dlandon/recycle.bin/raw/master/recycle.bin.plg">
+<!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
+<!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"075c80e2453f73e2d5e951818162ef9f">
+<!ENTITY MD5		"6a876a0040003bd40cc748ce0a716cf0">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Reference to GitHub repository.
+
+###2022.04.23
 - Add: Don't clear trash sizes when the Recycle Bin is started and trashsize updates are done in the background.
 - Add: Logic and semaphore flags to be sure the trashsize update is not running when a cron purge is running.  The trashsize script conflicts with the 'find' commands used to locate aged files.
 - Add: Ability to set up to one share sub-directory when excluding directories from shares.  i.e. /share/directory/sub-directory.
@@ -486,7 +489,7 @@ the vfs recycle functionality in samba on Unraid.
 Get the plugin bundle.
 -->
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz">
-<URL>"https://github.com/dlandon/&name;/raw/master/&name;-&version;.tgz"</URL>
+<URL>"&gitURL;/&name;-&version;.tgz"</URL>
 <MD5>&MD5;</MD5>
 </FILE>
 

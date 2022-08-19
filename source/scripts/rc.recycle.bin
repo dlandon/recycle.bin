@@ -299,6 +299,8 @@ vfs_recycle_browse()
 
 	# Move the new RecycleBin to /mnt.
 	mv /tmp/RecycleBin /mnt/RecycleBin
+
+	# Set ownership of RecycleBin folder.
 	chown nobody:users /mnt/RecycleBin
 }
 
