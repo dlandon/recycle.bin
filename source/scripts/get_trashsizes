@@ -27,7 +27,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 	exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 
 	/* Get the total recycle bin trashsize. */
-	$recycle_bin_trashsize = exec( "/usr/bin/timeout 60 /usr/bin/du -shc /usr/bin/du -shc /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/*/ /mnt/RecycleBin/Unassigned/*/ /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null | grep total 2>/dev/null" );
+	$recycle_bin_trashsize = exec( "/usr/bin/timeout 60 /usr/bin/du -sc /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/*/ /mnt/RecycleBin/Unassigned/*/ /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null | grep total 2>/dev/null" );
 	$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 	file_put_contents($trashsize_file, $recycle_bin_trashsize);
 
@@ -41,11 +41,11 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 		$du_share = str_replace("'", "\'", $share);
 		$du_share = str_replace(" ", "\ ", $du_share);
 		if ($share == 'flash') {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 du -shc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 10 /usr/bin/du -sc /mnt/RecycleBin/Flash/* 2>/dev/null | grep total 2>/dev/null" );
 		} else if (strcmp($share, 'cache') == 0) {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -sc /mnt/RecycleBin/Disk/$du_share/ 2>/dev/null | grep total 2>/dev/null" );
 		} else if (strcmp(substr($share, 0, 4), 'disk') != 0) {
-			$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
+			$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -sc /mnt/RecycleBin/User\ Shares/$du_share/* 2>/dev/null | grep total 2>/dev/null" );
 		} else {
 			$recycle_bin_trashsize = 0;
 		}
@@ -63,7 +63,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 		$du_share_name	= str_replace("'", "\'", $share_name);
 		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
 
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Disk/$du_share_name/ 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -sc /mnt/RecycleBin/Disk/$du_share_name/ 2>/dev/null | grep total 2>/dev/null" );
 
 		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 
@@ -79,7 +79,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 		$du_share_name	= str_replace("'", "\'", $share_name);
 		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
 
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -sc /mnt/RecycleBin/Unassigned/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
 
 		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 		if ($recycle_bin_trashsize != "0")
@@ -94,7 +94,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 		$du_share_name	= str_replace("'", "\'", $share_name);
 		$du_share_name	= str_replace(" ", "\ ", $du_share_name);
 
-		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -shc /mnt/RecycleBin/Root\ Shares/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
+		$recycle_bin_trashsize = exec( "/usr/bin/timeout 30 /usr/bin/du -sc /mnt/RecycleBin/Root\ Shares/$du_share_name/* 2>/dev/null | grep total 2>/dev/null" );
 
 		$recycle_bin_trashsize = trim(str_replace( 'total', '', $recycle_bin_trashsize));
 		if ($recycle_bin_trashsize != "0")

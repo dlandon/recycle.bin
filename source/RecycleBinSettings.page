@@ -23,13 +23,9 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?
 
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
-$recycle_bin_trashsize = "";
 if (is_file("/tmp/{$plugin}/trashsize")) {
-	$recycle_bin_trashsize = file_get_contents("/tmp/{$plugin}/trashsize");
-}
-
-if ($recycle_bin_trashsize == "")
-{
+	$recycle_bin_trashsize = my_scale(file_get_contents("/tmp/{$plugin}/trashsize") * 1024, $unit)." {$unit}";
+} else {
 	$recycle_bin_trashsize = "?";
 }
 
