@@ -174,10 +174,8 @@ vfs_recycle_empty()
 	rm -rf /mnt/RecycleBin/Unassigned/*/ 2>/dev/null
 	rm -rf /mnt/RecycleBin/Flash/* 2>/dev/null
 
-	if [ "$BACKGROUND" != "yes" ]; then
-		# Refresh trash sizes
-		vfs_recycle_refresh
-	fi
+	# Refresh trash sizes
+	vfs_recycle_refresh
 
 	echo "Recycle Bin has been emptied"
 	logger "User: Recycle Bin has been emptied" -t"$PROG_NAME"
