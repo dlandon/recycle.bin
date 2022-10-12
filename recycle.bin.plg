@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.08.24">
+<!ENTITY version	"2022.10.12">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"732d5ad3d6e187e92e389bbe50a8a16c">
+<!ENTITY MD5		"0ab2b2197bc71cc82afbde4497cd5087">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Don't use Samba restart to load changed configuration, use configuration reload.
+- Fix: Remove Recycle Bin settings from smb-extra.conf and move to /etc/samba/smb-recycle_bin.conf.
+
+###2022.08.24
 - Fix: Use standard Unraid disk size display format.
 - Fix: Clear trash sizes when recycle bin is emptied and refresh is in the background.
 
@@ -265,7 +269,7 @@
 - Fix: Some webui cleanup and changes.
 
 ###2017.06.24
-- Add: Recyle Bin shares tab shows only shares with Recycle Bin contents and Recycle Bins can now be emptied per share.
+- Add: Recycle Bin shares tab shows only shares with Recycle Bin contents and Recycle Bins can now be emptied per share.
 
 ###2017.06.11
 - Fix: Modifications for Unraid 6.4 Azure and Gray themes.
@@ -519,9 +523,11 @@ Remove smb-extra parameters.
 <INLINE>
 <![CDATA[
 #!/bin/bash
-sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
-printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
-rm -f smb.tmp
+if [[ `grep '#vfs_recycle_start' /boot/config/smb-extra.conf` != "" ]]; then
+	sed '/#vfs_recycle_start/,/#vfs_recycle_end/d' /boot/config/smb-extra.conf >> smb.tmp
+	printf %s "$(< smb.tmp)" > /boot/config/smb-extra.conf
+	rm -f smb.tmp
+fi
 ]]>
 </INLINE>
 </FILE>
@@ -587,6 +593,27 @@ INCLUDE_UD="no"
 </INLINE>
 </FILE>
 
+<!--
+Add smb parameters for Recycle Bin.
+-->
+<FILE Name="/tmp/&name;/add-smb" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/bash
+# Add entry to /etc/samba/smb.conf
+if [[ `grep '# recycle_bin' /etc/samba/smb.conf` = "" ]]; then
+	echo "" >> /etc/samba/smb.conf
+	echo "	# recycle_bin" >> /etc/samba/smb.conf
+	echo "	include = /etc/samba/smb-recycle_bin.conf" >> /etc/samba/smb.conf
+	/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+
+	# Create smb-recycle_bin.conf
+	touch /etc/samba/smb-recycle_bin.conf
+fi
+]]>
+</INLINE>
+</FILE>
+
 <FILE Run="/usr/bin/php">
 <INLINE>
 <![CDATA[
@@ -609,11 +636,11 @@ The 'post-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-# Add vfs_recycle to smb-extra.conf.
-if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
-	printf "\n" >> /boot/config/smb-extra.conf
-	cat /boot/config/plugins/&name;/config/smb-extra.conf >> /boot/config/smb-extra.conf
-fi
+# Add recycle_bin to smb.conf.
+at -M -f /tmp/&name;/add-smb now 2>/dev/null
+
+# Add vfs_recycle to smb-recycle_bin.conf.
+cp /boot/config/plugins/&name;/config/smb-extra.conf /etc/samba/smb-recycle_bin.conf
 
 # Restart the recycle bin if it was already running
 if [ -f /tmp/recycle.bin/started ]; then
@@ -624,6 +651,9 @@ if [ -f /tmp/recycle.bin/started ]; then
 	# Remove started status file
 	rm -rf /tmp/recycle.bin/started
 fi
+
+# Remove vfs_recycle from smb-extra.conf to cleanup old configuration.
+at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
 
 echo ""
 echo "-----------------------------------------------------------"
@@ -666,8 +696,8 @@ rm -rf /mnt/RecycleBin
 # Remove the pid file.
 rm -rf /var/run/&name;.pid 2>/dev/null
 
-# Remove vfs_recycle from smb-extra.conf.
-at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
+# Clear the smb-recycle_bin.conf file
+echo "" > /etc/samba/smb-recycle_bin.conf
 
 # Remove the tmp directory.
 rm -rf /tmp/&name; 2>/dev/null
