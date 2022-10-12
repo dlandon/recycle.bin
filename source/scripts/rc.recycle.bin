@@ -12,21 +12,9 @@ vfs_recycle_start()
 	if [ ! -e /var/run/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
-		# Add vfs_recycle to smb-extra.conf.
-		if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
-			printf "\n" >> /boot/config/smb-extra.conf
-			cat /boot/config/plugins/${plugin}/config/smb-extra.conf >> /boot/config/smb-extra.conf
-		fi
-
-		# Adjust smb-extra.conf user set parameters.
-		if [ "$LOG" = "yes" ]; then
-			if [[ `grep 'syslog only = No' /boot/config/smb-extra.conf` = "" ]]; then
-				sed -i "/syslog only =/c\   syslog only = No" /boot/config/smb-extra.conf
-			fi
-		else
-			if [[ `grep 'syslog only = Yes' /boot/config/smb-extra.conf` = "" ]]; then
-				sed -i "/syslog only =/c\   syslog only = Yes" /boot/config/smb-extra.conf
-			fi
+		# Add vfs_recycle to smb-recycle_bin.conf.
+		if [[ `grep '#Recycle bin configuration' /etc/samba/smb-recycle_bin.conf` = "" ]]; then
+			cp /boot/config/plugins/recycle.bin/config/smb-extra.conf /etc/samba/smb-recycle_bin.conf
 		fi
 
 		# If cron run is enabled, add cron job.
@@ -47,8 +35,8 @@ vfs_recycle_start()
 		# Run recycle bin setup to configure vfs_recycle
 		${DOCROOT}/plugins/${plugin}/scripts/restart_services
 
-		# Restart samba
-		/etc/rc.d/rc.samba restart 1>/dev/null
+		# Reload samba configuration
+		/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
 
 		if [ "$BACKGROUND" != "yes" ]; then
 			# Refresh trash sizes
@@ -101,8 +89,8 @@ vfs_recycle_stop()
 			# Run recycle bin setup to configure vfs_recycle
 			${DOCROOT}/plugins/${plugin}/scripts/restart_services
 
-			# Restart samba
-			/etc/rc.d/rc.samba restart 1>/dev/null
+			# Reload samba configuration
+			/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
 
 			# Clear out the recycle bin browse and the trash sizes
 			# Remove browsing directory.
