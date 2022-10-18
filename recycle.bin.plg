@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.10.12">
+<!ENTITY version	"2022.10.18">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"0ab2b2197bc71cc82afbde4497cd5087">
+<!ENTITY MD5		"68701753a03a1a6f84c05a5dae07371a">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Revert to restarting Samba when starting and stopping the Recycle Bin.  This is required to enable/disable vfs_recycle.
+- Fix: Adjust buttons on bottom of page to show when using 'fixed' listing height.
+
+###2022.10.12
 - Fix: Don't use Samba restart to load changed configuration, use configuration reload.
 - Fix: Remove Recycle Bin settings from smb-extra.conf and move to /etc/samba/smb-recycle_bin.conf.
 
@@ -622,9 +626,11 @@ $version = parse_ini_file("/etc/unraid-version");
 @mkdir("/boot/config/plugins/recycle.bin/config/");
 $file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
 if ( version_compare($version['version'],"6.8.9", "<=") ) {
-	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
+	file_put_contents($file, array("#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   log level = 0 vfs:0\n"));
+} elseif ( version_compare($version['version'],"6.10.9", "<=") ) {
+	file_put_contents($file, array("#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n"));
 } else {
-	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
+	file_put_contents($file, array("#Recycle bin configuration\n", "[global]\n", "   syslog = 0\n", "   logging = 0\n", "   max log size = 10000\n"));
 }
 ?>
 ]]>
