@@ -50,7 +50,7 @@ echo "</pre>";
 <script>
 <?if ($display['resize']):?>
 function resize() {
-  $('pre.up').height(Math.max(window.innerHeight-340,370)).show();
+  $('pre.up').height(Math.max(window.innerHeight-360,370)).show();
 }
 $(function() {
   resize();
