@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.10.18a">
+<!ENTITY version	"2022.10.21">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
@@ -17,11 +17,16 @@
 		pluginURL="&pluginURL;"
 		support="&supportURL;"
 		icon="trash"
-		min="6.7.0">
+		min="6.9.0">
 
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Remove added Samba logging settings.  Settings are no longer needed.
+- Add: Log filter to remove excessive smbd_audit log entries.  This is to overcome some logging problems with Samba 4.17.
+- Add: Set minimum version to 6.9.
+
+###2022.10.18a
 - Fix: Revert to restarting Samba when starting and stopping the Recycle Bin.  This is required to enable/disable vfs_recycle.
 - Fix: Adjust buttons on bottom of page to show when using 'fixed' listing height.
 
@@ -604,12 +609,10 @@ INCLUDE_UD="no"
 $version = parse_ini_file("/etc/unraid-version");
 @mkdir("/boot/config/plugins/recycle.bin/config/");
 $file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
-if ( version_compare($version['version'],"6.8.9", "<=") ) {
-	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
-} elseif ( version_compare($version['version'],"6.10.9", "<=") ) {
+if ( version_compare($version['version'],"6.10.9", "<=") ) {
 	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
 } else {
-	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog = 0\n", "   logging = 0\n", "   max log size = 10000\n", "#vfs_recycle_end\n"));
+	exec("rm -rf /boot/config/plugins/recycle.bin/config/smb-extra.conf");
 }
 ?>
 ]]>
@@ -621,12 +624,6 @@ The 'post-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-# Add vfs_recycle to smb-extra.conf.
-if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
-	printf "\n" >> /boot/config/smb-extra.conf
-	cat /boot/config/plugins/&name;/config/smb-extra.conf >> /boot/config/smb-extra.conf
-fi
-
 # Restart the recycle bin if it was already running
 if [ -f /tmp/recycle.bin/started ]; then
 	# Start recycle bin in the background.
@@ -636,6 +633,13 @@ if [ -f /tmp/recycle.bin/started ]; then
 	# Remove started status file
 	rm -rf /tmp/recycle.bin/started
 fi
+
+# Create log filter
+echo ":msg,contains,\"smbd_audit\" stop" > /etc/rsyslog.d/03-recycle-bin.conf
+/etc/rc.d/rc.rsyslogd restart 1>/dev/null
+
+# Remove vfs_recycle from smb-extra.conf.
+at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
@@ -676,9 +680,6 @@ rm -rf /mnt/RecycleBin
 
 # Remove the pid file.
 rm -rf /var/run/&name;.pid 2>/dev/null
-
-# Remove vfs_recycle from smb-extra.conf.
-at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
 
 # Remove the tmp directory.
 rm -rf /tmp/&name; 2>/dev/null
