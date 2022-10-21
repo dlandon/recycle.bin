@@ -624,6 +624,9 @@ The 'post-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+# Remove vfs_recycle from smb-extra.conf.
+at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
+
 # Restart the recycle bin if it was already running
 if [ -f /tmp/recycle.bin/started ]; then
 	# Start recycle bin in the background.
@@ -637,9 +640,6 @@ fi
 # Create log filter
 echo ":msg,contains,\"smbd_audit\" stop" > /etc/rsyslog.d/03-recycle-bin.conf
 /etc/rc.d/rc.rsyslogd restart 1>/dev/null
-
-# Remove vfs_recycle from smb-extra.conf.
-at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
 echo ""
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
