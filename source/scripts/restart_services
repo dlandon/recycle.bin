@@ -1,6 +1,9 @@
 #!/usr/bin/php
 <?php
 
+/* Create log filter */
+exec('echo ":msg,contains,\"smbd_audit\" stop" > /etc/rsyslog.d/03-recycle-bin.conf');
+
 /* Update the smb-shares configuration. */
 exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin");
 
