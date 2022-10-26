@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.10.25a">
+<!ENTITY version	"2022.10.26">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Logging issue with 6.9.
+
+###2022.10.25a
 - Fix: Changed the way the log filter is applied.
 - Fix: Reversion causing excessive logging with 6.10 and below.
 
@@ -546,6 +549,23 @@ fi
 </FILE>
 
 <!--
+Add smb-extra parameters.
+-->
+<FILE Name="/tmp/&name;/add-smb-extra" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/bash
+	sleep 1
+	# Add vfs_recycle to smb-extra.conf.
+	if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
+		printf "\n" >> /boot/config/smb-extra.conf
+		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
+	fi
+]]>
+</INLINE>
+</FILE>
+
+<!--
 The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
@@ -614,9 +634,15 @@ $version = parse_ini_file("/etc/unraid-version");
 @mkdir("/boot/config/plugins/recycle.bin/config/");
 $file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
 if ( version_compare($version['version'],"6.10.9", "<=") ) {
+echo("here 6.9 and 6.10\n");
 	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
+	// Add vfs_recycle from smb-extra.conf.
+	exec("at -M -f /tmp/recycle.bin/add-smb-extra now 2>/dev/null");
 } else {
+echo("here 6.11\n");
 	exec("rm -rf /boot/config/plugins/recycle.bin/config/smb-extra.conf");
+	// Remove vfs_recycle from smb-extra.conf.
+	exec("at -M -f /tmp/recycle.bin/remove-smb-extra now 2>/dev/null");
 }
 ?>
 ]]>
@@ -628,18 +654,6 @@ The 'post-install' script.
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-source /etc/unraid-version
-if [[ "$version" &lt; "6.11" ]]; then
-	# Add vfs_recycle to smb-extra.conf.
-	if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
-		printf "\n" >> /boot/config/smb-extra.conf
-		cat /boot/config/plugins/&name;/config/smb-extra.conf >> /boot/config/smb-extra.conf
-	fi
-else
-	# Remove vfs_recycle from smb-extra.conf.
-	at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
-fi
-
 # Restart the recycle bin if it was already running
 if [ -f /tmp/recycle.bin/started ]; then
 	# Start recycle bin in the background.
