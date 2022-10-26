@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.10.26">
+<!ENTITY version	"2022.10.26a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"2efb1d69b34a2aaef268e817a2d31210">
+<!ENTITY MD5		"d1ec94b89901409e20a9ba8240c5a566">
 ]>
 
 <PLUGIN	name="&name;"
@@ -638,9 +638,14 @@ if ( version_compare($version['version'],"6.10.9", "<=") ) {
 	// Add vfs_recycle from smb-extra.conf.
 	exec("at -M -f /tmp/recycle.bin/add-smb-extra now 2>/dev/null");
 } else {
+	// Create log filter file
+	exec('echo ":msg,contains,\"smbd_audit\" stop" > /etc/rsyslog.d/03-recycle-bin.conf');
+	// Remove the smb-extra.conf file entry
 	exec("rm -rf /boot/config/plugins/recycle.bin/config/smb-extra.conf");
 	// Remove vfs_recycle from smb-extra.conf.
 	exec("at -M -f /tmp/recycle.bin/remove-smb-extra now 2>/dev/null");
+	// Restart rsyslog
+	exec("/etc/rc.d/rc.rsyslogd restart");
 }
 ?>
 ]]>
