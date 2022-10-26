@@ -634,12 +634,10 @@ $version = parse_ini_file("/etc/unraid-version");
 @mkdir("/boot/config/plugins/recycle.bin/config/");
 $file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
 if ( version_compare($version['version'],"6.10.9", "<=") ) {
-echo("here 6.9 and 6.10\n");
 	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
 	// Add vfs_recycle from smb-extra.conf.
 	exec("at -M -f /tmp/recycle.bin/add-smb-extra now 2>/dev/null");
 } else {
-echo("here 6.11\n");
 	exec("rm -rf /boot/config/plugins/recycle.bin/config/smb-extra.conf");
 	// Remove vfs_recycle from smb-extra.conf.
 	exec("at -M -f /tmp/recycle.bin/remove-smb-extra now 2>/dev/null");
