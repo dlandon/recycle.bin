@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.10.26a">
+<!ENTITY version	"2022.11.02">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"d1ec94b89901409e20a9ba8240c5a566">
+<!ENTITY MD5		"a049c428444486c419445e9d6806d6fa">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Additional logging cleanup.  Remove rsyslog filter.
+
+###2022.10.26a
 - Fix: Logging issue with 6.9.
 
 ###2022.10.25a
@@ -551,16 +554,17 @@ fi
 <!--
 Add smb-extra parameters.
 -->
-<FILE Name="/tmp/&name;/add-smb-extra" Mode="0770">
+<FILE Name="/tmp/&name;/add-smb" Mode="0770">
 <INLINE>
 <![CDATA[
 #!/bin/bash
-	sleep 1
-	# Add vfs_recycle to smb-extra.conf.
-	if [[ `grep '#vfs_recycle' /boot/config/smb-extra.conf` = "" ]]; then
-		printf "\n" >> /boot/config/smb-extra.conf
-		cat /boot/config/plugins/recycle.bin/config/smb-extra.conf >> /boot/config/smb-extra.conf
-	fi
+# Copy the smb logging parameters to the samba include file
+cp /boot/config/plugins/recycle.bin/config/smb-extra.conf /etc/samba/smb-recycle.bin.conf
+
+# Add vfs_recycle to smb.conf.
+if [[ `grep '# hook for recycle bin log settings' /etc/samba/smb.conf` = "" ]]; then
+	sed -i "/# hook for user-defined samba config/i \	# hook for recycle bin log settings\n	include = /etc/samba/smb-recycle.bin.conf\n" /etc/samba/smb.conf
+fi
 ]]>
 </INLINE>
 </FILE>
@@ -594,6 +598,9 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null | grep -v '&versi
 
 # Remove the default smb-extra.conf file.
 rm -f /boot/config/plugins/&name;/config/smb-extra.conf
+
+# Remove vfs_recycle from smb-extra.conf.
+at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
 </INLINE>
 </FILE>
 
@@ -634,19 +641,14 @@ $version = parse_ini_file("/etc/unraid-version");
 @mkdir("/boot/config/plugins/recycle.bin/config/");
 $file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
 if ( version_compare($version['version'],"6.10.9", "<=") ) {
-	file_put_contents($file, array("#vfs_recycle_start\n", "#Recycle bin configuration\n", "[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n", "#vfs_recycle_end\n"));
-	// Add vfs_recycle from smb-extra.conf.
-	exec("at -M -f /tmp/recycle.bin/add-smb-extra now 2>/dev/null");
+	/* Logging settings for earlier versions of Unraid */
+	file_put_contents($file, array("[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n"));
 } else {
-	// Create log filter file
-	exec('echo ":msg,contains,\"smbd_audit\" stop" > /etc/rsyslog.d/03-recycle-bin.conf');
-	// Remove the smb-extra.conf file entry
-	exec("rm -rf /boot/config/plugins/recycle.bin/config/smb-extra.conf");
-	// Remove vfs_recycle from smb-extra.conf.
-	exec("at -M -f /tmp/recycle.bin/remove-smb-extra now 2>/dev/null");
-	// Restart rsyslog
-	exec("/etc/rc.d/rc.rsyslogd restart");
+	/* Logging settings for later versions of Unraid */
+	file_put_contents($file, array("[global]\n", "   syslog = 0\n", "   logging = 0\n"));
 }
+/* Add vfs_recycle from smb-extra.conf to smb.conf */
+exec("at -M -f /tmp/recycle.bin/add-smb now 2>/dev/null");
 ?>
 ]]>
 </INLINE>
