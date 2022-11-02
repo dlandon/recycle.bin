@@ -12,11 +12,6 @@ vfs_recycle_start()
 	if [ ! -e /var/run/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
-		# Add vfs_recycle to smb-recycle_bin.conf.
-		if [[ `grep '#Recycle bin configuration' /etc/samba/smb-recycle_bin.conf` = "" ]]; then
-			cp /boot/config/plugins/recycle.bin/config/smb-extra.conf /etc/samba/smb-recycle_bin.conf
-		fi
-
 		# If cron run is enabled, add cron job.
 		if [ "$SCHEDRUN" = "hourly" ]; then
 			printf "# Purge recycle bin every hour on the hour:\n" > /tmp/${plugin}/recyclebin.cron
