@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.11.02">
+<!ENTITY version	"2022.11.04">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"a049c428444486c419445e9d6806d6fa">
+<!ENTITY MD5		"d1604ce563735fe9659eed9a4284a43a">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Adjustments to logging setup to delay application of smb.conf changes.
+
+###2022.11.02
 - Fix: Additional logging cleanup.  Remove rsyslog filter.
 
 ###2022.10.26a
@@ -552,24 +555,6 @@ fi
 </FILE>
 
 <!--
-Add smb-extra parameters.
--->
-<FILE Name="/tmp/&name;/add-smb" Mode="0770">
-<INLINE>
-<![CDATA[
-#!/bin/bash
-# Copy the smb logging parameters to the samba include file
-cp /boot/config/plugins/recycle.bin/config/smb-extra.conf /etc/samba/smb-recycle.bin.conf
-
-# Add vfs_recycle to smb.conf.
-if [[ `grep '# hook for recycle bin log settings' /etc/samba/smb.conf` = "" ]]; then
-	sed -i "/# hook for user-defined samba config/i \	# hook for recycle bin log settings\n	include = /etc/samba/smb-recycle.bin.conf\n" /etc/samba/smb.conf
-fi
-]]>
-</INLINE>
-</FILE>
-
-<!--
 The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
@@ -647,8 +632,6 @@ if ( version_compare($version['version'],"6.10.9", "<=") ) {
 	/* Logging settings for later versions of Unraid */
 	file_put_contents($file, array("[global]\n", "   syslog = 0\n", "   logging = 0\n"));
 }
-/* Add vfs_recycle from smb-extra.conf to smb.conf */
-exec("at -M -f /tmp/recycle.bin/add-smb now 2>/dev/null");
 ?>
 ]]>
 </INLINE>
