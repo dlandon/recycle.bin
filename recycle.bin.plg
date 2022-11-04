@@ -630,7 +630,7 @@ if ( version_compare($version['version'],"6.10.9", "<=") ) {
 	file_put_contents($file, array("[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n"));
 } else {
 	/* Logging settings for later versions of Unraid */
-	file_put_contents($file, array("[global]\n", "   syslog = 0\n", "   logging = 0\n"));
+	file_put_contents($file, array("[global]\n", "   syslog = 0\n", "   logging = 0\n, "   max log size = 10000\n"));
 }
 ?>
 ]]>
