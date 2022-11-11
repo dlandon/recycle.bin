@@ -138,14 +138,16 @@ if ($smb_file) {
 		/* Add parameters if recycle bin is running. */
 		if (is_file("/var/run/recycle.bin.pid")) {
 			foreach ($shares as $s) {
-				$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
-				$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
-				$pd = $parms['recycle:exclude_dir'];
-				if ($excluded_dirs[$s]) {
-					$parms['recycle:exclude_dir'] .= ",".$excluded_dirs[$s];
+				if ($s != "global") {
+					$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
+					$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
+					$pd = $parms['recycle:exclude_dir'];
+					if ($excluded_dirs[$s]) {
+						$parms['recycle:exclude_dir'] .= ",".$excluded_dirs[$s];
+					}
+					$smb_config[$s] = array_merge($smb_config[$s], $parms);
+					$parms['recycle:exclude_dir'] = $pd;
 				}
-				$smb_config[$s] = array_merge($smb_config[$s], $parms);
-				$parms['recycle:exclude_dir'] = $pd;
 			}
 		}
 	}
