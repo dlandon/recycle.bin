@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.11.04a">
+<!ENTITY version	"2022.11.11">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"d1604ce563735fe9659eed9a4284a43a">
+<!ENTITY MD5		"d8e00979c6f35389372d449cc7e4f3c8">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Recycle bin not stopped properly when updating.
+- Fix: Better handling of smb configuration.
+
+2022.11.04a
 - Fix: Adjustments to logging setup to delay application of smb.conf changes.
 
 ###2022.11.02
@@ -563,7 +567,8 @@ The 'pre-install' script.
 if [ -e /var/run/&name;.pid ]; then
 	# Stop recycle bin in the background.
 	echo "Stopping Recycle Bin..."
-	at -M -f /usr/local/emhttp/plugins/&name;/event/stopping_svcs now 2>/dev/null
+	echo "/usr/local/emhttp/plugins/recycle.bin/scripts/rc.recycle.bin stop" > /tmp/recycle.bin/recycle_bin_stop
+	at -M -f /tmp/&name;/recycle_bin_stop now 2>/dev/null
 
 	# Wait for the recycle bin to stop
 	timeout 5 /tmp/&name;/wait_recycle.bin
@@ -627,10 +632,10 @@ $version = parse_ini_file("/etc/unraid-version");
 $file = "/boot/config/plugins/recycle.bin/config/smb-extra.conf";
 if ( version_compare($version['version'],"6.10.9", "<=") ) {
 	/* Logging settings for earlier versions of Unraid */
-	file_put_contents($file, array("[global]\n", "   syslog only = No\n", "   syslog = 0\n", "   logging = 0\n", "   log level = 0 vfs:0\n"));
+	file_put_contents($file, array("\t# recycle bin parameters\n", "\tsyslog only = No\n", "\tsyslog = 0\n", "\tlogging = 0\n", "\tlog level = 0 vfs:0\n"));
 } else {
 	/* Logging settings for later versions of Unraid */
-	file_put_contents($file, array("[global]\n", "   syslog = 0\n", "   logging = 0\n", "   max log size = 10000\n"));
+	file_put_contents($file, array("\t# recycle bin parameters\n", "\tsyslog = 0\n", "\tlogging = 0\n", "\tmax log size = 10000\n"));
 }
 ?>
 ]]>
