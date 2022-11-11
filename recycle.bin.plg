@@ -25,7 +25,7 @@
 - Fix: Recycle bin not stopped properly when updating.
 - Fix: Better handling of smb configuration.
 
-2022.11.04a
+###2022.11.04a
 - Fix: Adjustments to logging setup to delay application of smb.conf changes.
 
 ###2022.11.02
