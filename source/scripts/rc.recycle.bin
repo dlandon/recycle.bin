@@ -12,12 +12,9 @@ vfs_recycle_start()
 	if [ ! -e /var/run/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
-		# Copy the smb logging parameters to the samba include file
-		cp /boot/config/plugins/recycle.bin/config/smb-extra.conf /etc/samba/smb-recycle.bin.conf
-
 		# Add vfs_recycle to smb.conf.
-		if [[ `grep '# hook for recycle bin log settings' /etc/samba/smb.conf` = "" ]]; then
-			sed -i "/# hook for user-defined samba config/i \	# hook for recycle bin log settings\n	include = /etc/samba/smb-recycle.bin.conf\n" /etc/samba/smb.conf
+		if [[ `grep '# recycle bin parameters' /etc/samba/smb.conf` = "" ]]; then
+			sed -i "/logging = syslog@0/r /boot/config/plugins/recycle.bin/config/smb-extra.conf" /etc/samba/smb.conf
 		fi
 
 		# If cron run is enabled, add cron job.
