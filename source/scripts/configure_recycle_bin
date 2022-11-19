@@ -121,7 +121,7 @@ if ($smb_file) {
 	/* Remove recycle bin parameters from the configuration. */
 	foreach ($smb_shares as $s) {
 		if (isset($smb_config[$s]['vfs objects'])) {
-			$smb_config[$s]['vfs objects'] = str_replace(array("extd_audit", "recycle"), "", $smb_config[$s]['vfs objects']);
+			$smb_config[$s]['vfs objects'] = trim(str_replace(array("extd_audit", "recycle"), "", $smb_config[$s]['vfs objects']));
 			if (empty($smb_config[$s]['vfs objects'])) {
 				unset($smb_config[$s]['vfs objects']);
 			}
@@ -153,12 +153,19 @@ if ($smb_file) {
 	}
 
 	/* Rewrite the configuration file. */
-	$keys = array_keys($smb_config);
+	$keys		= array_keys($smb_config);
+	$iniFile	= "";
+	$first_line	= true;
 	foreach ($keys as $key) {
-		$iniFile .= "[$key]\n";
+		if ($first_line) {
+			$iniFile .= "[$key]";
+			$first_line	= false;
+		} else {
+			$iniFile .= "\n[$key]";
+		}
 		$entryKeys = array_keys($smb_config[$key]);
 		foreach ($entryKeys as $entry) {
-			$iniFile .= "\t".$entry.' = '.$smb_config[$key][$entry]."\n";
+			$iniFile .= "\n\t".$entry.' = '.$smb_config[$key][$entry];
 		}
 	}
 
