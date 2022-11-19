@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.11.11">
+<!ENTITY version	"2022.11.19">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"d8e00979c6f35389372d449cc7e4f3c8">
+<!ENTITY MD5		"edb07090ea280b11f86e767ac52e3297">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Cleanup writting of SMB config files.
+
+###2022.11.11
 - Fix: Recycle bin not stopped properly when updating.
 - Fix: Better handling of smb configuration.
 
