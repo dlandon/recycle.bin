@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2022.11.19">
+<!ENTITY version	"2022.11.19a">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"edb07090ea280b11f86e767ac52e3297">
+<!ENTITY MD5		"ece7264cf8b29625a551fa51f6ddd0af">
 ]>
 
 <PLUGIN	name="&name;"
