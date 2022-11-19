@@ -167,6 +167,16 @@ if ($smb_file) {
 		foreach ($entryKeys as $entry) {
 			$iniFile .= "\n\t".$entry.' = '.$smb_config[$key][$entry];
 		}
+
+		/* If rewritting unassigned devices share add final line break. */
+		if ($key == "global") {
+			$iniFile	.= "\n";
+		}
+	}
+
+	/* If rewritting smb-shares.conf add final line break. */
+	if (! $ud_config_file) {
+		$iniFile	.= "\n";
 	}
 
 	/* Write the new configuration. */
