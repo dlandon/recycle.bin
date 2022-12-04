@@ -62,9 +62,10 @@ if ($smb_file) {
 	$parms['recycle:exclude'] = trim($recycle_bin_cfg['EXCLUDE']);
 
 	/* Set the excluded directories. */
-	$exclude_dirs = explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']);
+	$exclude_dirs = explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']) ?? null;
 	foreach ($exclude_dirs as $d) {
 		$d = pathinfo($d);
+		$d['dirname']	= $d['dirname'] ?? null;
 		$i = dirname($d['dirname']);
 		if ($i != ".") {
 			$d['dirname'] = $i;
@@ -142,7 +143,7 @@ if ($smb_file) {
 					$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
 					$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
 					$pd = $parms['recycle:exclude_dir'];
-					if ($excluded_dirs[$s]) {
+					if (isset($excluded_dirs[$s])) {
 						$parms['recycle:exclude_dir'] .= ",".$excluded_dirs[$s];
 					}
 					$smb_config[$s] = array_merge($smb_config[$s], $parms);
