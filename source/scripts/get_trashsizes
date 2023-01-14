@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* Copyright 2017-2022, Dan Landon
+/* Copyright 2017-2023, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -32,7 +32,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 	file_put_contents($trashsize_file, $recycle_bin_trashsize);
 
 	/* Get array of share trashsizes. */
-	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/${plugin}/${plugin}.cfg" );
+	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
 	$smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
 	$shares = array_keys($smb_shares);
 	$share_trashsize = array();
