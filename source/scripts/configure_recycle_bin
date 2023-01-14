@@ -69,6 +69,7 @@ if ($smb_file) {
 
 	/* Set the excluded directories. */
 	$exclude_dirs	= (isset($recycle_bin_cfg['EXCLUDE_DIRS'])) ? explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']) : array();
+	$excluded_dirs	= array();
 	foreach ($exclude_dirs as $d) {
 		$d	= pathinfo($d);
 		$b	= null;
@@ -79,7 +80,15 @@ if ($smb_file) {
 			}
 			$b = basename($d['dirname']);
 		}
-		$b == "." ? $parms['recycle:exclude_dir'] .= ",".$d['basename'] : ($excluded_dirs[$b] .= ($excluded_dirs[$b]) ? ",".$d['basename'] : $d['basename']);
+
+		/* See if we are adding an excluded global directory or a share directory. */
+		if ($b == ".") {
+			$parms['recycle:exclude_dir'] .= ",".$d['basename'];
+		} else if (isset($excluded_dirs[$b])) {
+			$excluded_dirs[$b] .= ",".$d['basename'];
+		} else {
+			$excluded_dirs[$b] = $d['basename'];
+		}
 	}
 
 	/* Adjust repository with user parameters. */
