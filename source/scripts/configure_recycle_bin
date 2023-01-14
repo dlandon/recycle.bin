@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* Copyright 2017-2022 Dan Landon
+/* Copyright 2017-2023 Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -32,7 +32,11 @@ if (!is_file($smb_file)) {
 /* If smb_file is not defined then there is nothing to configure. */
 if ($smb_file) {
 	/* Get the recycle bin confifuration. */
-	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
+	if (file_exists("/boot/config/plugins/recycle.bin/recycle.bin.cfg")) {
+		$recycle_bin_cfg	= parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
+	} else {
+		$recycle_bin_cfg	= array();
+	}
 
 	/* Array of recycle bin parameters. */
 	$parms =  array("recycle:repository"		=> ".Recycle.Bin",
@@ -47,7 +51,7 @@ if ($smb_file) {
 	);
 
 	/* Adjust user set parameters. */
-	if ($recycle_bin_cfg['LOG'] == "yes") {
+	if ((isset($recycle_bin_cfg['LOG'])) && ($recycle_bin_cfg['LOG'] == "yes")) {
 		$vfs_objects = "extd_audit recycle";
 	} else {
 		$vfs_objects = "recycle";
@@ -55,27 +59,31 @@ if ($smb_file) {
 	
 	/* Set the directory mode. */
 	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'])) {
-		$parms['recycle:directory_mode'] = $recycle_bin_cfg['DIR_MODE'];
+		$parms['recycle:directory_mode']	= $recycle_bin_cfg['DIR_MODE'];
+	} else {
+		$parms['recycle:directory_mode']	= "";
 	}
 
 	/* Set the excluded files. */
-	$parms['recycle:exclude'] = trim($recycle_bin_cfg['EXCLUDE']);
+	$parms['recycle:exclude'] = (isset($recycle_bin_cfg['EXCLUDE'])) ? trim($recycle_bin_cfg['EXCLUDE']) : "";
 
 	/* Set the excluded directories. */
-	$exclude_dirs = explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']) ?? null;
+	$exclude_dirs	= (isset($recycle_bin_cfg['EXCLUDE_DIRS'])) ? explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']) : array();
 	foreach ($exclude_dirs as $d) {
-		$d = pathinfo($d);
-		$d['dirname']	= $d['dirname'] ?? null;
-		$i = dirname($d['dirname']);
-		if ($i != ".") {
-			$d['dirname'] = $i;
+		$d	= pathinfo($d);
+		$b	= null;
+		if (isset($d['dirname'])) {
+			$i = dirname($d['dirname']);
+			if ($i != ".") {
+				$d['dirname'] = $i;
+			}
+			$b = basename($d['dirname']);
 		}
-		$b = basename($d['dirname']);
-		$b == "." ? $parms['recycle:exclude_dir'] .= ",".$d['basename'] : $excluded_dirs[$b] = $d['basename'];
+		$b == "." ? $parms['recycle:exclude_dir'] .= ",".$d['basename'] : ($excluded_dirs[$b] .= ($excluded_dirs[$b]) ? ",".$d['basename'] : $d['basename']);
 	}
 
 	/* Adjust repository with user parameters. */
-	if ($recycle_bin_cfg['PARAMETERS']) {
+	if ((isset($recycle_bin_cfg['PARAMETERS'])) && ($recycle_bin_cfg['PARAMETERS'])) {
 		$parms['recycle:repository'] .= "/".$recycle_bin_cfg['PARAMETERS'];
 	}
 
@@ -83,7 +91,7 @@ if ($smb_file) {
 	$smb_config = parse_ini_file($smb_file, true, INI_SCANNER_RAW);
 
 	/* Get the excluded shares from recycle bin configuration. */
-	if ($recycle_bin_cfg['EXCLUDE_SHARES']) {
+	if ((isset($recycle_bin_cfg['EXCLUDE_SHARES'])) && ($recycle_bin_cfg['EXCLUDE_SHARES'])) {
 		$excluded_shares = explode(',', $recycle_bin_cfg['EXCLUDE_SHARES']);
 	} else {
 		$excluded_shares = array();
