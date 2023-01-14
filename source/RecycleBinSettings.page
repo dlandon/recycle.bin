@@ -2,7 +2,7 @@ Menu="RecycleBin:1"
 Title="Settings"
 ---
 <?php
-/* Copyright 2015-2022 Dan Landon.
+/* Copyright 2015-2023 Dan Landon.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -23,6 +23,19 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?
 
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
+$recycle_bin_cfg['BACKGROUND']		= $recycle_bin_cfg['BACKGROUND'] ?? '';
+$recycle_bin_cfg['SERVICE']			= $recycle_bin_cfg['SERVICE'] ?? '';
+$recycle_bin_cfg['INCLUDE_UD']		= $recycle_bin_cfg['INCLUDE_UD'] ?? '';
+$recycle_bin_cfg['PARAMETERS']		= $recycle_bin_cfg['PARAMETERS'] ?? '';
+$recycle_bin_cfg['DIR_MODE']		= $recycle_bin_cfg['DIR_MODE'] ?? '';
+$recycle_bin_cfg['EXCLUDE']			= $recycle_bin_cfg['EXCLUDE'] ?? '';
+$recycle_bin_cfg['EXCLUDE_DIRS']	= $recycle_bin_cfg['EXCLUDE_DIRS'] ?? '';
+$recycle_bin_cfg['EXCLUDE_SHARES']	= $recycle_bin_cfg['EXCLUDE_SHARES'] ?? '';
+$recycle_bin_cfg['AGE']				= $recycle_bin_cfg['AGE'] ?? '';
+$recycle_bin_cfg['SCHEDRUN']		= $recycle_bin_cfg['SCHEDRUN'] ?? '';
+$recycle_bin_cfg['NOTIFY']			= $recycle_bin_cfg['NOTIFY'] ?? '';
+$recycle_bin_cfg['LOG']				= $recycle_bin_cfg['LOG'] ?? '';
+
 if (is_file("/tmp/{$plugin}/trashsize")) {
 	$recycle_bin_trashsize = my_scale(file_get_contents("/tmp/{$plugin}/trashsize") * 1024, $unit)." {$unit}";
 } else {
