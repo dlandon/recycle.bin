@@ -60,8 +60,6 @@ if ($smb_file) {
 	/* Set the directory mode. */
 	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'])) {
 		$parms['recycle:directory_mode']	= $recycle_bin_cfg['DIR_MODE'];
-	} else {
-		$parms['recycle:directory_mode']	= "";
 	}
 
 	/* Set the excluded files. */
