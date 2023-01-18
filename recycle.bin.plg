@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2023.01.14">
+<!ENTITY version	"2023.01.18">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"29a5e01e81732e38b0b12aa6eab848f5">
+<!ENTITY MD5		"d49227daea6ccc6b8b4b7b44bbb0aa75">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Default directory mode setting not set to 0777.
+
+###2023.01.14
 - Fix: Multiple excluded directores on the same share.
 
 ###2022.12.10
