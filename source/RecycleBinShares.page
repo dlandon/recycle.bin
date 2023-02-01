@@ -47,24 +47,23 @@ if (is_file("/tmp/{$plugin}/share_trashsize")) {
 <tbody>
 
 <?
-$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/${plugin}/${plugin}.cfg" );
+$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/".$plugin."/".$plugin.".cfg" );
 $smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
 $shares = array_keys($smb_shares);
 natcasesort($shares);
 
 foreach($shares as $share) {
-	$recycle_bin_trashsize = $share_trashsize[$share]['trashsize'];
+	$recycle_bin_trashsize = isset($share_trashsize[$share]['trashsize']) ? $share_trashsize[$share]['trashsize'] : "";
 	if ($share == 'flash') {
 		$browse = "/mnt/RecycleBin/Flash";
 		$share_type = _('Flash');
-	} elseif (strcmp(substr($share, 0, 4), 'disk') == 0) {
+	} else if (strcmp(substr($share, 0, 4), 'disk') == 0) {
 		$browse = "/mnt/RecycleBin/Disk/".$share;
 		$share_type = _('Disk');
-	} elseif (strcmp($share, 'cache') == 0 || strcmp(substr($share, 0, 4), 'disk') == 0) {
+	} else if (strcmp($share, 'cache') == 0 || strcmp(substr($share, 0, 4), 'disk') == 0) {
 		$browse = "/mnt/RecycleBin/Disk/".$share;
 		$share_type = _('Disk');
 	} else {
-		$brow_share = 
 		$browse = "/mnt/RecycleBin/User Shares/".$share;
 		$share_type = _('Share');
 	}
@@ -75,7 +74,7 @@ foreach($shares as $share) {
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
@@ -97,7 +96,7 @@ foreach ($files as $file) {
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
@@ -119,7 +118,7 @@ foreach ($files as $file) {
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-		$bb .= "<input type='hidden' name='#command' value='/plugins/${plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
