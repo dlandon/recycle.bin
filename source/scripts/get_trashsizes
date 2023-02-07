@@ -19,7 +19,7 @@ sleep(5);
 if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.pid"))) {
 	file_put_contents("/var/run/trashsize.pid", getmypid());
 
-	$docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+	$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 	$trashsize_file ="/tmp/{$plugin}/trashsize";
 	$share_trashsize_file ="/tmp/{$plugin}/share_trashsize";
 
