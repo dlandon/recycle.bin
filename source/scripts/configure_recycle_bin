@@ -157,8 +157,10 @@ if ($smb_file) {
 				if ($s != "global") {
 					if (isset($smb_config[$s]['vfs objects'])) {
 						$smb_config[$s]['vfs objects'] .= " ".$vfs_objects;
-						$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
+					} else {
+						$smb_config[$s]['vfs objects'] = $vfs_objects;
 					}
+					$smb_config[$s]['vfs objects'] = trim($smb_config[$s]['vfs objects']);
 					$pd = $parms['recycle:exclude_dir'];
 					if (isset($excluded_dirs[$s])) {
 						$parms['recycle:exclude_dir'] .= ",".$excluded_dirs[$s];
