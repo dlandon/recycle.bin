@@ -102,7 +102,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.{$plugin}.p
 			$share_trashsize[$share_name]['trashsize'] = $recycle_bin_trashsize;
 		}
 	}
-	file_put_contents($share_trashsize_file, json_encode($share_trashsize));
+	file_put_contents($share_trashsize_file, json_encode($share_trashsize, JSON_PRETTY_PRINT));
 
 	unlink("/var/run/trashsize.pid");
 }
