@@ -25,6 +25,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 $recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
 $recycle_bin_cfg['BACKGROUND']		= $recycle_bin_cfg['BACKGROUND'] ?? '';
 $recycle_bin_cfg['SERVICE']			= $recycle_bin_cfg['SERVICE'] ?? '';
+$recycle_bin_cfg['HIDE_FOLDER']		= $recycle_bin_cfg['HIDE_FOLDER'] ?? '';
 $recycle_bin_cfg['INCLUDE_UD']		= $recycle_bin_cfg['INCLUDE_UD'] ?? '';
 $recycle_bin_cfg['PARAMETERS']		= $recycle_bin_cfg['PARAMETERS'] ?? '';
 $recycle_bin_cfg['DIR_MODE']		= $recycle_bin_cfg['DIR_MODE'] ?? '';
@@ -160,6 +161,16 @@ $(function() {
 	> Set to **Yes** to enable the Recycle Bin functionality for SMB deleted files when the server is started.
 	>
 	> To hide the Recycle Bin folder, set 'Hide Dot Files to 'Yes' in the SMB settings <a href='/Settings/SMB'>here</a>.
+:end
+
+	_(Hide Recycle Bin Folder)_?
+	: <select name="HIDE_FOLDER" size="1">
+		<?=mk_option($recycle_bin_cfg['HIDE_FOLDER'], "yes", "_(Yes)_");?>
+		<?=mk_option($recycle_bin_cfg['HIDE_FOLDER'], "no", "_(No)_");?>
+	  </select>
+
+:recycle_bin_hide_folder_plug:
+	> Set to **No** to show the Recycle Bin folder is user shares.  The SMB setting "Hide dot files" controls if hidden folders show in user shares.
 :end
 
 	_(Update Recycle Bin Size in Background)_?
