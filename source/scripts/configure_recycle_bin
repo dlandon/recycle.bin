@@ -48,7 +48,7 @@ if ($smb_file) {
 					"recycle:versions"			=> "Yes",
 					"recycle:exclude"			=> "",   
 					"recycle:exclude_dir"		=> ".Recycle.Bin",
-					"veto files"				=> "/.Recycle.Bin"
+					"veto files"				=> ""
 	);
 
 	/* Adjust user set parameters. */
@@ -59,8 +59,8 @@ if ($smb_file) {
 	}
 	
 	/* Set if the .RecycleBin folder is hidden in user shares. */
-	if (isset($recycle_bin_cfg['HIDE_FOLDER']) && ($recycle_bin_cfg['HIDE_FOLDER'] == "no")) {
-		$parms['veto files']				= "";
+	if (isset($recycle_bin_cfg['HIDE_FOLDER']) && ($recycle_bin_cfg['HIDE_FOLDER'] == "yes")) {
+		$parms['veto files']				= "/.Recycle.Bin";
 	}
 
 	/* Set the directory mode. */

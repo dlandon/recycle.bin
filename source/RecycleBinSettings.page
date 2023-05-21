@@ -165,8 +165,8 @@ $(function() {
 
 	_(Hide Recycle Bin Folder)_?
 	: <select name="HIDE_FOLDER" size="1">
-		<?=mk_option($recycle_bin_cfg['HIDE_FOLDER'], "yes", "_(Yes)_");?>
 		<?=mk_option($recycle_bin_cfg['HIDE_FOLDER'], "no", "_(No)_");?>
+		<?=mk_option($recycle_bin_cfg['HIDE_FOLDER'], "yes", "_(Yes)_");?>
 	  </select>
 
 :recycle_bin_hide_folder_plug:
