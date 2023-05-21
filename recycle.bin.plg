@@ -22,9 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
-- FIx: Change default setting of hide recycle bin folder to 'No'.
+- FIx: Change default setting of hide recycle bin folder to No.
 
-###2023.05.19
+###2023.05.20
 - Add: Setting to hide the .Recycle.Bin folder in user shares.
 
 ###2023.04.12
