@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2023.05.20">
+<!ENTITY version	"2023.05.21">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"9a0a66c7f79e73d4fcacbd42322d755b">
+<!ENTITY MD5		""2b443e1db8a1bda2901c01f82a682627>
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- FIx: Change default setting of hide recycle bin folder to 'No'.
+
+###2023.05.19
 - Add: Setting to hide the .Recycle.Bin folder in user shares.
 
 ###2023.04.12
