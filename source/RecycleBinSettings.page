@@ -37,8 +37,10 @@ $recycle_bin_cfg['SCHEDRUN']		= $recycle_bin_cfg['SCHEDRUN'] ?? '';
 $recycle_bin_cfg['NOTIFY']			= $recycle_bin_cfg['NOTIFY'] ?? '';
 $recycle_bin_cfg['LOG']				= $recycle_bin_cfg['LOG'] ?? '';
 
-if (is_file("/tmp/{$plugin}/trashsize")) {
-	$recycle_bin_trashsize = my_scale(file_get_contents("/tmp/{$plugin}/trashsize") * 1024, $unit)." {$unit}";
+if (is_file("/tmp/".$plugin."/trashsize")) {
+	$trashsize				= file_get_contents("/tmp/".$plugin."/trashsize");
+	$trashsize				= $trashsize ? $trashsize : "0";
+	$recycle_bin_trashsize	= my_scale($trashsize * 1024, $unit)." {$unit}";
 } else {
 	$recycle_bin_trashsize = "?";
 }
