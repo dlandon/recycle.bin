@@ -302,10 +302,12 @@ source $CONFIG
 # Trim leading and trailing spaces
 AGE=$AGE | tr -d ' '
 
-# Set default AGE if blank in settings
+# Set default AGE if not defined in settings
 if [ "$AGE" = "" ]; then
 	AGE="7"
 fi
+
+# Set default DIR_MODE if not defined in settings
 if [ "$DIR_MODE" = "" ]; then
 	DIR_MODE="0777"
 fi
