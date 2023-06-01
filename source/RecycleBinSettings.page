@@ -39,7 +39,7 @@ $recycle_bin_cfg['LOG']				= $recycle_bin_cfg['LOG'] ?? '';
 
 if (is_file("/tmp/".$plugin."/trashsize")) {
 	$trashsize				= file_get_contents("/tmp/".$plugin."/trashsize");
-	$trashsize				= $trashsize ? $trashsize : "0";
+	$trashsize				= (is_numeric($trashsize)) ? $trashsize : "0";
 	$recycle_bin_trashsize	= my_scale($trashsize * 1024, $unit)." {$unit}";
 } else {
 	$recycle_bin_trashsize = "?";
