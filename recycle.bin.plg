@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2023.06.01">
+<!ENTITY version	"2023.07.11">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"6b44cd4874cf4ac908d33d9b9abda305">
+<!ENTITY MD5		"320157a36ee8ce5142176186187b2c7a">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Don't include the legacy remote share symbolic links in the Recycle Bin.  Remote shares should not show in the Recycle Bin.
+
+###2023.06.01
 - Fix: Recycle bin trashsize php warning when recycle bin is empty.
 
 ###2023.05.21
