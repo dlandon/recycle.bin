@@ -172,7 +172,7 @@ $(function() {
 	  </select>
 
 :recycle_bin_hide_folder_plug:
-	> Set to **No** to show the Recycle Bin folder is user shares.  The SMB setting "Hide dot files" controls if hidden folders show in user shares.
+	> Set to **No** to show the Recycle Bin folder in user shares.  The SMB setting "Hide dot files" controls if hidden folders show in user shares.
 :end
 
 	_(Update Recycle Bin Size in Background)_?
