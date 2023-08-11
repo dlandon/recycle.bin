@@ -251,7 +251,7 @@ vfs_recycle_browse()
 	do
 		if [ "${DIR}" = "disks" ]; then
 			# Be sure the legacy symbolic links to remote shares are not included
-			ls -l /mnt/disks/ | grep -v ^l | grep -v 'total' | /bin/awk '{print $9}' | while read line
+			find /mnt/disks/ -maxdepth 1 -type d ! -name "disks" ! -type l -exec basename {} \; | while read line
 			do
 				if [ -d /mnt/disks/"${line}"/.Recycle.Bin ]; then
 					ln -sf /mnt/disks/"${line}"/.Recycle.Bin RecycleBin/Unassigned/"${line}"
