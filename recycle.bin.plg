@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2023.07.11">
+<!ENTITY version	"2023.08.12">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"320157a36ee8ce5142176186187b2c7a">
+<!ENTITY MD5		"f2463388de0790e7b173aea3ea4054df">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Unassigned Devices not included in Recycle Bin if share has a space.
+
+###2023.07.11
 - Fix: Don't include the legacy remote share symbolic links in the Recycle Bin.  Remote shares should not show in the Recycle Bin.
 
 ###2023.06.01
