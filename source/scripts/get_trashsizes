@@ -19,15 +19,15 @@ sleep(5);
 if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.".$plugin.".pid"))) {
 	file_put_contents("/var/run/trashsize.pid", getmypid());
 
-	$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-	$trashsize_file ="/tmp/".$plugin."/trashsize";
-	$share_trashsize_file ="/tmp/".$plugin."/share_trashsize";
+	$docroot				= $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+	$trashsize_file			="/tmp/".$plugin."/trashsize";
+	$share_trashsize_file	="/tmp/".$plugin."/share_trashsize";
 
 	/* Update /mnt/RecycleBin folder. */
 	exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 
 	/* Get the total recycle bin trashsize. */
-	$recycle_bin_trashsize	= exec( "/usr/bin/timeout 60 /usr/bin/du -sc /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/*/ /mnt/RecycleBin/Unassigned/*/ /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null | grep total 2>/dev/null" ) ?? "";
+	$recycle_bin_trashsize	= exec( "/usr/bin/timeout 60 /usr/bin/du -sc /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/* /mnt/RecycleBin/Unassigned/*/ /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null | grep total 2>/dev/null" ) ?? "";
 	$recycle_bin_trashsize	= trim(str_replace( 'total', '', $recycle_bin_trashsize));
 	$recycle_bin_trashsize	= $recycle_bin_trashsize ? $recycle_bin_trashsize : "0";
 	file_put_contents($trashsize_file, $recycle_bin_trashsize);
