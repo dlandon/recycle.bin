@@ -1,0 +1,8 @@
+table.recycle-bin {padding: 0px 0px 0px 0px;border-collapse:collapse;white-space:nowrap;}
+table.recycle-bin thead tr>th{text-align:left;}
+table.recycle-bin thead tr>th+th+th{text-align:right;}
+table.recycle-bin thead tr>th+th+th+th{text-align:center;}
+
+table.recycle-bin tr>td{text-align:left;}
+table.recycle-bin tr>td+td+td{text-align:right;}
+table.recycle-bin tr>td+td+td+td{text-align:center;}
