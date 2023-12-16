@@ -44,7 +44,7 @@ if (is_file("/tmp/{$plugin}/share_trashsize")) {
 > Click on the 'SMB Share', 'Share Type', or 'Trash Size' columns of the table header and the contents will be sorted.  The 'Trash Size' is an alpha numeric and not a numeric sort.
 :end
 
-<table class='recycle-bin tablesorter shift ups' id='tblRecycleShares'>
+<table class='recycle-bin shift' id='tblRecycleShares'>
 <thead><tr><th>_(SMB Share)_</th><th>_(Share Type)_</th><th>_(Trash Size)_</th><th>_(Browse)_</th><th>_(Empty Trash)_</th></tr></thead>
 <tbody>
 
