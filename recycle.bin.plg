@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2023.12.15">
+<!ENTITY version	"2023.12.31">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"5077f0630d9e8633755836cb000141d7">
+<!ENTITY MD5		"9e872700cfec59bcb2f0246139c996cf">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Excluded directories with spaces not working.
+
+###2023.12.15
 - Fix: Flash Recycle Bin size not adding to total Recycle Bin size correctly.
 - FIx: Clean up shares table and add line highlight to shares.
 - Fix: Put styles into .css files.
