@@ -58,21 +58,16 @@ if ($smb_file) {
 		$vfs_objects = "recycle";
 	}
 	
-	/* Set if the .RecycleBin folder is hidden in user shares. */
-	if (isset($recycle_bin_cfg['HIDE_FOLDER']) && ($recycle_bin_cfg['HIDE_FOLDER'] == "yes")) {
-		$parms['veto files']				= "/.Recycle.Bin";
-	}
-
 	/* Set the directory mode. */
 	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'])) {
 		$parms['recycle:directory_mode']	= $recycle_bin_cfg['DIR_MODE'];
 	}
 
 	/* Set the excluded files. */
-	$parms['recycle:exclude'] = (isset($recycle_bin_cfg['EXCLUDE'])) ? trim($recycle_bin_cfg['EXCLUDE']) : "";
+	$parms['recycle:exclude'] = trim($recycle_bin_cfg['EXCLUDE'] ?? "");
 
 	/* Set the excluded directories. */
-	$exclude_dirs	= (isset($recycle_bin_cfg['EXCLUDE_DIRS'])) ? explode(",", $recycle_bin_cfg['EXCLUDE_DIRS']) : array();
+	$exclude_dirs	= explode(",", trim($recycle_bin_cfg['EXCLUDE_DIRS'] ?? ""));
 	$excluded_dirs	= array();
 	foreach ($exclude_dirs as $d) {
 		$d	= pathinfo($d);
@@ -86,12 +81,14 @@ if ($smb_file) {
 		}
 
 		/* See if we are adding an excluded global directory or a share directory. */
+		$basename	= '"'.$d['basename'].'"';
+
 		if ($b == ".") {
-			$parms['recycle:exclude_dir'] .= ",".$d['basename'];
+			$parms['recycle:exclude_dir'] .= ",".$basename;
 		} else if (isset($excluded_dirs[$b])) {
-			$excluded_dirs[$b] .= ",".$d['basename'];
+			$excluded_dirs[$b] .= ",".$basename;
 		} else {
-			$excluded_dirs[$b] = $d['basename'];
+			$excluded_dirs[$b] = $basename;
 		}
 	}
 
@@ -154,6 +151,13 @@ if ($smb_file) {
 				unset($smb_config[$s][$key]);
 			}
 		}
+	}
+
+	/* Set if the .RecycleBin folder is hidden in user shares. */
+	if (isset($recycle_bin_cfg['HIDE_FOLDER']) && ($recycle_bin_cfg['HIDE_FOLDER'] == "yes")) {
+		$parms['veto files']				= "/.Recycle.Bin";
+	} else {
+		unset($parms['veto files']);
 	}
 
 	if ((! $ud_config_file) || (($ud_config_file) && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes'))) {
