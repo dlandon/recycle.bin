@@ -79,7 +79,7 @@ foreach($shares as $share) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
+		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
 		echo "<tr><td>$share</td><td>_(Array)_ $share_type</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$aa</td><td>$bb</td></tr>";
@@ -101,7 +101,7 @@ foreach ($files as $file) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
+		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
 		echo "<tr><td>$share_name</td><td>_(Unassigned Device)_</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$aa</td><td>$bb</td></tr>";
@@ -123,7 +123,7 @@ foreach ($files as $file) {
 		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
-		$bb .= '<input type="checkbox" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
+		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
 		echo "<tr><td>$share_name</td><td>_(Root Share)_</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$aa</td><td>$bb</td></tr>";
@@ -148,14 +148,13 @@ foreach ($files as $file) {
 function resize() {
   $('pre.up').height(Math.max(window.innerHeight-340,370)).show();
 }
+
 $(function() {
   resize();
   $(window).bind('resize',function(){resize();});
 });
 <?endif;?>
-</script>
 
-<script type="text/javascript">
 $(function(){
 	$('#tblRecycleShares').tablesorter({headers:{3:{sorter:false},4:{sorter:false}}});
 });
