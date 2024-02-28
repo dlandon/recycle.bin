@@ -155,7 +155,7 @@ if ($smb_file) {
 
 	/* Set if the .RecycleBin folder is hidden in user shares. */
 	if (isset($recycle_bin_cfg['HIDE_FOLDER']) && ($recycle_bin_cfg['HIDE_FOLDER'] == "yes")) {
-		$parms['veto files']				= "/.Recycle.Bin";
+		$parms['veto files']	= "/.Recycle.Bin";
 	} else {
 		unset($parms['veto files']);
 	}
