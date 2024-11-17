@@ -22,20 +22,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?else:?>
 <?
 
-$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/{$plugin}/{$plugin}.cfg" );
-$recycle_bin_cfg['BACKGROUND']		= $recycle_bin_cfg['BACKGROUND'] ?? '';
-$recycle_bin_cfg['SERVICE']			= $recycle_bin_cfg['SERVICE'] ?? '';
-$recycle_bin_cfg['HIDE_FOLDER']		= $recycle_bin_cfg['HIDE_FOLDER'] ?? '';
-$recycle_bin_cfg['INCLUDE_UD']		= $recycle_bin_cfg['INCLUDE_UD'] ?? '';
-$recycle_bin_cfg['PARAMETERS']		= $recycle_bin_cfg['PARAMETERS'] ?? '';
-$recycle_bin_cfg['DIR_MODE']		= $recycle_bin_cfg['DIR_MODE'] ?? '';
-$recycle_bin_cfg['EXCLUDE']			= $recycle_bin_cfg['EXCLUDE'] ?? '';
-$recycle_bin_cfg['EXCLUDE_DIRS']	= $recycle_bin_cfg['EXCLUDE_DIRS'] ?? '';
-$recycle_bin_cfg['EXCLUDE_SHARES']	= $recycle_bin_cfg['EXCLUDE_SHARES'] ?? '';
-$recycle_bin_cfg['AGE']				= $recycle_bin_cfg['AGE'] ?? '';
-$recycle_bin_cfg['SCHEDRUN']		= $recycle_bin_cfg['SCHEDRUN'] ?? '';
-$recycle_bin_cfg['NOTIFY']			= $recycle_bin_cfg['NOTIFY'] ?? '';
-$recycle_bin_cfg['LOG']				= $recycle_bin_cfg['LOG'] ?? '';
+$recycle_bin_cfg = parse_plugin_cfg("$plugin");
 
 if (is_file("/tmp/".$plugin."/trashsize")) {
 	$trashsize				= file_get_contents("/tmp/".$plugin."/trashsize");
