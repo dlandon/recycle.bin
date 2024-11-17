@@ -31,7 +31,7 @@ if (!is_file($smb_file)) {
 
 /* If smb_file is not defined then there is nothing to configure. */
 if ($smb_file) {
-	/* Get the recycle bin confifuration. */
+	/* Get the recycle bin configuration. */
 	if (file_exists("/boot/config/plugins/recycle.bin/recycle.bin.cfg")) {
 		$recycle_bin_cfg	= parse_ini_file( "/boot/config/plugins/recycle.bin/recycle.bin.cfg" );
 	} else {
@@ -53,7 +53,7 @@ if ($smb_file) {
 
 	/* Adjust user set parameters. */
 	if ((isset($recycle_bin_cfg['LOG'])) && ($recycle_bin_cfg['LOG'] == "yes")) {
-		$vfs_objects = "extd_audit recycle";
+		$vfs_objects = "extd_audit recycle dirsort";
 	} else {
 		$vfs_objects = "recycle";
 	}
