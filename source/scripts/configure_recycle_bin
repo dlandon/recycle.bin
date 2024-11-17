@@ -53,7 +53,7 @@ if ($smb_file) {
 
 	/* Adjust user set parameters. */
 	if ((isset($recycle_bin_cfg['LOG'])) && ($recycle_bin_cfg['LOG'] == "yes")) {
-		$vfs_objects = "extd_audit recycle dirsort";
+		$vfs_objects = "extd_audit recycle";
 	} else {
 		$vfs_objects = "recycle";
 	}
