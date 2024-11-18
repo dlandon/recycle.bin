@@ -22,7 +22,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?else:?>
 <?
 
-$recycle_bin_cfg = parse_plugin_cfg("$plugin");
+$recycle_bin_cfg = parse_plugin_cfg("$plugin", true);
 
 if (is_file("/tmp/".$plugin."/trashsize")) {
 	$trashsize				= file_get_contents("/tmp/".$plugin."/trashsize");
