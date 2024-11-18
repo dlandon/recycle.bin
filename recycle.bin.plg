@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2024.11.17a">
+<!ENTITY version	"2024.11.17b">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"5b4894b3d9f95ee9caef62ca5cacef0a">
+<!ENTITY MD5		"7b97f33e14aabba2236453d44e06483d">
 ]>
 
 <PLUGIN	name="&name;"
@@ -642,9 +642,6 @@ rm -f /boot/config/plugins/&name;/config/smb-extra.conf
 
 # Remove vfs_recycle from smb-extra.conf.
 at -M -f /tmp/&name;/remove-smb-extra now 2>/dev/null
-
-# Remove default.cfg file so it can be udated
-rm -f /boot/config/plugins/&name;/default.cfg
 </INLINE>
 </FILE>
 
@@ -661,25 +658,6 @@ tar -xf /boot/config/plugins/&name;/&name;-&version;.tgz -C /usr/local/emhttp/pl
 <FILE Name="/boot/config/plugins/&name;/&name;.cfg">
 <INLINE>
 <![CDATA[
-]]>
-</INLINE>
-</FILE>
-
-<FILE Name="/boot/config/plugins/&name;/default.cfg">
-<INLINE>
-<![CDATA[
-SERVICE="disable"
-BACKGROUND="yes"
-DIR_MODE=""
-PARAMETERS=""
-EXCLUDE="*.tmp"
-EXCLUDE_DIRS=""
-EXCLUDE_SHARES=""
-SCHEDRUN="no"
-AGE="7"
-NOTIFY="no"
-LOG="no"
-INCLUDE_UD="no"
 ]]>
 </INLINE>
 </FILE>
@@ -717,9 +695,6 @@ if [ -f /tmp/recycle.bin/started ]; then
 	# Remove started status file
 	rm -rf /tmp/recycle.bin/started
 fi
-
-# Copy default file so the 'default' button will work.
-cp /boot/config/plugins/&name;/default.cfg /usr/local/emhttp/plugins/&name;/
 
 echo ""
 echo "-----------------------------------------------------------"
