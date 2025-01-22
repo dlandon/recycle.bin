@@ -2,7 +2,7 @@ Menu="RecycleBin:1"
 Title="Settings"
 ---
 <?php
-/* Copyright 2015-2023 Dan Landon.
+/* Copyright 2015-2025 Dan Landon.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -12,27 +12,29 @@ Title="Settings"
  * all copies or substantial portions of the Software.
  */
 
-$plugin = "recycle.bin";
-$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-$translations = file_exists("$docroot/webGui/include/Translations.php");
-require_once "$docroot/plugins/$plugin/include/Legacy.php";
-?>
-<?if (!$translations):?>
-<?eval('?>'.parse_file("$docroot/plugins/$plugin/RecycleBinSettings.page"))?>
-<?else:?>
-<?
+/* Define our plugin name. */
+if (!defined('RECYCLE_PLUGIN')) {
+	define('RECYCLE_PLUGIN', 'recycle.bin');
+}
 
-$recycle_bin_cfg = parse_plugin_cfg("$plugin", true);
+/* Define our plugin name. */
+if (!defined('DOCROOT')) {
+	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+}
 
-if (is_file("/tmp/".$plugin."/trashsize")) {
-	$trashsize				= file_get_contents("/tmp/".$plugin."/trashsize");
+parse_file(DOCROOT."/plugins/".RECYCLE_PLUGIN."/RecycleBinSettings.page");
+
+$recycle_bin_cfg = parse_plugin_cfg(RECYCLE_PLUGIN, true);
+
+if (is_file("/tmp/".RECYCLE_PLUGIN."/trashsize")) {
+	$trashsize				= file_get_contents("/tmp/".RECYCLE_PLUGIN."/trashsize");
 	$trashsize				= (is_numeric($trashsize)) ? $trashsize : "0";
 	$recycle_bin_trashsize	= my_scale($trashsize * 1024, $unit)." {$unit}";
 } else {
 	$recycle_bin_trashsize = "?";
 }
 
-if (is_file("/var/run/{$plugin}.pid")) {
+if (is_file("/var/run/".RECYCLE_PLUGIN.".pid")) {
 	$recycle_bin_enabled = "yes";
 } else {
 	$recycle_bin_enabled = "no";
@@ -42,9 +44,7 @@ if (is_file("/var/run/{$plugin}.pid")) {
 <script>
 $(function() {
 	showStatus('pid','recycle.bin');
-});
 
-$(function() {
 	if ( typeof caPluginUpdateCheck === "function" ) {
 		caPluginUpdateCheck("recycle.bin.plg");
 	}
@@ -56,7 +56,7 @@ $(function() {
 </table>
 
 <?if ($var['mdState']=="STARTED"):?>
-<div style="width: 35%; float:left">
+<div style="width: 25%; float:left">
 	<div>
 		<blockquote class='inline_help'>
 		<p><strong>_(Note)_:</strong> _(Starting and stopping the Recycle Bin can cause SMB shares to go offline for a short period)_.</p>
@@ -134,7 +134,7 @@ $(function() {
 		<?endif;?>
 	</div>
 </div>
-<div style="width: 65%; float:right">
+<div style="width: 75%; float:right">
 	<form markdown="1" name="recycle_bin_settings" method="POST" action="/update.php" target="progressFrame">
 	<input type="hidden" name="#file" value="recycle.bin/recycle.bin.cfg">
 	<input type="hidden" name="#command" value="/plugins/recycle.bin/scripts/rc.recycle.bin">
@@ -183,7 +183,7 @@ $(function() {
 :end
 
 	_(Recycle Bin parameters)_:
-	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=$recycle_bin_cfg['PARAMETERS'];?>">
+	: <input type="text" name="PARAMETERS" class="narrow" maxlength="50" value="<?=htmlspecialchars($recycle_bin_cfg['PARAMETERS']);?>">
 
 :recycle_bin_parameters_plug:
 	> Additional parameters for Recycle Bin.  The following are some options you can set to control the file structure of the deleted files.
@@ -201,28 +201,28 @@ $(function() {
 :end
 
 	_(Recycle Bin permissions)_:
-	: <input type="text" name="DIR_MODE" class="narrow" maxlength="4" value="<?=$recycle_bin_cfg['DIR_MODE'];?>" placeholder="0777">
+	: <input type="text" name="DIR_MODE" class="narrow" maxlength="4" value="<?=htmlspecialchars($recycle_bin_cfg['DIR_MODE']);?>" placeholder="0777">
 
 :recycle_bin_permissions_plug:
 	> Set the directory and sub-directory permissions of the Recycle Bin.  Set permissions to 07xx for the Recycle Bin to operate properly.  Don't change this from the default if you don't know how to use permissions.
 :end
 
 	_(Excluded Files)_:
-	: <input type="text" name="EXCLUDE" class="narrow" maxlength="150" value="<?=$recycle_bin_cfg['EXCLUDE'];?>">
+	: <input type="text" name="EXCLUDE" class="narrow" maxlength="150" value="<?=htmlspecialchars($recycle_bin_cfg['EXCLUDE']);?>">
 
 :recycle_bin_excluded_files_plug:
 	> List of files to exclude from the Recycle Bin separated by commas.  Wild cards '*' and '?' are allowed.
 :end
 
 	_(Excluded Directories)_:
-	: <input type="text" name="EXCLUDE_DIRS" class="narrow" maxlength="150" value="<?=$recycle_bin_cfg['EXCLUDE_DIRS'];?>">
+	: <input type="text" name="EXCLUDE_DIRS" class="narrow" maxlength="150" value="<?=htmlspecialchars($recycle_bin_cfg['EXCLUDE_DIRS']);?>">
 
 :recycle_bin_excluded_dirs_plug:
 	> List of directories to exclude from the Recycle Bin separated by commas.  To specify a particular share directory, use 'share/directory'.  You can specify up to one sub-directory.  Unassigned Devices are specified the same way using 'mountpoint/directory'.  Wild cards '*' and '?' are allowed in the directory name.
 :end
 
 	_(Excluded Shares)_:
-	: <input type="text" name="EXCLUDE_SHARES" class="narrow" maxlength="100" value="<?=$recycle_bin_cfg['EXCLUDE_SHARES'];?>">
+	: <input type="text" name="EXCLUDE_SHARES" class="narrow" maxlength="100" value="<?=htmlspecialchars($recycle_bin_cfg['EXCLUDE_SHARES']);?>">
 
 :recycle_bin_excluded_shares_plug:
 	> List of shares to exclude from the Recycle Bin separated by commas.  This list can include Unassigned Devices shares.  The share name is case sensitive.
@@ -235,7 +235,7 @@ $(function() {
 :end
 
 	_(Age Days)_:
-	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=$recycle_bin_cfg['AGE'];?>" placeholder="7">
+	: <input type="text" name="AGE" class="narrow" maxlength="5" value="<?=htmlspecialchars($recycle_bin_cfg['AGE']);?>" placeholder="7">
 
 :recycle_bin_age_day_plug:
 	> Any files older than the set number of days are removed on the schedule or when the 'Remove Aged Files' button is clicked.
@@ -280,5 +280,4 @@ $(function() {
 </div>
 <?else:?>
 	<p>_(Array is stopped)_!</p>
-<?endif;?>
 <?endif;?>

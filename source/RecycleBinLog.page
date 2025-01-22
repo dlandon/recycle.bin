@@ -2,7 +2,7 @@ Menu="RecycleBin:3"
 Title="Deleted Files"
 ---
 <?php
-/* Copyright 2015-2023 Dan Landon
+/* Copyright 2015-2025 Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -12,14 +12,16 @@ Title="Deleted Files"
  * all copies or substantial portions of the Software.
  */
 
-$plugin = "recycle.bin";
-$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-$translations = file_exists("$docroot/webGui/include/Translations.php");
-require_once "$docroot/plugins/$plugin/include/Legacy.php";
+/* Define our plugin name. */
+if (!defined('RECYCLE_PLUGIN')) {
+	define('RECYCLE_PLUGIN', 'recycle.bin');
+}
+
+/* Define our plugin name. */
+if (!defined('DOCROOT')) {
+	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+}
 ?>
-<?if (!$translations):?>
-<?eval('?>'.parse_file("$docroot/plugins/$plugin/RecycleBinLog.page"))?>
-<?else:?>
 
 :recycle_bin_show_log_plug:
 > Recycle Bin Log:
@@ -31,7 +33,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <table class='tablesorter shift ups'>
 <thead><tr><th>_(Deleted Files Log)_</th></tr></thead>
 </table>
-<br />
+<br>
 
 <?
 echo $display['resize'] ? "<pre class='up' style='display:none'>" : "<pre class='up'>";
@@ -58,4 +60,3 @@ $(function() {
 });
 <?endif;?>
 </script>
-<?endif;?>

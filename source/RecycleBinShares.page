@@ -2,7 +2,7 @@ Menu="RecycleBin:2"
 Title="Shares"
 ---
 <?php
-/* Copyright 2015-2023 Dan Landon
+/* Copyright 2015-2025 Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -12,33 +12,32 @@ Title="Shares"
  * all copies or substantial portions of the Software.
  */
 
-$plugin = "recycle.bin";
-$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-$translations = file_exists("$docroot/webGui/include/Translations.php");
-require_once "$docroot/plugins/$plugin/include/Legacy.php";
-?>
-<?if (!$translations):?>
-<?eval('?>'.parse_file("$docroot/plugins/$plugin/RecycleBinShares.page"))?>
-<?else:?>
-<?
-$recycle_bin_cfg = parse_plugin_cfg("$plugin", true);
+/* Define our plugin name. */
+if (!defined('RECYCLE_PLUGIN')) {
+	define('RECYCLE_PLUGIN', 'recycle.bin');
+}
 
-if (is_file("/tmp/{$plugin}/share_trashsize")) {
-	$share_trashsize = json_decode(file_get_contents("/tmp/{$plugin}/share_trashsize"), true);
+/* Define our plugin name. */
+if (!defined('DOCROOT')) {
+	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+}
+
+if (is_file("/tmp/".RECYCLE_PLUGIN."/share_trashsize")) {
+	$share_trashsize = json_decode(file_get_contents("/tmp/".RECYCLE_PLUGIN."/share_trashsize"), true);
 } else {
 	$share_trashsize = array();
 }
 ?>
 
-<link type="text/css" rel="stylesheet" href="<?autov("/plugins/".$plugin."/assets/style-$theme.css")?>">
-<link type="text/css" rel="stylesheet" href="<?autov("/plugins/".$plugin."/assets/recycle-bin.css")?>">
+<link type="text/css" rel="stylesheet" href="<?autov("/plugins/".RECYCLE_PLUGIN."/assets/style-$theme.css")?>">
+<link type="text/css" rel="stylesheet" href="<?autov("/plugins/".RECYCLE_PLUGIN."/assets/recycle-bin.css")?>">
 
 :recycle_bin_shares_plug:
 > Recycle Bin Shares:
 >
 > The shares with Recycle Bin contents will be displayed along with the size of the share's Trash Bin.
-> Click on the <strong>Browse</strong> icon to browse the deleted files in that share.
-> Click on the <strong>Empty</strong> button to remove the deleted files.
+> Click on the **Browse** icon to browse the deleted files in that share.
+> Click on the **Empty** button to remove the deleted files.
 >
 > Unassigned Devices shares will only show if the Recycle Bin is enabled for Unassigned Devices and there are Unassigned Devices that are mounted and shared and have Recycle Bin contents.
 >
@@ -76,7 +75,7 @@ foreach($shares as $share) {
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/".RECYCLE_PLUGIN."/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
@@ -98,7 +97,7 @@ foreach ($files as $file) {
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/".RECYCLE_PLUGIN."/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
@@ -120,7 +119,7 @@ foreach ($files as $file) {
 	if ($recycle_bin_trashsize != "") {
 		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
-		$bb .= "<input type='hidden' name='#command' value='/plugins/{$plugin}/scripts/rc.recycle.bin'>";
+		$bb .= "<input type='hidden' name='#command' value='/plugins/".RECYCLE_PLUGIN."/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
 		$bb .= '<input type="hidden" name="#arg[2]" value="'.$mount_point.'">';
 		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
@@ -159,4 +158,3 @@ $(function(){
 	$('#tblRecycleShares').tablesorter({headers:{3:{sorter:false},4:{sorter:false}}});
 });
 </script>
-<?endif;?>

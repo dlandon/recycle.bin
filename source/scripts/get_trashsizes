@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* Copyright 2017-2023, Dan Landon
+/* Copyright 2017-2025, Dan Landon
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2,
@@ -10,21 +10,30 @@
  * all copies or substantial portions of the Software.
  */
 
-$plugin = "recycle.bin";
+/* Define our plugin name. */
+if (!defined('RECYCLE_PLUGIN')) {
+	define('RECYCLE_PLUGIN', 'recycle.bin');
+}
+
+/* Define our plugin name. */
+if (!defined('DOCROOT')) {
+	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+}
+
+require_once(DOCROOT."/webGui/include/Wrappers.php");
 
 /* Wait a bit before we start. */
 sleep(5);
 
 /* If this sxcript is already running or the cron job is running, don't update trashsizes. */
-if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.".$plugin.".pid"))) {
+if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.".RECYCLE_PLUGIN.".pid"))) {
 	file_put_contents("/var/run/trashsize.pid", getmypid());
 
-	$docroot				= $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-	$trashsize_file			="/tmp/".$plugin."/trashsize";
-	$share_trashsize_file	="/tmp/".$plugin."/share_trashsize";
+	$trashsize_file			="/tmp/".RECYCLE_PLUGIN."/trashsize";
+	$share_trashsize_file	="/tmp/".RECYCLE_PLUGIN."/share_trashsize";
 
 	/* Update /mnt/RecycleBin folder. */
-	exec("{$docroot}/plugins/recycle.bin/scripts/rc.recycle.bin browse");
+	exec(DOCROOT."/plugins/recycle.bin/scripts/rc.recycle.bin browse");
 
 	/* Get the total recycle bin trashsize. */
 	$recycle_bin_trashsize	= exec( "/usr/bin/timeout 60 /usr/bin/du -sc /mnt/RecycleBin/Disk/*/ /mnt/RecycleBin/Flash/* /mnt/RecycleBin/Unassigned/*/ /mnt/RecycleBin/User\ Shares/*/ 2>/dev/null | grep total 2>/dev/null" ) ?? "";
@@ -33,7 +42,7 @@ if ((! is_file("/var/run/trashsize.pid")) && (! is_file("/var/run/rc.".$plugin."
 	file_put_contents($trashsize_file, $recycle_bin_trashsize);
 
 	/* Get array of share trashsizes. */
-	$recycle_bin_cfg = parse_ini_file( "/boot/config/plugins/".$plugin."/".$plugin.".cfg" );
+	$recycle_bin_cfg = parse_plugin_cfg(RECYCLE_PLUGIN, true);
 	$smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
 	$shares = array_keys($smb_shares);
 	$share_trashsize = array();
