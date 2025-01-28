@@ -15,6 +15,13 @@ if (!defined('RECYCLE_PLUGIN')) {
 	define('RECYCLE_PLUGIN', 'recycle.bin');
 }
 
+/* Define our plugin name. */
+if (!defined('DOCROOT')) {
+	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+}
+
+require_once(DOCROOT."/webGui/include/Wrappers.php");
+
 if (isset($argv[1])) {
 	$smb_file = $argv[1];
 	$ud_config_file = true;
