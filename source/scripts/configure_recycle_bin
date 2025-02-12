@@ -61,7 +61,7 @@ if ($smb_file) {
 
 	/* Adjust user set parameters. */
 	if ((isset($recycle_bin_cfg['LOG'])) && ($recycle_bin_cfg['LOG'] == "yes")) {
-		$vfs_objects = "extd_audit recycle";
+		$vfs_objects = "recycle extd_audit";
 	} else {
 		$vfs_objects = "recycle";
 	}
@@ -174,7 +174,7 @@ if ($smb_file) {
 			foreach ($shares as $s) {
 				if ($s != "global") {
 					if (isset($smb_config[$s]['vfs objects'])) {
-						$smb_config[$s]['vfs objects'] = $vfs_objects." ".$smb_config[$s]['vfs objects'];
+						$smb_config[$s]['vfs objects'] = $smb_config[$s]['vfs objects']." ".$vfs_objects;
 					} else {
 						$smb_config[$s]['vfs objects'] = $vfs_objects;
 					}
