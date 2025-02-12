@@ -11,7 +11,9 @@ Title="Settings"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
+?>
 
+<?
 /* Define our plugin name. */
 if (!defined('RECYCLE_PLUGIN')) {
 	define('RECYCLE_PLUGIN', 'recycle.bin');
@@ -21,8 +23,6 @@ if (!defined('RECYCLE_PLUGIN')) {
 if (!defined('DOCROOT')) {
 	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
 }
-
-parse_file(DOCROOT."/plugins/".RECYCLE_PLUGIN."/RecycleBinSettings.page");
 
 $recycle_bin_cfg = parse_plugin_cfg(RECYCLE_PLUGIN, true);
 
