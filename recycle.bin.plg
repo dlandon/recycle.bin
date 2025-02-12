@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.01.28">
+<!ENTITY version	"2025.02.12">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"f8d123e6bbe030169ad224e33031a4be">
+<!ENTITY MD5		"765e753b11aa3b8598cb7e8b1c10a27f">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Language translation updates.
+- Fix: Reorder vfs objects to fix strange file status after copying files from a Mac computer.
+
+###2025.01.28
 - Fix: Php error causing the recycle bin to not get configured on the shares.
 
 ###2025.01.22
