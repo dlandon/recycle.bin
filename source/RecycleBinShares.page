@@ -11,7 +11,9 @@ Title="Shares"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
+?>
 
+<?
 /* Define our plugin name. */
 if (!defined('RECYCLE_PLUGIN')) {
 	define('RECYCLE_PLUGIN', 'recycle.bin');
