@@ -1,5 +1,6 @@
 Menu="RecycleBin:3"
 Title="Deleted Files"
+Cond="$var['mdState'] == 'STARTED'"
 ---
 <?php
 /* Copyright 2015-2025 Dan Landon
@@ -29,17 +30,20 @@ if (!defined('DOCROOT')) {
 > Recycle Bin Log:
 >
 > The deleted files will show in the log as unlinked files.
+>
+> If a share shows logging is disabled, it is because the share is 'Exclusive Access' or is a "Root Share".  The Recycle Bin will work on these shares, but logging will not reliably work because of Samba vfs limitations.
+>
 > Click on the 'Clear' button to clear the log.
 :end
 
 <table class='tablesorter shift ups'>
 <thead><tr><th>_(Deleted Files Log)_</th></tr></thead>
 </table>
-<br>
+&nbsp;
 
 <?
 echo $display['resize'] ? "<pre class='up' style='display:none'>" : "<pre class='up'>";
-echo shell_exec("cat /var/log/samba/log.smbd | grep unlink | paste - - |  awk '{t=substr($1,2,10);gsub(\"/\",\" \",t);printf strftime(\"%b %d\", mktime(t\" 00 00 00\")) \" %s  %s =>%s\", substr($2,1,8), $6, $1=$2=$3=$4=$5=$6=\"\";print substr($0,6)}' | grep -v failed 2>/dev/null");
+echo shell_exec("/usr/bin/cat /var/log/".RECYCLE_PLUGIN.".log 2>/dev/null");
 echo "</pre>";
 ?>
 
@@ -58,7 +62,30 @@ function resize() {
 }
 $(function() {
   resize();
-  $(window).bind('resize',function(){resize();});
+  $(window).bind('resize', function() { resize(); });
 });
 <?endif;?>
+
+/* Scroll to bottom on page load */
+window.addEventListener("load", function() {
+	let logContainer = document.querySelector("pre.up");
+	if (!logContainer) return;
+
+	function scrollToBottom() {
+		logContainer.scrollTop = logContainer.scrollHeight;
+	}
+
+	/* Apply fixes for Chrome & other browsers */
+	setTimeout(scrollToBottom, 50);
+	logContainer.style.display = "none";
+
+	setTimeout(function() {
+		logContainer.style.display = "block";
+		scrollToBottom();
+	}, 10);
+
+	requestAnimationFrame(scrollToBottom);
+	setTimeout(scrollToBottom, 100);
+	setTimeout(scrollToBottom, 500);
+});
 </script>
