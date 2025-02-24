@@ -12,10 +12,8 @@ vfs_recycle_start()
 	if [ ! -e /var/run/${plugin}.pid ]; then
 		echo "Starting Recycle Bin..."
 
-		# Add vfs_recycle to smb.conf.
-		if [[ `grep '# recycle bin parameters' /etc/samba/smb.conf` = "" ]]; then
-			sed -i "/logging = syslog@0/r /boot/config/plugins/recycle.bin/config/smb-extra.conf" /etc/samba/smb.conf
-		fi
+		# Create pid file to show the recycle bin is running.
+		echo $$ > /var/run/${plugin}.pid
 
 		# If cron run is enabled, add cron job.
 		if [ "$SCHEDRUN" = "hourly" ]; then
@@ -29,14 +27,16 @@ vfs_recycle_start()
 			printf "0 5 * * 0 ${DOCROOT}/plugins/${plugin}/scripts/rc.${plugin} cron &> /dev/null\n\n" >> /tmp/${plugin}/recyclebin.cron
 		fi
 
-		# Create pid file to show the recycle bin is running.
-		echo $$ > /var/run/${plugin}.pid
-
 		# Run recycle bin setup to configure vfs_recycle
 		${DOCROOT}/plugins/${plugin}/scripts/restart_services
 
+		# Start inotify script to monitor disk events if logging is enabled
+		if [ "$LOG" = "yes" ]; then
+			/usr/local/emhttp/plugins/recycle.bin/scripts/inotify.recycle.activity > /dev/null 2>&1 & disown
+		fi
+
 		# Reload samba parameters
-		/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
 
 		if [ "$BACKGROUND" != "yes" ]; then
 			# Refresh trash sizes
@@ -82,15 +82,12 @@ vfs_recycle_stop()
 		# Remove recycle bin cron file.
 		rm -f /boot/config/plugins/${plugin}/recyclebin.cron
 
-		# Remove pid file to show recycle bin is not running.
-		rm -f /var/run/${plugin}.pid
-
 		if [ "$shutdown" != "shutdown" ]; then
 			# Run recycle bin setup to configure vfs_recycle
 			${DOCROOT}/plugins/${plugin}/scripts/restart_services
 
 			# Reload samba parameters
-			/usr/bin/smbcontrol $(cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+			/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
 
 			# Clear out the recycle bin browse and the trash sizes
 			# Remove browsing directory.
@@ -101,10 +98,18 @@ vfs_recycle_stop()
 				echo -n "0" > /tmp/recycle.bin/trashsize
 				rm -f /tmp/recycle.bin/share_trashsize
 			fi
-
-			# Remove pid file to show cron script is not running.
-			rm -f /var/run/rc.${plugin}.pid
 		fi
+		# Kill all recycle logging processes.
+		for pid in $(ps -eo pid,cmd | grep 'inotifywait' | grep 'recycle.bin' | grep -v grep | awk '{print $1}')
+		do
+			kill $pid >/dev/null 2>&1
+		done	
+
+		# Remove pid file to show recycle bin is not running.
+		rm -f /var/run/${plugin}.pid
+
+		# Remove pid file to show cron script is not running.
+		rm -f /var/run/rc.${plugin}.pid
 	else
 		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -113,13 +118,16 @@ vfs_recycle_stop()
 
 vfs_recycle_restart()
 {
-	# Stop vfs recycle.
-	vfs_recycle_stop
+	# Is vfs_recycle running?  Don't restart it if it is not running.
+	if [ -e /var/run/${plugin}.pid ]; then
+		# Stop vfs recycle.
+		vfs_recycle_stop
 
-	sleep 1
+		sleep 2
 
-	# Start vfs recycle
-	vfs_recycle_start
+		# Start vfs recycle
+		vfs_recycle_start
+	fi
 }
 
 vfs_recycle_buttonstart()
@@ -287,13 +295,16 @@ vfs_recycle_browse()
 	# Move the new RecycleBin to /mnt.
 	mv /tmp/RecycleBin /mnt/RecycleBin
 
+	# Set permissions of RecycleBin folder.
+	chmod 0777 /mnt/RecycleBin
+
 	# Set ownership of RecycleBin folder.
 	chown nobody:users /mnt/RecycleBin
 }
 
 vfs_recycle_clear() {
-	# Clear the samba log.
-	echo "" > /var/log/samba/log.smbd
+	# Clear the recycle bin log.
+	echo "" > /var/log/recycle.bin.log
 }
 
 # read our configuration.
@@ -313,7 +324,7 @@ if [ "$DIR_MODE" = "" ]; then
 	DIR_MODE="0777"
 fi
 
-PROG_NAME="Recycle Bin"
+PROG_NAME="recycle.bin"
 DOCROOT=`grep -Po '^chdir = \K.*' /etc/php-fpm.d/www.conf 2>/dev/null`
 if [ -z ${DOCROOT} ];then
 	DOCROOT="/usr/local/emhttp"
@@ -321,6 +332,11 @@ fi
 
 case "$1" in
 	'start')
+		# The second parameter is a startup delay.
+		if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]]; then
+			logger "Waiting ${2} seconds before starting." -t"$PROG_NAME"
+			sleep "$2"
+		fi
 		vfs_recycle_start
 	;;
 	'stop')

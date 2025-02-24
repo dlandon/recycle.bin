@@ -1,0 +1,91 @@
+#!/bin/bash
+# Usage:
+#
+plugin="recycle.bin"
+inotify="recycle.bin.inotify"
+recycle_bins_file="/tmp/${plugin}/recycle_bins"
+ud_recycle_bins_file="/tmp/${plugin}/ud.recycle_bins"
+combined_recycle_bins="/tmp/${plugin}/combined_recycle_bins"
+
+PROG_NAME=${plugin}
+
+# If recycle bin inotify is already running, don't run it again
+if [ -e "/var/run/${plugin}.pid" ] && [ ! -e "/var/run/${inotify}.pid" ]; then
+	# Create pid file to indicate inotify is running.
+	echo $$ > /var/run/${inotify}.pid
+
+	logger "Recycle Bin inotify starting" -t"$PROG_NAME"
+
+	# Concatenate the two files, removing duplicates
+	cat "$recycle_bins_file" "$ud_recycle_bins_file" | sort -u > "$combined_recycle_bins"
+
+	# Initialize directory count
+	dir_count=0
+
+	# Loop through each mount point in the combined file
+	while IFS= read -r mount_point || [ -n "$mount_point" ]; do
+		count=$(find "$mount_point" -type d 2>/dev/null | wc -l)
+		dir_count=$((dir_count + count))
+	done < "$combined_recycle_bins"
+
+	# Calculate the required watches with a 50% buffer
+	required_watches=$((dir_count + (dir_count / 50)))
+
+	# Find the current inotify watches being used
+	current_watches=$(find /proc/*/fd -lname anon_inode:inotify 2>/dev/null | cut -d/ -f5 | grep -v 'no such file or directory' | awk '{s+=$1} END {print s}')
+
+	# Calculate the new limit
+	new_limit=$((current_watches + required_watches))
+
+	# Check the current maximum limit
+	current_limit=$(/usr/bin/cat /proc/sys/fs/inotify/max_user_watches)
+
+	# Update the limit if necessary
+	if [ "$new_limit" -gt "$current_limit" ]; then
+		logger "Updating inotify max_user_watches from '$current_limit' to '$new_limit'" -t"$PROG_NAME"
+
+		# Set the inotify max_user_watches.
+		sysctl -qw fs.inotify.max_user_watches="$new_limit" > /dev/null
+	fi
+
+	open_isdir=",ISDIR"
+
+	# Define FIFO path
+	FIFO_PATH="/tmp/${plugin}recycle_bin_fifo"
+
+	# Cleanup function
+	cleanup() {
+		logger "Recycle Bin inotify exiting" -t"$PROG_NAME"
+
+		# Remove PID file
+  		rm -f /var/run/${inotify}.pid
+
+		# Remove FIFO if it exists
+  		[ -p "$FIFO_PATH" ] && rm -f "$FIFO_PATH"
+		exit 0
+	}
+
+	# Set trap to clean up on exit
+	trap cleanup SIGINT SIGTERM EXIT
+
+	# Create FIFO if it doesn't exist
+	[ -p "$FIFO_PATH" ] || mkfifo "$FIFO_PATH"
+
+	# Start inotifywait and send output to FIFO
+	inotifywait --monitor -rs --quiet --event move,create \
+		--timefmt '%b %d %H:%M:%S' \
+		--format '%T %e => %w%f' \
+		--fromfile "$combined_recycle_bins" > "$FIFO_PATH" &
+
+	# Read from FIFO
+	while IFS= read -r line < "$FIFO_PATH"
+	do
+		if [ "${line/$open_isdir}" = "$line" ]; then
+			# Add line to log
+			echo "$line" >> /var/log/${plugin}.log
+
+			# Trim log file if it is over 1000 lines
+			sed -i -e :a -e '$q;N;1001,$D;ba' /var/log/${plugin}.log &
+		fi
+	done
+fi

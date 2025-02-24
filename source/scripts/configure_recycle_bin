@@ -20,6 +20,10 @@ if (!defined('DOCROOT')) {
 	define('DOCROOT', $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
 }
 
+/* Collection of the /.Recycle.Bin files to be set for the inotify task. */
+$recycleBinsFile	="/tmp/".RECYCLE_PLUGIN."/recycle_bins";
+$UDrecycleBinsFile	="/tmp/".RECYCLE_PLUGIN."/ud.recycle_bins";
+
 require_once(DOCROOT."/webGui/include/Wrappers.php");
 
 if (isset($argv[1])) {
@@ -59,12 +63,8 @@ if ($smb_file) {
 					"veto files"				=> ""
 	);
 
-	/* Adjust user set parameters. */
-	if ((isset($recycle_bin_cfg['LOG'])) && ($recycle_bin_cfg['LOG'] == "yes")) {
-		$vfs_objects = "recycle extd_audit";
-	} else {
-		$vfs_objects = "recycle";
-	}
+	/* Add recycle vfs object. */
+	$vfs_objects = "recycle";
 	
 	/* Set the directory mode. */
 	if (isset($recycle_bin_cfg['DIR_MODE']) && ($recycle_bin_cfg['DIR_MODE'])) {
@@ -125,6 +125,7 @@ if ($smb_file) {
 				$excluded_shares[] .= $s;
 			}
 		}
+
 		/* Get ISO File Mounts. */
 		foreach (get_iso_mounts() as $name => $info) {
 			$s = basename($info['target']);
@@ -148,7 +149,7 @@ if ($smb_file) {
 	/* Remove recycle bin parameters from the configuration. */
 	foreach ($smb_shares as $s) {
 		if (isset($smb_config[$s]['vfs objects'])) {
-			$smb_config[$s]['vfs objects'] = trim(str_replace(array("recycle", "extd_audit"), "", $smb_config[$s]['vfs objects']));
+			$smb_config[$s]['vfs objects'] = trim(str_replace(array("recycle"), "", $smb_config[$s]['vfs objects']));
 			if (empty($smb_config[$s]['vfs objects'])) {
 				unset($smb_config[$s]['vfs objects']);
 			}
@@ -168,11 +169,13 @@ if ($smb_file) {
 		unset($parms['veto files']);
 	}
 
+	$recycle_bins	= "";
 	if ((! $ud_config_file) || (($ud_config_file) && ($recycle_bin_cfg['INCLUDE_UD'] == 'yes'))) {
 		/* Add parameters if recycle bin is running. */
 		if (is_file("/var/run/recycle.bin.pid")) {
 			foreach ($shares as $s) {
-				if ($s != "global") {
+				/* Check if the path is writable before adding the recycle bin. */
+				if (($s != "global") && (is_writable($smb_config[$s]['path']))) {
 					if (isset($smb_config[$s]['vfs objects'])) {
 						$smb_config[$s]['vfs objects'] = $smb_config[$s]['vfs objects']." ".$vfs_objects;
 					} else {
@@ -185,16 +188,23 @@ if ($smb_file) {
 					}
 					$smb_config[$s] = array_merge($smb_config[$s], $parms);
 					$parms['recycle:exclude_dir'] = $pd;
+
+					/* Get the path to the share .Recycle.Bin for inotify. */
+					$inotify_path	= $smb_config[$s]['path']."/.Recycle.Bin";
+					/* Make sure the .Recycle.Bin directory is there so inotify will not complain. */ 
+					if (!is_dir($inotify_path)) {
+						mkdir($inotify_path, 0777, true);
+					}
+					$recycle_bins	.= $inotify_path."\n";
 				}
 			}
 		}
 	}
 
 	/* Rewrite the configuration file. */
-	$keys		= array_keys($smb_config);
-	$iniFile	= "";
+	$iniFile		= "";
 	$first_line	= true;
-	foreach ($keys as $key) {
+	foreach ($smb_config as $key => $share) {
 		if ($first_line) {
 			$iniFile .= "[$key]";
 			$first_line	= false;
@@ -215,6 +225,14 @@ if ($smb_file) {
 	/* If rewritting smb-shares.conf add final line break. */
 	if (! $ud_config_file) {
 		$iniFile	.= "\n";
+	}
+
+	/* Write the file of inotify directories to monitor. */
+	if ($recycle_bins) {
+		$file	= $ud_config_file ? $UDrecycleBinsFile : $recycleBinsFile;
+
+		/* Write the inotify list of directories to monitor. */
+		file_put_contents($file, $recycle_bins, FILE_APPEND);
 	}
 
 	/* Write the new configuration. */
