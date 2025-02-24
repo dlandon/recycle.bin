@@ -1,5 +1,6 @@
 Menu="RecycleBin:2"
 Title="Shares"
+Cond="$var['mdState'] == 'STARTED'"
 ---
 <?php
 /* Copyright 2015-2025 Dan Landon
@@ -38,7 +39,7 @@ if (is_file("/tmp/".RECYCLE_PLUGIN."/share_trashsize")) {
 > Recycle Bin Shares:
 >
 > The shares with Recycle Bin contents will be displayed along with the size of the share's Trash Bin.
-> Click on the **Browse** icon to browse the deleted files in that share.
+> Click on the <i class='fa fa-external-link'></i> icon to browse the deleted files in that share.
 > Click on the **Empty** button to remove the deleted files.
 >
 > Unassigned Devices shares will only show if the Recycle Bin is enabled for Unassigned Devices and there are Unassigned Devices that are mounted and shared and have Recycle Bin contents.
@@ -47,15 +48,14 @@ if (is_file("/tmp/".RECYCLE_PLUGIN."/share_trashsize")) {
 :end
 
 <table class='recycle-bin shift' id='tblRecycleShares'>
-<thead><tr><th>_(SMB Share)_</th><th>_(Share Type)_</th><th>_(Trash Size)_</th><th>_(Browse)_</th><th>_(Empty Trash)_</th></tr></thead>
+<thead><tr><th>_(SMB Share)_</th><th>_(Share Type)_</th><th>_(Trash Size)_</th><th>_(Empty Trash)_</th></tr></thead>
 <tbody>
 
 <?
 $smb_shares = parse_ini_file("/etc/samba/smb-shares.conf", true, INI_SCANNER_RAW);
-$shares = array_keys($smb_shares);
-natcasesort($shares);
+ksort($smb_shares, SORT_NATURAL | SORT_FLAG_CASE);
 
-foreach($shares as $share) {
+foreach($smb_shares as $share => $value) {
 	$recycle_bin_trashsize = isset($share_trashsize[$share]['trashsize']) ? $share_trashsize[$share]['trashsize'] : "";
 	if ($share == 'flash') {
 		$browse = "/mnt/RecycleBin/Flash";
@@ -75,7 +75,7 @@ foreach($shares as $share) {
 	$check_id = str_replace(array(" ", ".", "-"), "", $share);
 
 	if ($recycle_bin_trashsize != "") {
-		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
+		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the)_ $share _(Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
 		$bb .= "<input type='hidden' name='#command' value='/plugins/".RECYCLE_PLUGIN."/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
@@ -83,7 +83,7 @@ foreach($shares as $share) {
 		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
-		echo "<tr><td>$share</td><td>_(Array)_ $share_type</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$aa</td><td>$bb</td></tr>";
+		echo "<tr><td>$aa $share</td><td>_(Array)_ $share_type</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$bb</td></tr>";
 	}
 }
 
@@ -97,7 +97,7 @@ foreach ($files as $file) {
 	$check_id = str_replace(array(" ", ".", "-"), "", $share_name);
 
 	if ($recycle_bin_trashsize != "") {
-		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
+		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the)_ $share_name _(Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
 		$bb .= "<input type='hidden' name='#command' value='/plugins/".RECYCLE_PLUGIN."/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
@@ -105,7 +105,7 @@ foreach ($files as $file) {
 		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
-		echo "<tr><td>$share_name</td><td>_(Unassigned Device)_</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$aa</td><td>$bb</td></tr>";
+		echo "<tr><td>$aa $share_name</td><td>_(Unassigned Device)_</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$bb</td></tr>";
 	}
 }
 
@@ -119,7 +119,7 @@ foreach ($files as $file) {
 	$check_id = str_replace(array(" ", ".", "-"), "", $share_name);
 
 	if ($recycle_bin_trashsize != "") {
-		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the Share Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
+		$aa = "<a href='/Settings/RecycleBin/Browse?dir=$browse' title='_(Browse the)_ $share_name _(Recycle Bin)_.'><i class='fa fa-external-link'></i></a>";
 		$bb = "<form name='empty_share_trash' method='POST' action='/update.php' target='progressFrame'>";
 		$bb .= "<input type='hidden' name='#command' value='/plugins/".RECYCLE_PLUGIN."/scripts/rc.recycle.bin'>";
 		$bb .= "<input type='hidden' name='#arg[1]' value='share'>";
@@ -127,7 +127,7 @@ foreach ($files as $file) {
 		$bb .= '<input type="checkbox" title="Enable Empty Share Trash Button" onclick=\'$("#'.$check_id.'").prop("disabled",!this.checked);\'>';
 		$bb .= '<input id="'.$check_id.'" disabled type="submit" value="_(Empty)_" title="_(Empty the)_ '.$share_name.' _(Recycle Bin)_.">';
 		$bb .= "</form>";
-		echo "<tr><td>$share_name</td><td>_(Root Share)_</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$aa</td><td>$bb</td></tr>";
+		echo "<tr><td>$aa $share_name</td><td>_(Root Share)_</td><td>".my_scale($recycle_bin_trashsize * 1024, $unit)." {$unit}"."</td><td>$bb</td></tr>";
 	}
 }
 ?>
@@ -145,18 +145,21 @@ foreach ($files as $file) {
 </form>
 
 <script>
-<?if ($display['resize']):?>
-function resize() {
-  $('pre.up').height(Math.max(window.innerHeight-340,370)).show();
-}
-
 $(function() {
-  resize();
-  $(window).bind('resize',function(){resize();});
-});
-<?endif;?>
+	/* Initialize table sorting */
+	$('#tblRecycleShares').tablesorter({
+		headers: { 3: { sorter: false }, 4: { sorter: false } }
+	});
 
-$(function(){
-	$('#tblRecycleShares').tablesorter({headers:{3:{sorter:false},4:{sorter:false}}});
+	<?php if ($display['resize']): ?>
+		/* Resize function */
+		function resize() {
+			$('pre.up').height(Math.max(window.innerHeight - 340, 370)).show();
+		}
+
+		/* Initial resize and bind event */
+		resize();
+		$(window).on('resize', resize);
+	<?php endif; ?>
 });
 </script>
