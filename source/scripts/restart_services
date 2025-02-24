@@ -1,13 +1,25 @@
 #!/usr/bin/php
 <?php
 
+/* Define our plugin name. */
+if (!defined('RECYCLE_PLUGIN')) {
+	define('RECYCLE_PLUGIN', 'recycle.bin');
+}
+/* Collection of the /.Recycle.Bin files to be set for the inotify task. */
+$recycleBinsFile	="/tmp/".RECYCLE_PLUGIN."/recycle_bins";
+$UDrecycleBinsFile	="/tmp/".RECYCLE_PLUGIN."/ud.recycle_bins";
+
+/* Clear the inotify files. */
+file_put_contents($UDrecycleBinsFile, "");
+file_put_contents($recycleBinsFile, "");
+
 /* Update the smb-shares configuration. */
 exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin");
 
 /* Update unassigned devices configurations. */
 $files = glob("/etc/samba/unassigned-shares/*.conf");
 foreach ($files as $file) {
-	exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin '$file'");
+	exec("/usr/local/emhttp/plugins/recycle.bin/scripts/configure_recycle_bin ".escapeshellarg($file));
 }
 
 /* Update the RecycleBin symlinks. */
