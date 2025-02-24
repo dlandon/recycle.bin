@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+plugin="recycle.bin"
+
+# Read in the configuration.
+CONFIG="/boot/config/plugins/${plugin}/${plugin}.cfg"
+source $CONFIG
+
+# Start recycle bin if it is enabled and currently running then restart it.
+if [ "$SERVICE" = "enable" ]; then
+	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} restart
+fi
