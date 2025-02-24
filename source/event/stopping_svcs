@@ -3,9 +3,7 @@
 plugin="recycle.bin"
 
 # Stop recycle bin if it is running.
-if [ -e "/var/run/${plugin}.pid" ]; then
-	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} stop shutdown
-fi
+/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} stop shutdown 1>/dev/null
 
 # Remove RecycleBin browse symlinks.
 rm -rf /mnt/RecycleBin
