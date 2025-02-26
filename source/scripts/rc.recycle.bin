@@ -62,6 +62,8 @@ vfs_recycle_start()
 
 		# Update recycle bin permissions.
 		chmod $DIR_MODE /mnt/*/*/.Recycle.Bin 2>/dev/null
+
+		sleep 2
 	else
 		echo "Recycle Bin is already running"
 		logger "Recycle Bin is already running" -t"$PROG_NAME"
@@ -110,6 +112,8 @@ vfs_recycle_stop()
 
 		# Remove pid file to show cron script is not running.
 		rm -f /var/run/rc.${plugin}.pid
+
+		sleep 2
 	else
 		echo "Recycle Bin is not running"
 		logger "Recycle Bin is not running" -t"$PROG_NAME"
@@ -122,8 +126,6 @@ vfs_recycle_restart()
 	if [ -e /var/run/${plugin}.pid ]; then
 		# Stop vfs recycle.
 		vfs_recycle_stop
-
-		sleep 2
 
 		# Start vfs recycle
 		vfs_recycle_start
