@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.02.24">
+<!ENTITY version	"2025.02.25">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"62991ed4a2228d8f2895df9762069238">
+<!ENTITY MD5		"49083ef9b8e290bd0ec389e8009c2be7">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Adjust some timing when restarting the recycle bin.
+
+###2025.02.24
 - Fix: Event to refresh the recycle bin after a share edit was not working.  The recycle bin has to be updated after a share change.
 - Fix: Start the Recycle Bin when Unraid is started and not when disks are mounted.
 - Add: Move the Share browse icon to the left of the share name to be more consistent with Unraid standard.
