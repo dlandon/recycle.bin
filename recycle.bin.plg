@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.02.25">
+<!ENTITY version	"2025.03.03">
 <!ENTITY launch		"Settings/RecycleBin">
 <!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
-<!ENTITY MD5		"49083ef9b8e290bd0ec389e8009c2be7">
+<!ENTITY MD5		"702b6291eab08dc5676374c0f1cc80bc">
 ]>
 
 <PLUGIN	name="&name;"
@@ -22,6 +22,10 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix: Extend the start up after array has started to 30 seconds to be sure all activity has settled.
+- Fix: Change the way samba reloads a changed configuration.
+
+###2025.02.25
 - Add: Adjust some timing when restarting the recycle bin.
 
 ###2025.02.24
