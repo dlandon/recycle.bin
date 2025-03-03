@@ -8,5 +8,5 @@ source $CONFIG
 
 # Start recycle bin if it is enabled.
 if [ "$SERVICE" = "enable" ]; then
-	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} start 10 1>/dev/null &
+	/usr/local/emhttp/plugins/${plugin}/scripts/rc.${plugin} start 30 1>/dev/null &
 fi
