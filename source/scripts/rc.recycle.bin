@@ -36,7 +36,7 @@ vfs_recycle_start()
 		fi
 
 		# Reload samba parameters
-		/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+		/usr/bin/smbcontrol all reload-config 2>&1
 
 		if [ "$BACKGROUND" != "yes" ]; then
 			# Refresh trash sizes
@@ -89,7 +89,7 @@ vfs_recycle_stop()
 			${DOCROOT}/plugins/${plugin}/scripts/restart_services
 
 			# Reload samba parameters
-			/usr/bin/smbcontrol $(/usr/bin/cat /var/run/smbd.pid 2>/dev/null) reload-config 2>&1
+			/usr/bin/smbcontrol all reload-config 2>&1
 
 			# Clear out the recycle bin browse and the trash sizes
 			# Remove browsing directory.
