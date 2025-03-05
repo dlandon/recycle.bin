@@ -628,10 +628,8 @@ The 'pre-install' script.
 <INLINE>
 # Stop the recycle bin if it is running
 if [ -e /var/run/&name;.pid ]; then
-	# Stop recycle bin in the background.
-	echo "Stopping Recycle Bin..."
-	echo "/usr/local/emhttp/plugins/&name;/scripts/rc.&name; stop" > /tmp/&name;/recycle_bin_stop
-	at -M -f /tmp/&name;/recycle_bin_stop now 2>/dev/null
+	# Stop recycle bin.
+	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; stop 2>/dev/null
 
 	# Wait for the recycle bin to stop
 	timeout 5 /tmp/&name;/wait_recycle.bin
@@ -692,8 +690,7 @@ chmod +x /usr/local/emhttp/plugins/&name;/scripts/* /usr/local/emhttp/plugins/&n
 # Restart the recycle bin if it was already running
 if [ -f /tmp/&name;/started ]; then
 	# Start recycle bin in the background.
-	echo "Starting Recycle Bin..."
-	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; start 1>/dev/null
+	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; start 2>/dev/null
 
 	# Remove started status file
 	rm -rf /tmp/&name;/started
