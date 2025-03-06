@@ -2,9 +2,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name		"recycle.bin">
 <!ENTITY author		"dlandon">
-<!ENTITY version	"2025.03.03">
+<!ENTITY version	"2025.03.06">
 <!ENTITY launch		"Settings/RecycleBin">
-<!ENTITY gitURL		"https://raw.githubusercontent.com/&author;/&name;/master">
+<!ENTITY gitURL		"https://raw.githubusercontent.com/unraid/&name;/master">
 <!ENTITY pluginURL	"&gitURL;/&name;.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/41044-recycle-bin-vfs-recycle-for-smb-shares/">
 <!ENTITY MD5		"702b6291eab08dc5676374c0f1cc80bc">
@@ -22,6 +22,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add: Change to Unraid repository.
+
+###2025.03.03
 - Fix: Extend the start up after array has started to 30 seconds to be sure all activity has settled.
 - Fix: Change the way samba reloads a changed configuration.
 
@@ -607,21 +610,6 @@ Get the plugin bundle.
 </FILE>
 
 <!--
-Recycle bin background wait script.
--->
-<FILE Name="/tmp/&name;/wait_recycle.bin" Mode="0770">
-<INLINE>
-<![CDATA[
-#!/bin/bash
-# Wait for the recycle bin to stop.
-while [ -e /var/run/&name;.pid ]; do
-	sleep 1
-done
-]]>
-</INLINE>
-</FILE>
-
-<!--
 The 'pre-install' script.
 -->
 <FILE Run="/bin/bash">
@@ -629,10 +617,7 @@ The 'pre-install' script.
 # Stop the recycle bin if it is running
 if [ -e /var/run/&name;.pid ]; then
 	# Stop recycle bin.
-	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; stop 2>/dev/null
-
-	# Wait for the recycle bin to stop
-	timeout 5 /tmp/&name;/wait_recycle.bin
+	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; stop 2>/dev/null disown
 
 	# Show that the	recycle bin was already running
 	echo "" > /tmp/&name;/started
@@ -689,8 +674,8 @@ chmod +x /usr/local/emhttp/plugins/&name;/scripts/* /usr/local/emhttp/plugins/&n
 
 # Restart the recycle bin if it was already running
 if [ -f /tmp/&name;/started ]; then
-	# Start recycle bin in the background.
-	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; start 2>/dev/null
+	# Start recycle bin.
+	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; start 2>/dev/null disown
 
 	# Remove started status file
 	rm -rf /tmp/&name;/started
@@ -714,12 +699,7 @@ The 'remove' script.
 # Stop the recycle bin if it is running
 if [ -e /var/run/&name;.pid ]; then
 	# Stop recycle bin in the background.
-	echo "Stopping Recycle Bin..."
-	echo "/usr/local/emhttp/plugins/&name;/scripts/rc.&name; stop" > /tmp/&name;/recycle_bin_stop
-	at -M -f /tmp/&name;/recycle_bin_stop now 2>/dev/null
-
-	# Wait for the recycle bin to stop
-	timeout 5 /tmp/&name;/wait_recycle.bin
+	/usr/local/emhttp/plugins/&name;/scripts/rc.&name; stop 2>/dev/null
 fi
 
 # Remove plugin files from emhttp.
